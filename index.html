@@ -438,7 +438,18 @@
   </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js";
+    import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js";
+    import {
+      getFirestore,
+      collection,
+      doc,
+      getDocs,
+      setDoc,
+      updateDoc,
+      deleteDoc,
+      onSnapshot,
+      writeBatch
+    } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCv4BqmTfFQ7bR8ahdzkid9lNuq55fxR60",
@@ -451,8 +462,193 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
 
+    try {
+      if (await analyticsIsSupported()) {
+        getAnalytics(app);
+      }
+    } catch (error) {
+      console.warn("Analytics não disponível neste ambiente.", error);
+    }
+
+    const COLLECTION_NAME = "kanban_financeiro_cards";
+
+    const BASE_ENTRIES = [
+      { empresa:"MP", fornecedor:"REGINALDO LEAL DE OLIVEIRA FILHO", historico:"ACORDO COM FORNECEDOR BAIANO - CARROCERIA DA FIORINO REF. PARC 4/5", vencimento:"2026-03-16", valor:5000.00 },
+      { empresa:"MP", fornecedor:"REGINALDO LEAL DE OLIVEIRA FILHO", historico:"ACORDO COM FORNECEDOR BAIANO - CARROCERIA DA FIORINO REF. PARC 5/5", vencimento:"2026-03-30", valor:5000.00 },
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087510. COMPRA DE 8 PNEUS BFG 295/80 R22.5 DR550", vencimento:"2026-03-31", valor:20000.00 },
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087529. COMPRA DE 2 PNEUS BFG 275/80 R22.5 CROSS CONTROL", vencimento:"2026-04-01", valor:4920.00 },
+      { empresa:"MP", fornecedor:"MOLAS IMPERATRIZ LTDA", historico:"REF. A NF Nº 051354", vencimento:"2026-04-02", valor:7000.00 },
+      { empresa:"MP", fornecedor:"MOLAS IMPERATRIZ LTDA", historico:"REF. A NF Nº 051355", vencimento:"2026-04-02", valor:1790.00 },
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087554", vencimento:"2026-04-02", valor:17844.00 },
+      { empresa:"MP", fornecedor:"MOLAS IMPERATRIZ LTDA", historico:"REF. A NF Nº 051367", vencimento:"2026-04-06", valor:2587.20 },
+      { empresa:"MP", fornecedor:"PONTAL FERRO E ACO EIRELI - EPP", historico:"REF. A NF Nº 011325", vencimento:"2026-04-09", valor:1000.00 },
+      { empresa:"MP", fornecedor:"POSTO CARRETEIRO", historico:"PAGAMENTO REF. AO ACORDO COM FORNECEDOR - VALDIR BRITO PARC 4/4.", vencimento:"2026-04-10", valor:5700.00 },
+      { empresa:"MP", fornecedor:"JUPITER TELECOMUNICAÇÕES E INFORMATICA LTDA", historico:"REFERENTE AO PAGAMENTO DE INTERNET JUPITER 04/2026 - ESTIMADO", vencimento:"2026-04-10", valor:200.00 },
+      { empresa:"MP", fornecedor:"GASOTINTA ACAILANDIA LTDA", historico:"REF. A NF Nº 004595", vencimento:"2026-04-11", valor:25.00 },
+      { empresa:"MP", fornecedor:"POSTO MAGNOLIA LTDA", historico:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", vencimento:"2026-04-12", valor:2748.93, observacao:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", quantidade:11 },
+      { empresa:"MP", fornecedor:"FRANCISCO DE ASSIS PONTES", historico:"3 CAMARA DE AR. NFS 121 FRANCISCO DE ASSIS PONTES. PIX CNPJ 47928703000148", vencimento:"2026-04-15", valor:450.00 },
+      { empresa:"MP", fornecedor:"BLACK PRIME NORDESTE COM. DE PROD. IND. E AUTOMOTIVOS", historico:"COMPRA DE MERCADORIAS PARA REVENDA – BLACK PRIME", vencimento:"2026-04-17", valor:663.01 },
+      { empresa:"MP", fornecedor:"TECNOBOR PRODUTOS PARA RECAUCHUTAGEM", historico:"REF. A NF Nº 016599", vencimento:"2026-04-19", valor:2720.20 },
+      { empresa:"MP", fornecedor:"POSTO MAGNOLIA LTDA", historico:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", vencimento:"2026-04-19", valor:2955.63, observacao:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", quantidade:12 },
+      { empresa:"MP", fornecedor:"LWSA S A", historico:"REFERENTE AO PAGAMENTO DE SISTEMA BLING 04/2026", vencimento:"2026-04-20", valor:200.00 },
+      { empresa:"MP", fornecedor:"SIMPLES NACIONAL", historico:"REFERENTE AO PAGAMENTO DO SIMPLES NACIONAL 03/2026", vencimento:"2026-04-20", valor:7256.09 },
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087901", vencimento:"2026-04-24", valor:3735.00 }
+    ];
+
+    let seedPromise = null;
+
+    function getSeedPayload(item, index) {
+      return {
+        id: `base_${index + 1}`,
+        empresa: item.empresa,
+        fornecedor: item.fornecedor,
+        historico: item.historico || "",
+        vencimento: item.vencimento,
+        valor: Number(item.valor || 0),
+        observacao: item.observacao || "",
+        quantidade: item.quantidade || null,
+        grouped: !!item.quantidade,
+        tipo: "MANUAL",
+        column: getColumnByDate(item.vencimento),
+        expanded: false
+      };
+    }
+
+    function parseDate(dateStr){
+      const [y,m,d] = dateStr.split("-").map(Number);
+      return new Date(y, m - 1, d, 12, 0, 0);
+    }
+
+    function getWeekStart(date){
+      const copy = new Date(date);
+      const day = copy.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      copy.setDate(copy.getDate() + diff);
+      copy.setHours(0,0,0,0);
+      return copy;
+    }
+
+    function getColumnByDate(dateStr){
+      const due = parseDate(dateStr);
+      const today = parseDate("2026-04-20");
+      const thisWeekStart = getWeekStart(today);
+      const thisWeekEnd = new Date(thisWeekStart);
+      thisWeekEnd.setDate(thisWeekStart.getDate() + 6);
+      thisWeekEnd.setHours(23,59,59,999);
+
+      const nextWeekStart = new Date(thisWeekStart);
+      nextWeekStart.setDate(thisWeekStart.getDate() + 7);
+      const nextWeekEnd = new Date(thisWeekStart);
+      nextWeekEnd.setDate(thisWeekStart.getDate() + 13);
+      nextWeekEnd.setHours(23,59,59,999);
+
+      if (due < today) return "fila";
+      if (due.getTime() === today.getTime()) return "hoje";
+      if (due >= today && due <= thisWeekEnd) return "semana";
+      if (due >= nextWeekStart && due <= nextWeekEnd) return "proxima";
+      return "proxima";
+    }
+
+    async function ensureSeedData() {
+      if (seedPromise) return seedPromise;
+
+      seedPromise = (async () => {
+        const colRef = collection(db, COLLECTION_NAME);
+        const snapshot = await getDocs(colRef);
+        if (!snapshot.empty) return;
+
+        const batch = writeBatch(db);
+        BASE_ENTRIES.forEach((item, index) => {
+          const payload = getSeedPayload(item, index);
+          batch.set(doc(db, COLLECTION_NAME, payload.id), payload);
+        });
+        await batch.commit();
+      })().finally(() => {
+        seedPromise = null;
+      });
+
+      return seedPromise;
+    }
+
+    function normalizeCard(id, data) {
+      return {
+        id,
+        empresa: data.empresa || "MP",
+        fornecedor: data.fornecedor || "",
+        historico: data.historico || "",
+        vencimento: data.vencimento || "",
+        valor: Number(data.valor || 0),
+        observacao: data.observacao || "",
+        quantidade: data.quantidade ?? null,
+        grouped: !!data.grouped,
+        tipo: data.tipo || "MANUAL",
+        column: data.column || "fila",
+        expanded: !!data.expanded
+      };
+    }
+
+    window.firebaseKanban = {
+      async startRealtime(onChange) {
+        await ensureSeedData();
+        return onSnapshot(
+          collection(db, COLLECTION_NAME),
+          (snapshot) => {
+            const remoteCards = snapshot.docs.map((docSnap) => normalizeCard(docSnap.id, docSnap.data()));
+            onChange(remoteCards);
+          },
+          (error) => {
+            console.error("Erro ao sincronizar Firestore:", error);
+          }
+        );
+      },
+
+      async addCard(payload) {
+        const ref = doc(collection(db, COLLECTION_NAME));
+        const card = {
+          id: ref.id,
+          empresa: payload.empresa,
+          fornecedor: payload.fornecedor,
+          historico: payload.historico || "",
+          vencimento: payload.vencimento,
+          valor: Number(payload.valor || 0),
+          observacao: payload.observacao || "",
+          quantidade: payload.quantidade ?? null,
+          grouped: !!payload.grouped,
+          tipo: payload.tipo || "MANUAL",
+          column: payload.column,
+          expanded: !!payload.expanded
+        };
+        await setDoc(ref, card);
+      },
+
+      async updateCard(id, payload) {
+        await updateDoc(doc(db, COLLECTION_NAME, id), {
+          empresa: payload.empresa,
+          fornecedor: payload.fornecedor,
+          historico: payload.historico || "",
+          vencimento: payload.vencimento,
+          valor: Number(payload.valor || 0),
+          observacao: payload.observacao || "",
+          column: payload.column
+        });
+      },
+
+      async deleteCard(id) {
+        await deleteDoc(doc(db, COLLECTION_NAME, id));
+      },
+
+      async moveCard(id, column) {
+        await updateDoc(doc(db, COLLECTION_NAME, id), { column });
+      },
+
+      async toggleCard(id, expanded) {
+        await updateDoc(doc(db, COLLECTION_NAME, id), { expanded: !!expanded });
+      }
+    };
+
+    window.dispatchEvent(new CustomEvent("firebase-kanban-ready"));
   </script>
 
 
@@ -491,20 +687,9 @@
       { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087901", vencimento:"2026-04-24", valor:3735.00 }
     ];
 
-    let cards = BASE_ENTRIES.map(item => ({
-      id: crypto.randomUUID(),
-      empresa: item.empresa,
-      fornecedor: item.fornecedor,
-      historico: item.historico || "",
-      vencimento: item.vencimento,
-      valor: Number(item.valor || 0),
-      observacao: item.observacao || "",
-      quantidade: item.quantidade || null,
-      grouped: !!item.quantidade,
-      tipo: "MANUAL",
-      column: getColumnByDate(item.vencimento),
-      expanded: false
-    }));
+    let cards = [];
+    let appStarted = false;
+    let firestoreUnsubscribe = null;
 
     const els = {
       board: document.getElementById("board"),
@@ -841,26 +1026,24 @@
       });
 
       document.querySelectorAll('[data-action="delete"]').forEach(el => {
-        el.addEventListener("click", e => {
+        el.addEventListener("click", async e => {
           const id = e.currentTarget.dataset.id;
-          cards = cards.filter(c => c.id !== id);
-          refreshAll();
+          if (!window.firebaseKanban) return;
+          await window.firebaseKanban.deleteCard(id);
         });
       });
     }
 
-    function toggleCard(id){
+    async function toggleCard(id){
       const idx = cards.findIndex(c => c.id === id);
-      if (idx === -1) return;
-      cards[idx].expanded = !cards[idx].expanded;
-      renderBoard();
+      if (idx === -1 || !window.firebaseKanban) return;
+      await window.firebaseKanban.toggleCard(id, !cards[idx].expanded);
     }
 
-    function moveCard(id, columnId){
+    async function moveCard(id, columnId){
       const idx = cards.findIndex(c => c.id === id);
-      if (idx === -1) return;
-      cards[idx].column = columnId;
-      refreshAll();
+      if (idx === -1 || !window.firebaseKanban) return;
+      await window.firebaseKanban.moveCard(id, columnId);
     }
 
     function clearForm(){
@@ -900,7 +1083,38 @@
       renderBoard();
     }
 
-    function init(){
+    async function startFirestoreSync(){
+      if (!window.firebaseKanban) {
+        cards = BASE_ENTRIES.map(item => ({
+          id: crypto.randomUUID(),
+          empresa: item.empresa,
+          fornecedor: item.fornecedor,
+          historico: item.historico || "",
+          vencimento: item.vencimento,
+          valor: Number(item.valor || 0),
+          observacao: item.observacao || "",
+          quantidade: item.quantidade || null,
+          grouped: !!item.quantidade,
+          tipo: "MANUAL",
+          column: getColumnByDate(item.vencimento),
+          expanded: false
+        }));
+        refreshAll();
+        return;
+      }
+
+      if (firestoreUnsubscribe) firestoreUnsubscribe();
+
+      firestoreUnsubscribe = await window.firebaseKanban.startRealtime((remoteCards) => {
+        cards = remoteCards;
+        refreshAll();
+      });
+    }
+
+    async function init(){
+      if (appStarted) return;
+      appStarted = true;
+
       els.filterColumn.innerHTML = `<option value="">Todas</option>` + COLUMNS.map(c => `<option value="${c.id}">${c.title}</option>`).join("");
       els.entryColumn.innerHTML = COLUMNS.map(c => `<option value="${c.id}">${c.title}</option>`).join("");
 
@@ -948,7 +1162,7 @@
         if (e.target === els.entryModal) closeModal();
       });
 
-      els.entryForm.addEventListener("submit", e => {
+      els.entryForm.addEventListener("submit", async e => {
         e.preventDefault();
 
         const payload = {
@@ -961,20 +1175,13 @@
           column: els.entryColumn.value
         };
 
-        if (!payload.empresa || !payload.fornecedor || !payload.vencimento || !payload.valor || !payload.column) return;
+        if (!payload.empresa || !payload.fornecedor || !payload.vencimento || !payload.valor || !payload.column || !window.firebaseKanban) return;
 
         const editId = els.entryId.value;
         if (editId) {
-          const idx = cards.findIndex(c => c.id === editId);
-          if (idx !== -1) {
-            cards[idx] = {
-              ...cards[idx],
-              ...payload
-            };
-          }
+          await window.firebaseKanban.updateCard(editId, payload);
         } else {
-          cards.push({
-            id: crypto.randomUUID(),
+          await window.firebaseKanban.addCard({
             ...payload,
             grouped:false,
             quantidade:null,
@@ -984,13 +1191,21 @@
         }
 
         closeModal();
-        refreshAll();
       });
 
-      refreshAll();
+      await startFirestoreSync();
     }
 
-    init();
+    if (window.firebaseKanban) {
+      init();
+    } else {
+      window.addEventListener("firebase-kanban-ready", init, { once: true });
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          if (!appStarted) init();
+        }, 1200);
+      }, { once: true });
+    }
   </script>
 </body>
 </html>
