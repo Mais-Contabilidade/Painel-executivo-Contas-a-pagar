@@ -494,7 +494,23 @@
       { empresa:"MP", fornecedor:"POSTO MAGNOLIA LTDA", historico:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", vencimento:"2026-04-19", valor:2955.63, observacao:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", quantidade:12 },
       { empresa:"MP", fornecedor:"LWSA S A", historico:"REFERENTE AO PAGAMENTO DE SISTEMA BLING 04/2026", vencimento:"2026-04-20", valor:200.00 },
       { empresa:"MP", fornecedor:"SIMPLES NACIONAL", historico:"REFERENTE AO PAGAMENTO DO SIMPLES NACIONAL 03/2026", vencimento:"2026-04-20", valor:7256.09 },
-      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087901", vencimento:"2026-04-24", valor:3735.00 }
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087901", vencimento:"2026-04-24", valor:3735.00 },
+
+      { empresa:"MF", fornecedor:"SIMPLES NACIONAL", historico:"SIMPLES NACIONAL REF 01/2026", vencimento:"2026-02-20", valor:56812.03 },
+      { empresa:"MF", fornecedor:"SIMPLES NACIONAL", historico:"PARCELAMENTO - DAS VALOR PARCELADO R$ 288.931,58 ENTRADA R$ 28.891,15", vencimento:"2026-02-28", valor:5295.08 },
+      { empresa:"MF", fornecedor:"COMERCIAL MARIANO CARNEIRO LTDA", historico:"PARCELA 3/5 - ACORDO RENEGOCIADO COM COMERCIAL MARIANO CARNEIRO LTDA - TOTAL R$ 10.000,00", vencimento:"2026-03-13", valor:2150.00 },
+      { empresa:"MF", fornecedor:"SIMPLES NACIONAL", historico:"SIMPLES NACIONAL REF 02/2026", vencimento:"2026-03-20", valor:54121.77 },
+      { empresa:"MF", fornecedor:"MAIS CONTABILIDADE - JAILTON", historico:"SERVIÇOS CONTÁBEIS REFERENTE AO MÊS DE MARÇO DE 2026", vencimento:"2026-04-06", valor:5500.00 },
+      { empresa:"MF", fornecedor:"MOVIDA PARTICIPAÇÕES S.A", historico:"TRANSFERIR PARA EUNAMAN DESPESA DA MOVIDA PARTICIPAÇÕES. FATURA 8026333", vencimento:"2026-04-06", valor:7531.13 },
+      { empresa:"MF", fornecedor:"LIVRARIA E PAPELARIA ACAILANDIA LTDA", historico:"REF. A NF Nº 271671", vencimento:"2026-04-11", valor:99.00 },
+      { empresa:"MF", fornecedor:"COMERCIAL MARIANO CARNEIRO LTDA", historico:"PARCELA 4/5 - ACORDO RENEGOCIADO COM COMERCIAL MARIANO CARNEIRO LTDA - TOTAL R$ 10.000,00", vencimento:"2026-04-13", valor:2150.00 },
+      { empresa:"MF", fornecedor:"LIVRARIA E PAPELARIA ACAILANDIA LTDA", historico:"REF. A NF Nº 027683", vencimento:"2026-04-13", valor:101.60 },
+      { empresa:"MF", fornecedor:"MAIS CONTABILIDADE - JAILTON", historico:"SERVIÇOS CONTÁBEIS PARA MALUT FERRAGENS", vencimento:"2026-04-15", valor:5800.00 },
+      { empresa:"MF", fornecedor:"TRITON KSG MAQUINAS E EQUIPAMENTOS LTDA", historico:"REF. A NF Nº 000597", vencimento:"2026-04-19", valor:1392.00 },
+      { empresa:"MF", fornecedor:"IDEAL MARKETING", historico:"CONTRATO R$ 39.600,00 PARCELAS R$ 1.700,00 3/23", vencimento:"2026-04-20", valor:1700.00 },
+      { empresa:"MF", fornecedor:"TRAMONTINA NORTE S/A", historico:"REF. A NF Nº 595645", vencimento:"2026-04-22", valor:2884.21 },
+      { empresa:"MF", fornecedor:"I9 SUPRIMENTOS ELETRONICOS LTDA", historico:"GRAVAÇÃO DE VIDEOS INSTITUCIONAL", vencimento:"2026-04-23", valor:1200.00 },
+      { empresa:"MF", fornecedor:"VIVO TELEFONICA BRASIL S.A.", historico:"SERVIÇOS CONTRATADOS: SMART EMPRESAS 6GB MAS SERVICO GESTAO DADOS EMPRESAS SERVICO GESTAO VOZ EMPRES", vencimento:"2026-04-25", valor:26.99 }
     ];
 
     let seedPromise = null;
@@ -557,14 +573,21 @@
       seedPromise = (async () => {
         const colRef = collection(db, COLLECTION_NAME);
         const snapshot = await getDocs(colRef);
-        if (!snapshot.empty) return;
+        const existingIds = new Set(snapshot.docs.map((docSnap) => docSnap.id));
 
         const batch = writeBatch(db);
+        let hasPendingWrites = false;
+
         BASE_ENTRIES.forEach((item, index) => {
           const payload = getSeedPayload(item, index);
+          if (existingIds.has(payload.id)) return;
           batch.set(doc(db, COLLECTION_NAME, payload.id), payload);
+          hasPendingWrites = true;
         });
-        await batch.commit();
+
+        if (hasPendingWrites) {
+          await batch.commit();
+        }
       })().finally(() => {
         seedPromise = null;
       });
@@ -684,7 +707,23 @@
       { empresa:"MP", fornecedor:"POSTO MAGNOLIA LTDA", historico:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", vencimento:"2026-04-19", valor:2955.63, observacao:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", quantidade:12 },
       { empresa:"MP", fornecedor:"LWSA S A", historico:"REFERENTE AO PAGAMENTO DE SISTEMA BLING 04/2026", vencimento:"2026-04-20", valor:200.00 },
       { empresa:"MP", fornecedor:"SIMPLES NACIONAL", historico:"REFERENTE AO PAGAMENTO DO SIMPLES NACIONAL 03/2026", vencimento:"2026-04-20", valor:7256.09 },
-      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087901", vencimento:"2026-04-24", valor:3735.00 }
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087901", vencimento:"2026-04-24", valor:3735.00 },
+
+      { empresa:"MF", fornecedor:"SIMPLES NACIONAL", historico:"SIMPLES NACIONAL REF 01/2026", vencimento:"2026-02-20", valor:56812.03 },
+      { empresa:"MF", fornecedor:"SIMPLES NACIONAL", historico:"PARCELAMENTO - DAS VALOR PARCELADO R$ 288.931,58 ENTRADA R$ 28.891,15", vencimento:"2026-02-28", valor:5295.08 },
+      { empresa:"MF", fornecedor:"COMERCIAL MARIANO CARNEIRO LTDA", historico:"PARCELA 3/5 - ACORDO RENEGOCIADO COM COMERCIAL MARIANO CARNEIRO LTDA - TOTAL R$ 10.000,00", vencimento:"2026-03-13", valor:2150.00 },
+      { empresa:"MF", fornecedor:"SIMPLES NACIONAL", historico:"SIMPLES NACIONAL REF 02/2026", vencimento:"2026-03-20", valor:54121.77 },
+      { empresa:"MF", fornecedor:"MAIS CONTABILIDADE - JAILTON", historico:"SERVIÇOS CONTÁBEIS REFERENTE AO MÊS DE MARÇO DE 2026", vencimento:"2026-04-06", valor:5500.00 },
+      { empresa:"MF", fornecedor:"MOVIDA PARTICIPAÇÕES S.A", historico:"TRANSFERIR PARA EUNAMAN DESPESA DA MOVIDA PARTICIPAÇÕES. FATURA 8026333", vencimento:"2026-04-06", valor:7531.13 },
+      { empresa:"MF", fornecedor:"LIVRARIA E PAPELARIA ACAILANDIA LTDA", historico:"REF. A NF Nº 271671", vencimento:"2026-04-11", valor:99.00 },
+      { empresa:"MF", fornecedor:"COMERCIAL MARIANO CARNEIRO LTDA", historico:"PARCELA 4/5 - ACORDO RENEGOCIADO COM COMERCIAL MARIANO CARNEIRO LTDA - TOTAL R$ 10.000,00", vencimento:"2026-04-13", valor:2150.00 },
+      { empresa:"MF", fornecedor:"LIVRARIA E PAPELARIA ACAILANDIA LTDA", historico:"REF. A NF Nº 027683", vencimento:"2026-04-13", valor:101.60 },
+      { empresa:"MF", fornecedor:"MAIS CONTABILIDADE - JAILTON", historico:"SERVIÇOS CONTÁBEIS PARA MALUT FERRAGENS", vencimento:"2026-04-15", valor:5800.00 },
+      { empresa:"MF", fornecedor:"TRITON KSG MAQUINAS E EQUIPAMENTOS LTDA", historico:"REF. A NF Nº 000597", vencimento:"2026-04-19", valor:1392.00 },
+      { empresa:"MF", fornecedor:"IDEAL MARKETING", historico:"CONTRATO R$ 39.600,00 PARCELAS R$ 1.700,00 3/23", vencimento:"2026-04-20", valor:1700.00 },
+      { empresa:"MF", fornecedor:"TRAMONTINA NORTE S/A", historico:"REF. A NF Nº 595645", vencimento:"2026-04-22", valor:2884.21 },
+      { empresa:"MF", fornecedor:"I9 SUPRIMENTOS ELETRONICOS LTDA", historico:"GRAVAÇÃO DE VIDEOS INSTITUCIONAL", vencimento:"2026-04-23", valor:1200.00 },
+      { empresa:"MF", fornecedor:"VIVO TELEFONICA BRASIL S.A.", historico:"SERVIÇOS CONTRATADOS: SMART EMPRESAS 6GB MAS SERVICO GESTAO DADOS EMPRESAS SERVICO GESTAO VOZ EMPRES", vencimento:"2026-04-25", valor:26.99 }
     ];
 
     let cards = [];
