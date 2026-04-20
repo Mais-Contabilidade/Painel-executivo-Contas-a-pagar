@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kanban Financeiro</title>
+  <style>
+    :root{
+      --bg:#eef3f8;
+      --bg-2:#e6edf5;
+      --panel:#ffffff;
+      --panel-soft:#f7fafc;
+      --text:#152536;
+      --muted:#5f7083;
+      --line:#d7e0ea;
+      --accent:#245584;
+      --accent-2:#2f6b9f;
+      --accent-soft:#edf4fb;
+      --danger-bg:#fff4f4;
+      --danger-border:#e9c2c2;
+      --today-bg:#fff8eb;
+      --today-border:#ead6a3;
+      --success-bg:#eef8f2;
+      --success-border:#cfe4d7;
+      --shadow:0 10px 28px rgba(31,54,79,.08);
+    }
+
+    [data-theme="dark"]{
+      --bg:#dde7f2;
+      --bg-2:#d6e1ec;
+      --panel:#f9fbfe;
+      --panel-soft:#eff4fa;
+      --text:#132131;
+      --muted:#607286;
+      --line:#cfd9e4;
+      --accent:#224f7a;
+      --accent-2:#2b638f;
+      --accent-soft:#e8f0f8;
+      --danger-bg:#fff2f2;
+      --danger-border:#e7c2c2;
+      --today-bg:#fff7e9;
+      --today-border:#e7d4a1;
+      --success-bg:#edf7f0;
+      --success-border:#cadfce;
+      --shadow:0 10px 24px rgba(31,54,79,.06);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--text)}
+    .wrap{max-width:1720px;margin:0 auto;padding:16px}
+    .card-shell{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero{padding:18px 18px 16px;margin-bottom:14px}
+    .hero-top{
+      display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap
+    }
+    .hero h1{margin:0;font-size:24px;letter-spacing:.2px}
+    .hero-sub{margin-top:5px;font-size:13px;color:var(--muted);font-weight:600}
+    .hero-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .theme-wrap{
+      display:flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+      background:var(--panel-soft);font-size:11px;font-weight:800
+    }
+    .switch{
+      width:44px;height:24px;border-radius:999px;background:#d9e5f1;position:relative;cursor:pointer;border:1px solid var(--line)
+    }
+    .switch::after{
+      content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+      background:var(--accent);transition:.2s ease
+    }
+    [data-theme="dark"] .switch::after{left:22px}
+    .btn{
+      border:none;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;
+      padding:11px 14px;cursor:pointer;font-size:13px;transition:.2s ease
+    }
+    .btn:hover{background:var(--accent-2);transform:translateY(-1px)}
+    .btn-secondary{
+      background:transparent;color:var(--text);border:1px solid var(--line)
+    }
+    .btn-secondary:hover{background:var(--panel-soft)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);border:1px solid var(--line);
+      color:var(--text);border-radius:999px;padding:8px 11px;font-size:11px;font-weight:800
+    }
+
+    .selectors{
+      display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:10px;margin-top:14px
+    }
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field label{font-size:11px;font-weight:800;color:var(--muted)}
+    .field input,.field select,.field textarea{
+      width:100%;border:1px solid var(--line);background:var(--panel-soft);color:var(--text);
+      border-radius:12px;padding:10px 12px;font-size:13px;outline:none
+    }
+    .field textarea{min-height:88px;resize:vertical}
+
+    .kpis{
+      display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:14px
+    }
+    .kpi{padding:14px}
+    .kpi-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.35px}
+    .kpi-value{margin-top:8px;font-size:18px;font-weight:900}
+    .kpi-sub{margin-top:4px;font-size:11px;color:var(--muted)}
+
+    .filters{padding:14px;margin-bottom:14px}
+    .filters-head{
+      display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px
+    }
+    .filters-title{font-size:14px;font-weight:900}
+    .filters-info{font-size:12px;color:var(--muted);margin-top:4px}
+    .filters-grid{
+      display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px
+    }
+
+    .board{
+      display:grid;grid-template-columns:repeat(5,minmax(260px,1fr));gap:12px;align-items:start;
+      overflow:auto;padding-bottom:4px
+    }
+    .column{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:10px;
+      min-height:540px
+    }
+    .column.drag-over{
+      outline:2px dashed var(--accent);
+      background:var(--accent-soft);
+    }
+    .column-head{
+      display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:4px 4px 10px
+    }
+    .column-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.4px}
+    .column-meta{font-size:11px;color:var(--muted);margin-top:4px}
+    .column-value{text-align:right}
+    .column-value strong{display:block;font-size:16px}
+    .list{display:flex;flex-direction:column;gap:8px;min-height:110px}
+
+    .item{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:var(--panel-soft);
+      padding:8px;
+      cursor:grab;
+    }
+    .item.vencido{background:var(--danger-bg);border-color:var(--danger-border)}
+    .item.hoje{background:var(--today-bg);border-color:var(--today-border)}
+    .item.pago{background:var(--success-bg);border-color:var(--success-border)}
+    .item.dragging{opacity:.55;transform:rotate(1deg)}
+
+    .item-summary{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      gap:8px;
+      align-items:start;
+      cursor:pointer;
+    }
+    .item-left{min-width:0}
+    .supplier{font-size:12px;font-weight:900;line-height:1.25}
+    .amount{font-size:14px;font-weight:900;white-space:nowrap}
+    .summary-line{
+      margin-top:4px;
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .summary-small{font-size:10px;color:var(--muted);font-weight:800}
+    .toggle-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:10px;
+      min-width:32px;
+      height:30px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer
+    }
+
+    .item-body{display:none;margin-top:8px}
+    .item.expanded .item-body{display:block}
+    .item.expanded .toggle-btn{transform:rotate(180deg)}
+
+    .history{margin:0 0 8px;font-size:11px;line-height:1.35}
+    .mini-box{
+      background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin-bottom:7px
+    }
+    [data-theme="dark"] .mini-box{background:#fbfdff}
+    .mini-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase}
+    .mini-value{margin-top:3px;font-size:11px;font-weight:800}
+    .mini-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+    .mini-chip{
+      border:1px solid var(--line);border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;background:#fff
+    }
+    .mini-chip.bad-v{color:#b42318}
+    .mini-chip.bad-h{color:#b7791f}
+    .mini-chip.bad-a{color:#1d4ed8}
+    .obs{
+      background:#fff;border:1px dashed var(--line);border-radius:10px;padding:8px 9px;
+      font-size:10px;color:var(--muted);line-height:1.35;margin-bottom:8px
+    }
+    .item-actions{
+      display:grid;grid-template-columns:1fr auto auto;gap:6px
+    }
+    .item-actions select,.icon-btn{
+      border:1px solid var(--line);background:#fff;color:var(--text);border-radius:10px;height:32px
+    }
+    .item-actions select{padding:0 8px;font-weight:800;font-size:11px}
+    .icon-btn{min-width:32px;padding:0 9px;font-size:12px;font-weight:900;cursor:pointer}
+    .empty{
+      border:1px dashed var(--line);border-radius:12px;padding:16px;text-align:center;
+      color:var(--muted);font-size:12px;background:transparent
+    }
+
+    .footer-bar{
+      margin-top:18px;
+      background:var(--panel);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      padding:10px 18px;
+      text-align:center;
+      font-size:12px;
+      font-weight:600
+    }
+    .footer-bar strong{color:var(--accent)}
+
+    .modal{
+      position:fixed;inset:0;background:rgba(10,20,32,.46);display:none;align-items:center;justify-content:center;z-index:50;padding:18px
+    }
+    .modal.show{display:flex}
+    .modal-card{
+      width:min(760px,100%);
+      max-height:min(92vh,900px);
+      overflow:auto;
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:16px
+    }
+    .modal-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}
+    .modal-title{font-size:16px;font-weight:900}
+    .close{
+      border:none;background:transparent;color:var(--text);font-size:24px;cursor:pointer;padding:4px 8px
+    }
+    .modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+
+    @media (max-width:1380px){
+      .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .filters-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    }
+    @media (max-width:980px){
+      .selectors{grid-template-columns:1fr}
+      .filters-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .board{grid-template-columns:1fr}
+      .modal-grid{grid-template-columns:1fr}
+      .hero-right{width:100%;justify-content:flex-start}
+    }
+    @media (max-width:640px){
+      .wrap{padding:12px}
+      .hero{padding:14px}
+      .kpi{padding:12px}
+      .column{min-height:420px}
+      .filters-grid{grid-template-columns:1fr}
+      .kpis{grid-template-columns:1fr}
+      .chips{flex-direction:column;align-items:flex-start}
+      .hero h1{font-size:20px}
+      .modal{padding:10px}
+      .modal-card{padding:14px;border-radius:16px}
+      .item-actions{grid-template-columns:1fr 40px 40px}
+      .item-summary{grid-template-columns:1fr auto}
+      .toggle-btn{grid-column:2}
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="wrap">
+    <section class="hero card-shell">
+      <div class="hero-top">
+        <div>
+          <h1>KANBAN FINANCEIRO</h1>
+          <div class="hero-sub">PAINEL EXECUTIVO DE CONTAS A PAGAR</div>
+        </div>
+        <div class="hero-right">
+          <div class="theme-wrap">
+            <span>CLARO</span>
+            <div class="switch" id="themeSwitch"></div>
+            <span>ESCURO</span>
+          </div>
+          <button class="btn" id="newEntryBtn">+ NOVO TÍTULO</button>
+        </div>
+      </div>
+
+      <div class="chips">
+        <span class="chip">VISÃO: <strong id="scopeLabel">MALUT PNEUS</strong></span>
+      </div>
+
+      <div class="selectors">
+        <div class="field">
+          <label for="companyScope">Empresa / Base</label>
+          <select id="companyScope">
+            <option value="MP">Malut Pneus</option>
+            <option value="MF">Malut Ferragens</option>
+            <option value="ALL">Ambas as bases</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="manualInfo">Lógica de lançamento</label>
+          <input id="manualInfo" type="text" value="Todos os títulos são tratados como manual" readonly>
+        </div>
+      </div>
+    </section>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="filters card-shell">
+      <div class="filters-head">
+        <div>
+          <div class="filters-title">FILTROS</div>
+          <div class="filters-info" id="resultsInfo">Exibindo todos os cards</div>
+        </div>
+        <button class="btn btn-secondary" id="clearFilters">Limpar filtros</button>
+      </div>
+
+      <div class="filters-grid">
+        <div class="field">
+          <label for="filterFrom">Vencimento de</label>
+          <input type="date" id="filterFrom">
+        </div>
+        <div class="field">
+          <label for="filterTo">Vencimento até</label>
+          <input type="date" id="filterTo">
+        </div>
+        <div class="field">
+          <label for="filterSupplier">Fornecedor</label>
+          <select id="filterSupplier"></select>
+        </div>
+        <div class="field">
+          <label for="filterCondition">Condição</label>
+          <select id="filterCondition">
+            <option value="">Todas</option>
+            <option value="VENCIDO">VENCIDO</option>
+            <option value="VENCE HOJE">VENCE HOJE</option>
+            <option value="A VENCER">A VENCER</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="filterMin">Valor mínimo</label>
+          <input type="text" id="filterMin" placeholder="0,00" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="filterMax">Valor máximo</label>
+          <input type="text" id="filterMax" placeholder="0,00" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="filterColumn">Coluna atual</label>
+          <select id="filterColumn"></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="board" id="board"></section>
+
+    <div class="footer-bar">
+      Desenvolvido por <strong>Mais Contabilidade &amp; Soluções Empresariais</strong>
+    </div>
+  </div>
+
+  <div class="modal" id="entryModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="modalTitle">NOVO TÍTULO</div>
+        <button class="close" id="closeModal">×</button>
+      </div>
+
+      <form id="entryForm">
+        <input type="hidden" id="entryId">
+
+        <div class="modal-grid">
+          <div class="field">
+            <label for="entryCompany">Empresa *</label>
+            <select id="entryCompany" required>
+              <option value="MP">Malut Pneus</option>
+              <option value="MF">Malut Ferragens</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="entryDueDate">Vencimento *</label>
+            <input type="date" id="entryDueDate" required>
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <label for="entrySupplier">Fornecedor *</label>
+            <input type="text" id="entrySupplier" required>
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <label for="entryHistory">Histórico</label>
+            <input type="text" id="entryHistory">
+          </div>
+
+          <div class="field">
+            <label for="entryValue">Valor *</label>
+            <input type="text" id="entryValue" placeholder="0,00" inputmode="decimal" required>
+          </div>
+
+          <div class="field">
+            <label for="entryColumn">Coluna inicial *</label>
+            <select id="entryColumn" required></select>
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <label for="entryObservation">Observação</label>
+            <textarea id="entryObservation"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelModal">Cancelar</button>
+          <button type="submit" class="btn">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCv4BqmTfFQ7bR8ahdzkid9lNuq55fxR60",
+      authDomain: "painel-executivo-cp.firebaseapp.com",
+      projectId: "painel-executivo-cp",
+      storageBucket: "painel-executivo-cp.firebasestorage.app",
+      messagingSenderId: "507816495914",
+      appId: "1:507816495914:web:cd0045faa7e900f0412c53",
+      measurementId: "G-EWKD5VE0YM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+  </script>
+
+
+
+  <script>
+    const TODAY = "2026-04-20";
+
+    const COLUMNS = [
+      { id: "fila", title: "Fila de pagamento" },
+      { id: "hoje", title: "Pagar hoje" },
+      { id: "semana", title: "Ainda esta semana" },
+      { id: "proxima", title: "Próxima semana" },
+      { id: "pago", title: "Pago" }
+    ];
+
+    const BASE_ENTRIES = [
+      { empresa:"MP", fornecedor:"REGINALDO LEAL DE OLIVEIRA FILHO", historico:"ACORDO COM FORNECEDOR BAIANO - CARROCERIA DA FIORINO REF. PARC 4/5", vencimento:"2026-03-16", valor:5000.00 },
+      { empresa:"MP", fornecedor:"REGINALDO LEAL DE OLIVEIRA FILHO", historico:"ACORDO COM FORNECEDOR BAIANO - CARROCERIA DA FIORINO REF. PARC 5/5", vencimento:"2026-03-30", valor:5000.00 },
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087510. COMPRA DE 8 PNEUS BFG 295/80 R22.5 DR550", vencimento:"2026-03-31", valor:20000.00 },
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087529. COMPRA DE 2 PNEUS BFG 275/80 R22.5 CROSS CONTROL", vencimento:"2026-04-01", valor:4920.00 },
+      { empresa:"MP", fornecedor:"MOLAS IMPERATRIZ LTDA", historico:"REF. A NF Nº 051354", vencimento:"2026-04-02", valor:7000.00 },
+      { empresa:"MP", fornecedor:"MOLAS IMPERATRIZ LTDA", historico:"REF. A NF Nº 051355", vencimento:"2026-04-02", valor:1790.00 },
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087554", vencimento:"2026-04-02", valor:17844.00 },
+      { empresa:"MP", fornecedor:"MOLAS IMPERATRIZ LTDA", historico:"REF. A NF Nº 051367", vencimento:"2026-04-06", valor:2587.20 },
+      { empresa:"MP", fornecedor:"PONTAL FERRO E ACO EIRELI - EPP", historico:"REF. A NF Nº 011325", vencimento:"2026-04-09", valor:1000.00 },
+      { empresa:"MP", fornecedor:"POSTO CARRETEIRO", historico:"PAGAMENTO REF. AO ACORDO COM FORNECEDOR - VALDIR BRITO PARC 4/4.", vencimento:"2026-04-10", valor:5700.00 },
+      { empresa:"MP", fornecedor:"JUPITER TELECOMUNICAÇÕES E INFORMATICA LTDA", historico:"REFERENTE AO PAGAMENTO DE INTERNET JUPITER 04/2026 - ESTIMADO", vencimento:"2026-04-10", valor:200.00 },
+      { empresa:"MP", fornecedor:"GASOTINTA ACAILANDIA LTDA", historico:"REF. A NF Nº 004595", vencimento:"2026-04-11", valor:25.00 },
+      { empresa:"MP", fornecedor:"POSTO MAGNOLIA LTDA", historico:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", vencimento:"2026-04-12", valor:2748.93, observacao:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", quantidade:11 },
+      { empresa:"MP", fornecedor:"FRANCISCO DE ASSIS PONTES", historico:"3 CAMARA DE AR. NFS 121 FRANCISCO DE ASSIS PONTES. PIX CNPJ 47928703000148", vencimento:"2026-04-15", valor:450.00 },
+      { empresa:"MP", fornecedor:"BLACK PRIME NORDESTE COM. DE PROD. IND. E AUTOMOTIVOS", historico:"COMPRA DE MERCADORIAS PARA REVENDA – BLACK PRIME", vencimento:"2026-04-17", valor:663.01 },
+      { empresa:"MP", fornecedor:"TECNOBOR PRODUTOS PARA RECAUCHUTAGEM", historico:"REF. A NF Nº 016599", vencimento:"2026-04-19", valor:2720.20 },
+      { empresa:"MP", fornecedor:"POSTO MAGNOLIA LTDA", historico:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", vencimento:"2026-04-19", valor:2955.63, observacao:"LANÇAMENTOS UNIFICADOS POR VENCIMENTO", quantidade:12 },
+      { empresa:"MP", fornecedor:"LWSA S A", historico:"REFERENTE AO PAGAMENTO DE SISTEMA BLING 04/2026", vencimento:"2026-04-20", valor:200.00 },
+      { empresa:"MP", fornecedor:"SIMPLES NACIONAL", historico:"REFERENTE AO PAGAMENTO DO SIMPLES NACIONAL 03/2026", vencimento:"2026-04-20", valor:7256.09 },
+      { empresa:"MP", fornecedor:"RODOBENS VEICULOS COMERCIAIS CIRASA S.A.", historico:"REF. A NF Nº 087901", vencimento:"2026-04-24", valor:3735.00 }
+    ];
+
+    let cards = BASE_ENTRIES.map(item => ({
+      id: crypto.randomUUID(),
+      empresa: item.empresa,
+      fornecedor: item.fornecedor,
+      historico: item.historico || "",
+      vencimento: item.vencimento,
+      valor: Number(item.valor || 0),
+      observacao: item.observacao || "",
+      quantidade: item.quantidade || null,
+      grouped: !!item.quantidade,
+      tipo: "MANUAL",
+      column: getColumnByDate(item.vencimento),
+      expanded: false
+    }));
+
+    const els = {
+      board: document.getElementById("board"),
+      kpis: document.getElementById("kpis"),
+      resultsInfo: document.getElementById("resultsInfo"),
+      themeSwitch: document.getElementById("themeSwitch"),
+      companyScope: document.getElementById("companyScope"),
+      scopeLabel: document.getElementById("scopeLabel"),
+      filterFrom: document.getElementById("filterFrom"),
+      filterTo: document.getElementById("filterTo"),
+      filterSupplier: document.getElementById("filterSupplier"),
+      filterCondition: document.getElementById("filterCondition"),
+      filterMin: document.getElementById("filterMin"),
+      filterMax: document.getElementById("filterMax"),
+      filterColumn: document.getElementById("filterColumn"),
+      clearFilters: document.getElementById("clearFilters"),
+      newEntryBtn: document.getElementById("newEntryBtn"),
+
+      entryModal: document.getElementById("entryModal"),
+      modalTitle: document.getElementById("modalTitle"),
+      closeModal: document.getElementById("closeModal"),
+      cancelModal: document.getElementById("cancelModal"),
+      entryForm: document.getElementById("entryForm"),
+      entryId: document.getElementById("entryId"),
+      entryCompany: document.getElementById("entryCompany"),
+      entryDueDate: document.getElementById("entryDueDate"),
+      entrySupplier: document.getElementById("entrySupplier"),
+      entryHistory: document.getElementById("entryHistory"),
+      entryValue: document.getElementById("entryValue"),
+      entryColumn: document.getElementById("entryColumn"),
+      entryObservation: document.getElementById("entryObservation"),
+    };
+
+    function brl(v){
+      return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(v || 0));
+    }
+
+    function parseDate(dateStr){
+      const [y,m,d] = dateStr.split("-").map(Number);
+      return new Date(y, m - 1, d, 12, 0, 0);
+    }
+
+    function formatDateBR(dateStr){
+      if(!dateStr) return "";
+      const [y,m,d] = dateStr.split("-");
+      return `${d}/${m}/${y}`;
+    }
+
+    function escapeHtml(text){
+      return String(text ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function parseBRLInput(value){
+      let digits = String(value || "").replace(/\D/g, "");
+      if (!digits) return 0;
+      return Number(digits) / 100;
+    }
+
+    function formatBRLInputValue(value){
+      return parseBRLInput(value).toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function attachMoneyMask(input){
+      const apply = () => {
+        input.value = formatBRLInputValue(input.value);
+      };
+
+      input.addEventListener("input", apply);
+      input.addEventListener("blur", () => {
+        if (!input.value.replace(/\D/g, "")) input.value = "";
+        else apply();
+      });
+      input.addEventListener("focus", () => {
+        if (input.value) apply();
+      });
+    }
+
+    function getWeekStart(date){
+      const copy = new Date(date);
+      const day = copy.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      copy.setDate(copy.getDate() + diff);
+      copy.setHours(0,0,0,0);
+      return copy;
+    }
+
+    function getColumnByDate(dateStr){
+      const due = parseDate(dateStr);
+      const today = parseDate(TODAY);
+      const thisWeekStart = getWeekStart(today);
+      const thisWeekEnd = new Date(thisWeekStart);
+      thisWeekEnd.setDate(thisWeekStart.getDate() + 6);
+      thisWeekEnd.setHours(23,59,59,999);
+
+      const nextWeekStart = new Date(thisWeekStart);
+      nextWeekStart.setDate(thisWeekStart.getDate() + 7);
+      const nextWeekEnd = new Date(thisWeekStart);
+      nextWeekEnd.setDate(thisWeekStart.getDate() + 13);
+      nextWeekEnd.setHours(23,59,59,999);
+
+      if (due < today) return "fila";
+      if (due.getTime() === today.getTime()) return "hoje";
+      if (due >= today && due <= thisWeekEnd) return "semana";
+      if (due >= nextWeekStart && due <= nextWeekEnd) return "proxima";
+      return "proxima";
+    }
+
+    function getCondition(dateStr, columnId){
+      if (columnId === "pago") return "A VENCER";
+      const due = parseDate(dateStr);
+      const today = parseDate(TODAY);
+      if (due < today) return "VENCIDO";
+      if (due.getTime() === today.getTime()) return "VENCE HOJE";
+      return "A VENCER";
+    }
+
+    function getScopeLabel(v){
+      if (v === "MP") return "MALUT PNEUS";
+      if (v === "MF") return "MALUT FERRAGENS";
+      return "MALUT PNEUS + MALUT FERRAGENS";
+    }
+
+    function getScopeCards(){
+      const scope = els.companyScope.value;
+      if (scope === "ALL") return cards;
+      return cards.filter(c => c.empresa === scope);
+    }
+
+    function getSuppliersFromScope(){
+      return [...new Set(getScopeCards().map(c => c.fornecedor))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+    }
+
+    function refreshSupplierOptions(){
+      const current = els.filterSupplier.value;
+      const suppliers = getSuppliersFromScope();
+      els.filterSupplier.innerHTML = `<option value="">Todos</option>` + suppliers.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("");
+      if (suppliers.includes(current)) els.filterSupplier.value = current;
+    }
+
+    function getFilteredCards(){
+      const list = getScopeCards();
+      const from = els.filterFrom.value;
+      const to = els.filterTo.value;
+      const supplier = els.filterSupplier.value;
+      const condition = els.filterCondition.value;
+      const min = parseBRLInput(els.filterMin.value);
+      const max = parseBRLInput(els.filterMax.value);
+      const column = els.filterColumn.value;
+
+      return list.filter(card => {
+        if (from && card.vencimento < from) return false;
+        if (to && card.vencimento > to) return false;
+        if (supplier && card.fornecedor !== supplier) return false;
+        if (condition && getCondition(card.vencimento, card.column) !== condition) return false;
+        if (els.filterMin.value && Number(card.valor) < min) return false;
+        if (els.filterMax.value && Number(card.valor) > max) return false;
+        if (column && card.column !== column) return false;
+        return true;
+      });
+    }
+
+    function columnSort(a,b){
+      const order = { "VENCIDO":1, "VENCE HOJE":2, "A VENCER":3 };
+      const ca = getCondition(a.vencimento, a.column);
+      const cb = getCondition(b.vencimento, b.column);
+      if (order[ca] !== order[cb]) return order[ca] - order[cb];
+      if (a.vencimento !== b.vencimento) return a.vencimento.localeCompare(b.vencimento);
+      return Number(b.valor) - Number(a.valor);
+    }
+
+    function renderKpis(){
+      const scopeCards = getScopeCards();
+      const totalCards = scopeCards.length;
+      const totalValue = scopeCards.reduce((acc,c)=>acc + Number(c.valor),0);
+
+      const columnMetrics = COLUMNS.map(col => {
+        const items = scopeCards.filter(c => c.column === col.id);
+        return {
+          ...col,
+          qty: items.length,
+          value: items.reduce((acc,c)=>acc + Number(c.valor),0)
+        };
+      });
+
+      els.kpis.innerHTML = [
+        `<div class="kpi card-shell"><div class="kpi-label">Total de cards</div><div class="kpi-value">${totalCards}</div><div class="kpi-sub">Base visível atual</div></div>`,
+        `<div class="kpi card-shell"><div class="kpi-label">Valor total geral</div><div class="kpi-value">${brl(totalValue)}</div><div class="kpi-sub">Somatório da base selecionada</div></div>`,
+        ...columnMetrics.map(item => `
+          <div class="kpi card-shell">
+            <div class="kpi-label">${item.title}</div>
+            <div class="kpi-value">${brl(item.value)}</div>
+            <div class="kpi-sub">${item.qty} card${item.qty === 1 ? "" : "s"}</div>
+          </div>
+        `)
+      ].join("");
+    }
+
+    function renderBoard(){
+      const filtered = getFilteredCards();
+      const visibleTotal = filtered.reduce((acc,c)=>acc + Number(c.valor),0);
+      els.resultsInfo.textContent = `Exibindo ${filtered.length} de ${getScopeCards().length} cards | ${brl(visibleTotal)} visível no filtro`;
+      els.scopeLabel.textContent = getScopeLabel(els.companyScope.value);
+
+      els.board.innerHTML = COLUMNS.map(col => {
+        const allItems = getScopeCards().filter(c => c.column === col.id).sort(columnSort);
+        const visibleItems = filtered.filter(c => c.column === col.id).sort(columnSort);
+
+        return `
+          <div class="column" data-column="${col.id}">
+            <div class="column-head">
+              <div>
+                <div class="column-title">${col.title}</div>
+                <div class="column-meta">${allItems.length} card${allItems.length === 1 ? "" : "s"} no total</div>
+              </div>
+              <div class="column-value">
+                <strong>${brl(allItems.reduce((acc,c)=>acc + Number(c.valor),0))}</strong>
+                <div class="column-meta">${visibleItems.length} visível${visibleItems.length === 1 ? "" : "is"}</div>
+              </div>
+            </div>
+            <div class="list" data-column="${col.id}">
+              ${visibleItems.length ? visibleItems.map(renderItem).join("") : `<div class="empty">Nenhum card para exibir nesta coluna</div>`}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      bindBoardEvents();
+    }
+
+    function renderItem(card){
+      const cond = getCondition(card.vencimento, card.column);
+      const condClass = cond === "VENCIDO" ? "bad-v" : cond === "VENCE HOJE" ? "bad-h" : "bad-a";
+      const itemClass = card.column === "pago" ? "pago" : cond === "VENCIDO" ? "vencido" : cond === "VENCE HOJE" ? "hoje" : "";
+
+      return `
+        <div class="item ${itemClass} ${card.expanded ? "expanded" : ""}" draggable="true" data-id="${card.id}">
+          <div class="item-summary" data-action="toggle" data-id="${card.id}">
+            <div class="item-left">
+              <div class="supplier">${escapeHtml(card.fornecedor)}</div>
+              <div class="summary-line">
+                <span class="summary-small">${formatDateBR(card.vencimento)}</span>
+                <span class="summary-small">•</span>
+                <span class="summary-small">${card.empresa === "MP" ? "MALUT PNEUS" : "MALUT FERRAGENS"}</span>
+              </div>
+            </div>
+            <div class="amount">${brl(card.valor)}</div>
+            <button type="button" class="toggle-btn" data-action="toggle" data-id="${card.id}">⌄</button>
+          </div>
+
+          <div class="item-body">
+            <div class="history">${escapeHtml(card.historico || "—")}</div>
+
+            <div class="mini-box">
+              <div class="mini-label">Vencimento</div>
+              <div class="mini-value">${formatDateBR(card.vencimento)}</div>
+            </div>
+
+            <div class="mini-chips">
+              <span class="mini-chip ${condClass}">${cond}</span>
+              <span class="mini-chip">${card.empresa === "MP" ? "MALUT PNEUS" : "MALUT FERRAGENS"}</span>
+              ${card.grouped ? `<span class="mini-chip">QTD: ${card.quantidade}</span>` : ``}
+            </div>
+
+            ${card.observacao ? `<div class="obs">${escapeHtml(card.observacao)}</div>` : ""}
+
+            <div class="item-actions">
+              <select data-action="move" data-id="${card.id}">
+                ${COLUMNS.map(c => `<option value="${c.id}" ${c.id === card.column ? "selected" : ""}>${c.title}</option>`).join("")}
+              </select>
+              <button type="button" class="icon-btn" data-action="edit" data-id="${card.id}" title="Editar">✎</button>
+              <button type="button" class="icon-btn" data-action="delete" data-id="${card.id}" title="Excluir">🗑</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function bindBoardEvents(){
+      document.querySelectorAll(".item").forEach(el => {
+        el.addEventListener("dragstart", e => {
+          if (e.target.closest("select, button")) {
+            e.preventDefault();
+            return;
+          }
+          el.classList.add("dragging");
+          e.dataTransfer.setData("text/plain", el.dataset.id);
+        });
+        el.addEventListener("dragend", () => el.classList.remove("dragging"));
+      });
+
+      document.querySelectorAll(".column").forEach(col => {
+        col.addEventListener("dragover", e => {
+          e.preventDefault();
+          col.classList.add("drag-over");
+        });
+        col.addEventListener("dragleave", () => col.classList.remove("drag-over"));
+        col.addEventListener("drop", e => {
+          e.preventDefault();
+          col.classList.remove("drag-over");
+          const id = e.dataTransfer.getData("text/plain");
+          moveCard(id, col.dataset.column);
+        });
+      });
+
+      document.querySelectorAll('[data-action="toggle"]').forEach(el => {
+        el.addEventListener("click", e => {
+          e.stopPropagation();
+          const id = e.currentTarget.dataset.id;
+          toggleCard(id);
+        });
+      });
+
+      document.querySelectorAll('[data-action="move"]').forEach(el => {
+        el.addEventListener("change", e => {
+          moveCard(e.target.dataset.id, e.target.value);
+        });
+      });
+
+      document.querySelectorAll('[data-action="edit"]').forEach(el => {
+        el.addEventListener("click", e => {
+          const id = e.currentTarget.dataset.id;
+          const card = cards.find(c => c.id === id);
+          if (!card) return;
+          openModal(card);
+        });
+      });
+
+      document.querySelectorAll('[data-action="delete"]').forEach(el => {
+        el.addEventListener("click", e => {
+          const id = e.currentTarget.dataset.id;
+          cards = cards.filter(c => c.id !== id);
+          refreshAll();
+        });
+      });
+    }
+
+    function toggleCard(id){
+      const idx = cards.findIndex(c => c.id === id);
+      if (idx === -1) return;
+      cards[idx].expanded = !cards[idx].expanded;
+      renderBoard();
+    }
+
+    function moveCard(id, columnId){
+      const idx = cards.findIndex(c => c.id === id);
+      if (idx === -1) return;
+      cards[idx].column = columnId;
+      refreshAll();
+    }
+
+    function clearForm(){
+      els.entryForm.reset();
+      els.entryId.value = "";
+      els.modalTitle.textContent = "NOVO TÍTULO";
+      els.entryCompany.value = els.companyScope.value === "ALL" ? "MP" : els.companyScope.value;
+      els.entryColumn.value = "fila";
+      els.entryValue.value = "";
+    }
+
+    function openModal(card = null){
+      clearForm();
+
+      if (card) {
+        els.modalTitle.textContent = "EDITAR TÍTULO";
+        els.entryId.value = card.id;
+        els.entryCompany.value = card.empresa;
+        els.entryDueDate.value = card.vencimento;
+        els.entrySupplier.value = card.fornecedor;
+        els.entryHistory.value = card.historico || "";
+        els.entryValue.value = Number(card.valor).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2});
+        els.entryColumn.value = card.column;
+        els.entryObservation.value = card.observacao || "";
+      }
+
+      els.entryModal.classList.add("show");
+    }
+
+    function closeModal(){
+      els.entryModal.classList.remove("show");
+    }
+
+    function refreshAll(){
+      refreshSupplierOptions();
+      renderKpis();
+      renderBoard();
+    }
+
+    function init(){
+      els.filterColumn.innerHTML = `<option value="">Todas</option>` + COLUMNS.map(c => `<option value="${c.id}">${c.title}</option>`).join("");
+      els.entryColumn.innerHTML = COLUMNS.map(c => `<option value="${c.id}">${c.title}</option>`).join("");
+
+      attachMoneyMask(els.entryValue);
+      attachMoneyMask(els.filterMin);
+      attachMoneyMask(els.filterMax);
+
+      els.themeSwitch.addEventListener("click", () => {
+        document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
+      });
+
+      els.companyScope.addEventListener("change", () => {
+        refreshAll();
+      });
+
+      [
+        els.filterFrom,
+        els.filterTo,
+        els.filterSupplier,
+        els.filterCondition,
+        els.filterMin,
+        els.filterMax,
+        els.filterColumn
+      ].forEach(el => {
+        el.addEventListener("input", renderBoard);
+        el.addEventListener("change", renderBoard);
+      });
+
+      els.clearFilters.addEventListener("click", () => {
+        els.filterFrom.value = "";
+        els.filterTo.value = "";
+        els.filterSupplier.value = "";
+        els.filterCondition.value = "";
+        els.filterMin.value = "";
+        els.filterMax.value = "";
+        els.filterColumn.value = "";
+        renderBoard();
+      });
+
+      els.newEntryBtn.addEventListener("click", () => openModal());
+      els.closeModal.addEventListener("click", closeModal);
+      els.cancelModal.addEventListener("click", closeModal);
+
+      els.entryModal.addEventListener("click", e => {
+        if (e.target === els.entryModal) closeModal();
+      });
+
+      els.entryForm.addEventListener("submit", e => {
+        e.preventDefault();
+
+        const payload = {
+          empresa: els.entryCompany.value,
+          fornecedor: els.entrySupplier.value.trim(),
+          historico: els.entryHistory.value.trim(),
+          vencimento: els.entryDueDate.value,
+          valor: parseBRLInput(els.entryValue.value),
+          observacao: els.entryObservation.value.trim(),
+          column: els.entryColumn.value
+        };
+
+        if (!payload.empresa || !payload.fornecedor || !payload.vencimento || !payload.valor || !payload.column) return;
+
+        const editId = els.entryId.value;
+        if (editId) {
+          const idx = cards.findIndex(c => c.id === editId);
+          if (idx !== -1) {
+            cards[idx] = {
+              ...cards[idx],
+              ...payload
+            };
+          }
+        } else {
+          cards.push({
+            id: crypto.randomUUID(),
+            ...payload,
+            grouped:false,
+            quantidade:null,
+            tipo:"MANUAL",
+            expanded:false
+          });
+        }
+
+        closeModal();
+        refreshAll();
+      });
+
+      refreshAll();
+    }
+
+    init();
+  </script>
+</body>
+</html>
