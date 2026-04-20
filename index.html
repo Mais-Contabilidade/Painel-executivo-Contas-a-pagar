@@ -314,7 +314,8 @@
           <select id="companyScope">
             <option value="MP">Malut Pneus</option>
             <option value="MF">Malut Ferragens</option>
-            <option value="ALL">Ambas as bases</option>
+            <option value="MR">Malut Recife</option>
+            <option value="ALL">Todas as bases</option>
           </select>
         </div>
         <div class="field">
@@ -395,6 +396,7 @@
             <select id="entryCompany" required>
               <option value="MP">Malut Pneus</option>
               <option value="MF">Malut Ferragens</option>
+              <option value="MR">Malut Recife</option>
             </select>
           </div>
 
@@ -518,7 +520,7 @@
     function getSeedPayload(item, index) {
       return {
         id: `base_${index + 1}`,
-        empresa: item.empresa,
+        empresa: normalizeEmpresa(item.empresa),
         fornecedor: item.fornecedor,
         historico: item.historico || "",
         vencimento: item.vencimento,
@@ -595,10 +597,14 @@
       return seedPromise;
     }
 
+    function normalizeEmpresa(value) {
+      return ["MP", "MF", "MR"].includes(value) ? value : "MP";
+    }
+
     function normalizeCard(id, data) {
       return {
         id,
-        empresa: data.empresa || "MP",
+        empresa: normalizeEmpresa(data.empresa),
         fornecedor: data.fornecedor || "",
         historico: data.historico || "",
         vencimento: data.vencimento || "",
@@ -631,7 +637,7 @@
         const ref = doc(collection(db, COLLECTION_NAME));
         const card = {
           id: ref.id,
-          empresa: payload.empresa,
+          empresa: normalizeEmpresa(payload.empresa),
           fornecedor: payload.fornecedor,
           historico: payload.historico || "",
           vencimento: payload.vencimento,
@@ -648,7 +654,7 @@
 
       async updateCard(id, payload) {
         await updateDoc(doc(db, COLLECTION_NAME, id), {
-          empresa: payload.empresa,
+          empresa: normalizeEmpresa(payload.empresa),
           fornecedor: payload.fornecedor,
           historico: payload.historico || "",
           vencimento: payload.vencimento,
@@ -853,16 +859,26 @@
       return "A VENCER";
     }
 
+    function normalizeCompany(value){
+      return ["MP", "MF", "MR"].includes(value) ? value : "MP";
+    }
+
+    function getCompanyLabel(value){
+      if (value === "MP") return "MALUT PNEUS";
+      if (value === "MF") return "MALUT FERRAGENS";
+      if (value === "MR") return "MALUT RECIFE";
+      return value || "";
+    }
+
     function getScopeLabel(v){
-      if (v === "MP") return "MALUT PNEUS";
-      if (v === "MF") return "MALUT FERRAGENS";
-      return "MALUT PNEUS + MALUT FERRAGENS";
+      if (v === "ALL") return "MALUT PNEUS + MALUT FERRAGENS + MALUT RECIFE";
+      return getCompanyLabel(v);
     }
 
     function getScopeCards(){
       const scope = els.companyScope.value;
       if (scope === "ALL") return cards;
-      return cards.filter(c => c.empresa === scope);
+      return cards.filter(c => normalizeCompany(c.empresa) === normalizeCompany(scope));
     }
 
     function getSuppliersFromScope(){
@@ -979,7 +995,7 @@
               <div class="summary-line">
                 <span class="summary-small">${formatDateBR(card.vencimento)}</span>
                 <span class="summary-small">•</span>
-                <span class="summary-small">${card.empresa === "MP" ? "MALUT PNEUS" : "MALUT FERRAGENS"}</span>
+                <span class="summary-small">${getCompanyLabel(card.empresa)}</span>
               </div>
             </div>
             <div class="amount">${brl(card.valor)}</div>
@@ -996,7 +1012,7 @@
 
             <div class="mini-chips">
               <span class="mini-chip ${condClass}">${cond}</span>
-              <span class="mini-chip">${card.empresa === "MP" ? "MALUT PNEUS" : "MALUT FERRAGENS"}</span>
+              <span class="mini-chip">${getCompanyLabel(card.empresa)}</span>
               ${card.grouped ? `<span class="mini-chip">QTD: ${card.quantidade}</span>` : ``}
             </div>
 
@@ -1089,7 +1105,7 @@
       els.entryForm.reset();
       els.entryId.value = "";
       els.modalTitle.textContent = "NOVO TÍTULO";
-      els.entryCompany.value = els.companyScope.value === "ALL" ? "MP" : els.companyScope.value;
+      els.entryCompany.value = els.companyScope.value === "ALL" ? "MP" : normalizeCompany(els.companyScope.value);
       els.entryColumn.value = "fila";
       els.entryValue.value = "";
     }
@@ -1100,7 +1116,7 @@
       if (card) {
         els.modalTitle.textContent = "EDITAR TÍTULO";
         els.entryId.value = card.id;
-        els.entryCompany.value = card.empresa;
+        els.entryCompany.value = normalizeCompany(card.empresa);
         els.entryDueDate.value = card.vencimento;
         els.entrySupplier.value = card.fornecedor;
         els.entryHistory.value = card.historico || "";
@@ -1126,7 +1142,7 @@
       if (!window.firebaseKanban) {
         cards = BASE_ENTRIES.map(item => ({
           id: crypto.randomUUID(),
-          empresa: item.empresa,
+          empresa: ["MP", "MF", "MR"].includes(item.empresa) ? item.empresa : "MP",
           fornecedor: item.fornecedor,
           historico: item.historico || "",
           vencimento: item.vencimento,
@@ -1205,7 +1221,7 @@
         e.preventDefault();
 
         const payload = {
-          empresa: els.entryCompany.value,
+          empresa: normalizeCompany(els.entryCompany.value),
           fornecedor: els.entrySupplier.value.trim(),
           historico: els.entryHistory.value.trim(),
           vencimento: els.entryDueDate.value,
@@ -1246,5 +1262,6 @@
       }, { once: true });
     }
   </script>
+<!--BUILD_OK-->
 </body>
 </html>
