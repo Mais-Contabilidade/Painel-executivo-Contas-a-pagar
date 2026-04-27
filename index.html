@@ -116,11 +116,11 @@
     .filters-title{font-size:14px;font-weight:900}
     .filters-info{font-size:12px;color:var(--muted);margin-top:4px}
     .filters-grid{
-      display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px
+      display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px
     }
 
     .board{
-      display:grid;grid-template-columns:repeat(5,minmax(260px,1fr));gap:12px;align-items:start;
+      display:grid;grid-template-columns:repeat(6,minmax(260px,1fr));gap:12px;align-items:start;
       overflow:auto;padding-bottom:4px
     }
     .column{
@@ -131,17 +131,36 @@
       padding:10px;
       min-height:540px
     }
+    .column.collapsed{
+      min-height:auto;
+    }
+    .column.collapsed .list{
+      display:none;
+    }
     .column.drag-over{
       outline:2px dashed var(--accent);
       background:var(--accent-soft);
     }
     .column-head{
-      display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:4px 4px 10px
+      display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:4px 4px 10px;cursor:pointer
     }
     .column-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.4px}
+    .column-description{margin-top:4px;font-size:10px;line-height:1.35;color:var(--muted);font-weight:700}
     .column-meta{font-size:11px;color:var(--muted);margin-top:4px}
     .column-value{text-align:right}
     .column-value strong{display:block;font-size:16px}
+    .column-actions{display:flex;align-items:flex-start;gap:8px}
+    .column-toggle{
+      border:1px solid var(--line);
+      background:var(--panel-soft);
+      color:var(--text);
+      border-radius:10px;
+      min-width:30px;
+      height:28px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer
+    }
     .list{display:flex;flex-direction:column;gap:8px;min-height:110px}
 
     .item{
@@ -158,16 +177,28 @@
 
     .item-summary{
       display:grid;
-      grid-template-columns:1fr auto auto;
+      grid-template-columns:minmax(0,1fr) auto;
       gap:8px;
       align-items:start;
       cursor:pointer;
     }
-    .item-left{min-width:0}
-    .supplier{font-size:12px;font-weight:900;line-height:1.25}
-    .amount{font-size:14px;font-weight:900;white-space:nowrap}
+    .item-main{min-width:0}
+    .item-topline{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:8px;
+      align-items:start;
+    }
+    .supplier{
+      font-size:12px;
+      font-weight:900;
+      line-height:1.25;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+    }
+    .amount{font-size:14px;font-weight:900;white-space:nowrap;text-align:right}
     .summary-line{
-      margin-top:4px;
+      margin-top:5px;
       display:flex;
       gap:6px;
       flex-wrap:wrap;
@@ -183,8 +214,25 @@
       height:30px;
       font-size:12px;
       font-weight:900;
-      cursor:pointer
+      cursor:pointer;
+      flex-shrink:0
     }
+    .priority-badge{
+      display:inline-flex;
+      align-items:center;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:3px 7px;
+      font-size:9px;
+      font-weight:900;
+      line-height:1;
+      background:#fff;
+      white-space:nowrap;
+    }
+    .priority-a_definir{color:var(--muted);background:var(--panel-soft);border-color:var(--line)}
+    .priority-baixa{color:#166534;background:#eef8f2;border-color:#cfe4d7}
+    .priority-media{color:#92400e;background:#fff8eb;border-color:#ead6a3}
+    .priority-alta{color:#b42318;background:#fff4f4;border-color:#e9c2c2}
 
     .item-body{display:none;margin-top:8px}
     .item.expanded .item-body{display:block}
@@ -209,13 +257,13 @@
       font-size:10px;color:var(--muted);line-height:1.35;margin-bottom:8px
     }
     .item-actions{
-      display:grid;grid-template-columns:1fr auto auto;gap:6px
+      display:grid;grid-template-columns:minmax(0,1fr) 36px 36px;gap:6px;align-items:center
     }
     .item-actions select,.icon-btn{
       border:1px solid var(--line);background:#fff;color:var(--text);border-radius:10px;height:32px
     }
-    .item-actions select{padding:0 8px;font-weight:800;font-size:11px}
-    .icon-btn{min-width:32px;padding:0 9px;font-size:12px;font-weight:900;cursor:pointer}
+    .item-actions select{padding:0 8px;font-weight:800;font-size:11px;min-width:0;width:100%}
+    .icon-btn{width:36px;min-width:36px;padding:0;font-size:12px;font-weight:900;cursor:pointer}
     .empty{
       border:1px dashed var(--line);border-radius:12px;padding:16px;text-align:center;
       color:var(--muted);font-size:12px;background:transparent
@@ -280,8 +328,10 @@
       .hero h1{font-size:20px}
       .modal{padding:10px}
       .modal-card{padding:14px;border-radius:16px}
-      .item-actions{grid-template-columns:1fr 40px 40px}
-      .item-summary{grid-template-columns:1fr auto}
+      .item-actions{grid-template-columns:minmax(0,1fr) 36px 36px}
+      .item-summary{grid-template-columns:minmax(0,1fr) auto}
+      .item-topline{grid-template-columns:1fr}
+      .amount{text-align:left}
       .toggle-btn{grid-column:2}
     }
   </style>
@@ -320,7 +370,7 @@
         </div>
         <div class="field">
           <label for="manualInfo">Lógica de lançamento</label>
-          <input id="manualInfo" type="text" value="Todos os títulos são tratados como manual" readonly>
+          <input id="manualInfo" type="text" value="DDA é uma etapa de validação antes da fila de pagamento" readonly>
         </div>
       </div>
     </section>
@@ -370,6 +420,16 @@
         <div class="field">
           <label for="filterColumn">Coluna atual</label>
           <select id="filterColumn"></select>
+        </div>
+        <div class="field">
+          <label for="filterPriority">Prioridade</label>
+          <select id="filterPriority">
+            <option value="">Todas</option>
+            <option value="a_definir">A definir</option>
+            <option value="alta">Alta</option>
+            <option value="media">Média</option>
+            <option value="baixa">Baixa</option>
+          </select>
         </div>
       </div>
     </section>
@@ -424,6 +484,16 @@
           <div class="field">
             <label for="entryColumn">Coluna inicial *</label>
             <select id="entryColumn" required></select>
+          </div>
+
+          <div class="field">
+            <label for="entryPriority">Prioridade</label>
+            <select id="entryPriority">
+              <option value="a_definir" selected>A definir</option>
+              <option value="baixa">Baixa</option>
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+            </select>
           </div>
 
           <div class="field" style="grid-column:1/-1">
@@ -531,6 +601,10 @@
         grouped: !!item.quantidade,
         tipo: "MANUAL",
         column: getColumnByDate(item.vencimento),
+        prioridade: normalizePriority(item.prioridade),
+        dataPagamento: item.dataPagamento || "",
+        pagoEm: item.pagoEm || "",
+        movimentacoes: Array.isArray(item.movimentacoes) ? item.movimentacoes : [],
         expanded: false
       };
     }
@@ -606,6 +680,10 @@
       return seedPromise;
     }
 
+    function normalizePriority(value){
+      return ["a_definir", "baixa", "media", "alta"].includes(value) ? value : "a_definir";
+    }
+
     function normalizeEmpresa(value) {
       return ["MP", "MF", "MR"].includes(value) ? value : "MP";
     }
@@ -623,6 +701,10 @@
         grouped: !!data.grouped,
         tipo: data.tipo || "MANUAL",
         column: data.column || "fila",
+        prioridade: normalizePriority(data.prioridade),
+        dataPagamento: data.dataPagamento || "",
+        pagoEm: data.pagoEm || "",
+        movimentacoes: Array.isArray(data.movimentacoes) ? data.movimentacoes : [],
         expanded: !!data.expanded
       };
     }
@@ -656,6 +738,10 @@
           grouped: !!payload.grouped,
           tipo: payload.tipo || "MANUAL",
           column: payload.column,
+          prioridade: normalizePriority(payload.prioridade || "a_definir"),
+          dataPagamento: payload.dataPagamento || "",
+          pagoEm: payload.pagoEm || "",
+          movimentacoes: Array.isArray(payload.movimentacoes) ? payload.movimentacoes : [],
           expanded: !!payload.expanded
         };
         await setDoc(ref, card);
@@ -669,7 +755,8 @@
           vencimento: payload.vencimento,
           valor: Number(payload.valor || 0),
           observacao: payload.observacao || "",
-          column: payload.column
+          column: payload.column,
+          prioridade: normalizePriority(payload.prioridade || "a_definir")
         });
       },
 
@@ -677,8 +764,11 @@
         await deleteDoc(doc(db, COLLECTION_NAME, id));
       },
 
-      async moveCard(id, column) {
-        await updateDoc(doc(db, COLLECTION_NAME, id), { column });
+      async moveCard(id, column, extraPayload = {}) {
+        await updateDoc(doc(db, COLLECTION_NAME, id), {
+          column,
+          ...extraPayload
+        });
       },
 
       async toggleCard(id, expanded) {
@@ -698,12 +788,22 @@
     }
 
     const COLUMNS = [
+      { id: "dda", title: "DDA pendente de validação" },
       { id: "fila", title: "Fila de pagamento" },
       { id: "hoje", title: "Pagar hoje" },
       { id: "semana", title: "Ainda esta semana" },
       { id: "proxima", title: "Próxima semana" },
       { id: "pago", title: "Pago" }
     ];
+
+    let collapsedColumns = {
+      dda: true,
+      fila: true,
+      hoje: true,
+      semana: true,
+      proxima: true,
+      pago: true
+    };
 
     const BASE_ENTRIES = [
       { empresa:"MP", fornecedor:"REGINALDO LEAL DE OLIVEIRA FILHO", historico:"ACORDO COM FORNECEDOR BAIANO - CARROCERIA DA FIORINO REF. PARC 4/5", vencimento:"2026-03-16", valor:5000.00 },
@@ -762,6 +862,7 @@
       filterMin: document.getElementById("filterMin"),
       filterMax: document.getElementById("filterMax"),
       filterColumn: document.getElementById("filterColumn"),
+      filterPriority: document.getElementById("filterPriority"),
       clearFilters: document.getElementById("clearFilters"),
       newEntryBtn: document.getElementById("newEntryBtn"),
 
@@ -777,6 +878,7 @@
       entryHistory: document.getElementById("entryHistory"),
       entryValue: document.getElementById("entryValue"),
       entryColumn: document.getElementById("entryColumn"),
+      entryPriority: document.getElementById("entryPriority"),
       entryObservation: document.getElementById("entryObservation"),
     };
 
@@ -793,8 +895,14 @@
 
     function formatDateBR(dateStr){
       if(!dateStr) return "";
-      const [y,m,d] = dateStr.split("-");
+      const [y,m,d] = String(dateStr).split("-");
       return `${d}/${m}/${y}`;
+    }
+
+    function formatISODateBR(value){
+      if(!value) return "";
+      const datePart = String(value).slice(0,10);
+      return formatDateBR(datePart);
     }
 
     function escapeHtml(text){
@@ -879,6 +987,19 @@
       return ["MP", "MF", "MR"].includes(value) ? value : "MP";
     }
 
+    function normalizePriority(value){
+      return ["a_definir", "baixa", "media", "alta"].includes(value) ? value : "a_definir";
+    }
+
+    function getPriorityLabel(value){
+      const normalized = normalizePriority(value);
+      if (normalized === "a_definir") return "A DEFINIR";
+      if (normalized === "baixa") return "BAIXA";
+      if (normalized === "media") return "MÉDIA";
+      if (normalized === "alta") return "ALTA";
+      return "A DEFINIR";
+    }
+
     function getCompanyLabel(value){
       if (value === "MP") return "MALUT PNEUS";
       if (value === "MF") return "MALUT FERRAGENS";
@@ -889,6 +1010,11 @@
     function getScopeLabel(v){
       if (v === "ALL") return "MALUT PNEUS + MALUT FERRAGENS + MALUT RECIFE";
       return getCompanyLabel(v);
+    }
+
+    function getColumnTitle(columnId){
+      const found = COLUMNS.find(c => c.id === columnId);
+      return found ? found.title.toUpperCase() : String(columnId || "").toUpperCase();
     }
 
     function getScopeCards(){
@@ -917,6 +1043,7 @@
       const min = parseBRLInput(els.filterMin.value);
       const max = parseBRLInput(els.filterMax.value);
       const column = els.filterColumn.value;
+      const priority = els.filterPriority.value;
 
       return list.filter(card => {
         if (from && card.vencimento < from) return false;
@@ -926,15 +1053,20 @@
         if (els.filterMin.value && Number(card.valor) < min) return false;
         if (els.filterMax.value && Number(card.valor) > max) return false;
         if (column && card.column !== column) return false;
+        if (priority && normalizePriority(card.prioridade) !== priority) return false;
         return true;
       });
     }
 
     function columnSort(a,b){
       const order = { "VENCIDO":1, "VENCE HOJE":2, "A VENCER":3 };
+      const priorityOrder = { alta:1, media:2, baixa:3, a_definir:4 };
       const ca = getCondition(a.vencimento, a.column);
       const cb = getCondition(b.vencimento, b.column);
       if (order[ca] !== order[cb]) return order[ca] - order[cb];
+      const pa = priorityOrder[normalizePriority(a.prioridade)] || 4;
+      const pb = priorityOrder[normalizePriority(b.prioridade)] || 4;
+      if (pa !== pb) return pa - pb;
       if (a.vencimento !== b.vencimento) return a.vencimento.localeCompare(b.vencimento);
       return Number(b.valor) - Number(a.valor);
     }
@@ -975,21 +1107,26 @@
       els.board.innerHTML = COLUMNS.map(col => {
         const allItems = getScopeCards().filter(c => c.column === col.id).sort(columnSort);
         const visibleItems = filtered.filter(c => c.column === col.id).sort(columnSort);
+        const isCollapsed = collapsedColumns[col.id] !== false;
 
         return `
-          <div class="column" data-column="${col.id}">
-            <div class="column-head">
+          <div class="column ${isCollapsed ? "collapsed" : ""}" data-column="${col.id}">
+            <div class="column-head" data-action="toggle-column" data-column="${col.id}">
               <div>
                 <div class="column-title">${col.title}</div>
+                ${col.id === "dda" ? `<div class="column-description">Boletos recebidos via DDA que precisam ser conferidos com o cliente antes de seguir para pagamento.</div>` : ""}
                 <div class="column-meta">${allItems.length} card${allItems.length === 1 ? "" : "s"} no total</div>
               </div>
-              <div class="column-value">
-                <strong>${brl(allItems.reduce((acc,c)=>acc + Number(c.valor),0))}</strong>
-                <div class="column-meta">${visibleItems.length} visível${visibleItems.length === 1 ? "" : "is"}</div>
+              <div class="column-actions">
+                <div class="column-value">
+                  <strong>${brl(allItems.reduce((acc,c)=>acc + Number(c.valor),0))}</strong>
+                  <div class="column-meta">${visibleItems.length} visível${visibleItems.length === 1 ? "" : "is"}</div>
+                </div>
+                <button type="button" class="column-toggle" data-action="toggle-column" data-column="${col.id}" title="${isCollapsed ? "Expandir coluna" : "Recolher coluna"}">${isCollapsed ? "›" : "⌄"}</button>
               </div>
             </div>
             <div class="list" data-column="${col.id}">
-              ${visibleItems.length ? visibleItems.map(renderItem).join("") : `<div class="empty">Nenhum card para exibir nesta coluna</div>`}
+              ${isCollapsed ? "" : (visibleItems.length ? visibleItems.map(renderItem).join("") : `<div class="empty">Nenhum card para exibir nesta coluna</div>`)}
             </div>
           </div>
         `;
@@ -1002,19 +1139,23 @@
       const cond = getCondition(card.vencimento, card.column);
       const condClass = cond === "VENCIDO" ? "bad-v" : cond === "VENCE HOJE" ? "bad-h" : "bad-a";
       const itemClass = card.column === "pago" ? "pago" : cond === "VENCIDO" ? "vencido" : cond === "VENCE HOJE" ? "hoje" : "";
+      const lastMove = Array.isArray(card.movimentacoes) && card.movimentacoes.length ? card.movimentacoes[card.movimentacoes.length - 1] : null;
 
       return `
         <div class="item ${itemClass} ${card.expanded ? "expanded" : ""}" draggable="true" data-id="${card.id}">
           <div class="item-summary" data-action="toggle" data-id="${card.id}">
-            <div class="item-left">
-              <div class="supplier">${escapeHtml(card.fornecedor)}</div>
+            <div class="item-main">
+              <div class="item-topline">
+                <div class="supplier">${escapeHtml(card.fornecedor)}</div>
+                <div class="amount">${brl(card.valor)}</div>
+              </div>
               <div class="summary-line">
                 <span class="summary-small">${formatDateBR(card.vencimento)}</span>
                 <span class="summary-small">•</span>
                 <span class="summary-small">${getCompanyLabel(card.empresa)}</span>
+                <span class="priority-badge priority-${normalizePriority(card.prioridade)}">${getPriorityLabel(card.prioridade)}</span>
               </div>
             </div>
-            <div class="amount">${brl(card.valor)}</div>
             <button type="button" class="toggle-btn" data-action="toggle" data-id="${card.id}">⌄</button>
           </div>
 
@@ -1026,9 +1167,24 @@
               <div class="mini-value">${formatDateBR(card.vencimento)}</div>
             </div>
 
+            ${card.column === "pago" && card.dataPagamento ? `
+              <div class="mini-box">
+                <div class="mini-label">Data de pagamento</div>
+                <div class="mini-value">${formatDateBR(card.dataPagamento)}</div>
+              </div>
+            ` : ""}
+
+            ${lastMove ? `
+              <div class="mini-box">
+                <div class="mini-label">Última movimentação</div>
+                <div class="mini-value">${getColumnTitle(lastMove.de)} → ${getColumnTitle(lastMove.para)}${lastMove.em ? ` | ${formatISODateBR(lastMove.em)}` : ""}</div>
+              </div>
+            ` : ""}
+
             <div class="mini-chips">
               <span class="mini-chip ${condClass}">${cond}</span>
               <span class="mini-chip">${getCompanyLabel(card.empresa)}</span>
+              <span class="mini-chip">PRIORIDADE: ${getPriorityLabel(card.prioridade)}</span>
               ${card.grouped ? `<span class="mini-chip">QTD: ${card.quantidade}</span>` : ``}
             </div>
 
@@ -1046,7 +1202,21 @@
       `;
     }
 
+    function toggleColumn(columnId){
+      if (!Object.prototype.hasOwnProperty.call(collapsedColumns, columnId)) return;
+      collapsedColumns[columnId] = !collapsedColumns[columnId];
+      renderBoard();
+    }
+
     function bindBoardEvents(){
+      document.querySelectorAll('[data-action="toggle-column"]').forEach(el => {
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleColumn(e.currentTarget.dataset.column);
+        });
+      });
+
       document.querySelectorAll(".item").forEach(el => {
         el.addEventListener("dragstart", e => {
           if (e.target.closest("select, button")) {
@@ -1100,6 +1270,7 @@
         el.addEventListener("click", async e => {
           const id = e.currentTarget.dataset.id;
           if (!window.firebaseKanban) return;
+          if (!confirm("Deseja realmente excluir este título?")) return;
           await window.firebaseKanban.deleteCard(id);
         });
       });
@@ -1114,7 +1285,44 @@
     async function moveCard(id, columnId){
       const idx = cards.findIndex(c => c.id === id);
       if (idx === -1 || !window.firebaseKanban) return;
-      await window.firebaseKanban.moveCard(id, columnId);
+
+      const currentCard = cards[idx];
+      if (currentCard.column === columnId) {
+        renderBoard();
+        return;
+      }
+
+      const movimentacao = {
+        tipo: "movimentacao",
+        de: currentCard.column,
+        para: columnId,
+        em: new Date().toISOString()
+      };
+
+      const extraPayload = {
+        movimentacoes: [...(Array.isArray(currentCard.movimentacoes) ? currentCard.movimentacoes : []), movimentacao]
+      };
+
+      if (columnId === "pago" && currentCard.column !== "pago") {
+        const confirma = confirm("Confirmar pagamento deste título?");
+        if (!confirma) {
+          renderBoard();
+          return;
+        }
+
+        const hoje = new Date().toISOString().slice(0,10);
+        const dataPagamento = prompt("Informe a data do pagamento no formato AAAA-MM-DD:", hoje);
+
+        if (!dataPagamento) {
+          renderBoard();
+          return;
+        }
+
+        extraPayload.dataPagamento = dataPagamento;
+        extraPayload.pagoEm = new Date().toISOString();
+      }
+
+      await window.firebaseKanban.moveCard(id, columnId, extraPayload);
     }
 
     function clearForm(){
@@ -1123,6 +1331,7 @@
       els.modalTitle.textContent = "NOVO TÍTULO";
       els.entryCompany.value = els.companyScope.value === "ALL" ? "MP" : normalizeCompany(els.companyScope.value);
       els.entryColumn.value = "fila";
+      els.entryPriority.value = "a_definir";
       els.entryValue.value = "";
     }
 
@@ -1138,6 +1347,7 @@
         els.entryHistory.value = card.historico || "";
         els.entryValue.value = Number(card.valor).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2});
         els.entryColumn.value = card.column;
+        els.entryPriority.value = normalizePriority(card.prioridade);
         els.entryObservation.value = card.observacao || "";
       }
 
@@ -1168,6 +1378,10 @@
           grouped: !!item.quantidade,
           tipo: "MANUAL",
           column: getColumnByDate(item.vencimento),
+          prioridade: normalizePriority(item.prioridade),
+          dataPagamento: item.dataPagamento || "",
+          pagoEm: item.pagoEm || "",
+          movimentacoes: Array.isArray(item.movimentacoes) ? item.movimentacoes : [],
           expanded: false
         }));
         refreshAll();
@@ -1208,7 +1422,8 @@
         els.filterCondition,
         els.filterMin,
         els.filterMax,
-        els.filterColumn
+        els.filterColumn,
+        els.filterPriority
       ].forEach(el => {
         el.addEventListener("input", renderBoard);
         el.addEventListener("change", renderBoard);
@@ -1222,6 +1437,7 @@
         els.filterMin.value = "";
         els.filterMax.value = "";
         els.filterColumn.value = "";
+        els.filterPriority.value = "";
         renderBoard();
       });
 
@@ -1243,7 +1459,8 @@
           vencimento: els.entryDueDate.value,
           valor: parseBRLInput(els.entryValue.value),
           observacao: els.entryObservation.value.trim(),
-          column: els.entryColumn.value
+          column: els.entryColumn.value,
+          prioridade: normalizePriority(els.entryPriority.value || "a_definir")
         };
 
         if (!payload.empresa || !payload.fornecedor || !payload.vencimento || !payload.valor || !payload.column || !window.firebaseKanban) return;
@@ -1257,6 +1474,9 @@
             grouped:false,
             quantidade:null,
             tipo:"MANUAL",
+            dataPagamento:"",
+            pagoEm:"",
+            movimentacoes:[],
             expanded:false
           });
         }
