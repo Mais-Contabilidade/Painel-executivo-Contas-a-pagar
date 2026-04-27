@@ -106,6 +106,7 @@
     }
     .kpi{padding:14px}
     .kpi-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.35px}
+    .kpi-label-lower{text-transform:none}
     .kpi-value{margin-top:8px;font-size:18px;font-weight:900}
     .kpi-sub{margin-top:4px;font-size:11px;color:var(--muted)}
 
@@ -1086,7 +1087,10 @@
     function renderKpis(){
       const scopeCards = getScopeCards();
       const totalCards = scopeCards.length;
-      const totalValue = scopeCards.reduce((acc,c)=>acc + Number(c.valor),0);
+      const openColumns = ["fila", "hoje", "semana", "proxima"];
+      const openValue = scopeCards
+        .filter(c => openColumns.includes(c.column))
+        .reduce((acc,c)=>acc + Number(c.valor || 0),0);
 
       const columnMetrics = COLUMNS.map(col => {
         const items = scopeCards.filter(c => c.column === col.id);
@@ -1099,7 +1103,7 @@
 
       els.kpis.innerHTML = [
         `<div class="kpi card-shell"><div class="kpi-label">Total de cards</div><div class="kpi-value">${totalCards}</div><div class="kpi-sub">Base visível atual</div></div>`,
-        `<div class="kpi card-shell"><div class="kpi-label">Valor total geral</div><div class="kpi-value">${brl(totalValue)}</div><div class="kpi-sub">Somatório da base selecionada</div></div>`,
+        `<div class="kpi card-shell"><div class="kpi-label kpi-label-lower">valor em aberto</div><div class="kpi-value">${brl(openValue)}</div><div class="kpi-sub">Fila de pagamento + pagar hoje + ainda esta semana + próxima semana</div></div>`,
         ...columnMetrics.map(item => `
           <div class="kpi card-shell">
             <div class="kpi-label">${item.title}</div>
