@@ -356,6 +356,7 @@
             <option value="VENCIDO">VENCIDO</option>
             <option value="VENCE HOJE">VENCE HOJE</option>
             <option value="A VENCER">A VENCER</option>
+            <option value="PAGO">PAGO</option>
           </select>
         </div>
         <div class="field">
@@ -535,8 +536,15 @@
     }
 
     function parseDate(dateStr){
-      const [y,m,d] = dateStr.split("-").map(Number);
+      if (!dateStr) return null;
+      const [y,m,d] = String(dateStr).split("-").map(Number);
+      if (!y || !m || !d) return null;
       return new Date(y, m - 1, d, 12, 0, 0);
+    }
+
+    function getTodayDate(){
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
     }
 
     function getWeekStart(date){
@@ -550,7 +558,8 @@
 
     function getColumnByDate(dateStr){
       const due = parseDate(dateStr);
-      const today = parseDate("2026-04-20");
+      if (!due) return "fila";
+      const today = getTodayDate();
       const thisWeekStart = getWeekStart(today);
       const thisWeekEnd = new Date(thisWeekStart);
       thisWeekEnd.setDate(thisWeekStart.getDate() + 6);
@@ -683,7 +692,10 @@
 
 
   <script>
-    const TODAY = "2026-04-20";
+    function getTodayDate(){
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
+    }
 
     const COLUMNS = [
       { id: "fila", title: "Fila de pagamento" },
@@ -773,7 +785,9 @@
     }
 
     function parseDate(dateStr){
-      const [y,m,d] = dateStr.split("-").map(Number);
+      if(!dateStr) return null;
+      const [y,m,d] = String(dateStr).split("-").map(Number);
+      if(!y || !m || !d) return null;
       return new Date(y, m - 1, d, 12, 0, 0);
     }
 
@@ -831,7 +845,8 @@
 
     function getColumnByDate(dateStr){
       const due = parseDate(dateStr);
-      const today = parseDate(TODAY);
+      if(!due) return "fila";
+      const today = getTodayDate();
       const thisWeekStart = getWeekStart(today);
       const thisWeekEnd = new Date(thisWeekStart);
       thisWeekEnd.setDate(thisWeekStart.getDate() + 6);
@@ -851,9 +866,10 @@
     }
 
     function getCondition(dateStr, columnId){
-      if (columnId === "pago") return "A VENCER";
+      if (columnId === "pago") return "PAGO";
       const due = parseDate(dateStr);
-      const today = parseDate(TODAY);
+      const today = getTodayDate();
+      if (!due) return "A VENCER";
       if (due < today) return "VENCIDO";
       if (due.getTime() === today.getTime()) return "VENCE HOJE";
       return "A VENCER";
