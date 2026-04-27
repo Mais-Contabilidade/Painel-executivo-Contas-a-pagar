@@ -983,6 +983,18 @@
       return "A VENCER";
     }
 
+    function getDaysOverdue(dateStr, columnId){
+      if (columnId === "pago") return null;
+
+      const due = parseDate(dateStr);
+      const today = getTodayDate();
+
+      if (!due) return null;
+
+      const diffMs = today.getTime() - due.getTime();
+      return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    }
+
     function normalizeCompany(value){
       return ["MP", "MF", "MR"].includes(value) ? value : "MP";
     }
@@ -1139,7 +1151,7 @@
       const cond = getCondition(card.vencimento, card.column);
       const condClass = cond === "VENCIDO" ? "bad-v" : cond === "VENCE HOJE" ? "bad-h" : "bad-a";
       const itemClass = card.column === "pago" ? "pago" : cond === "VENCIDO" ? "vencido" : cond === "VENCE HOJE" ? "hoje" : "";
-      const lastMove = Array.isArray(card.movimentacoes) && card.movimentacoes.length ? card.movimentacoes[card.movimentacoes.length - 1] : null;
+      const daysOverdue = getDaysOverdue(card.vencimento, card.column);
 
       return `
         <div class="item ${itemClass} ${card.expanded ? "expanded" : ""}" draggable="true" data-id="${card.id}">
@@ -1174,10 +1186,10 @@
               </div>
             ` : ""}
 
-            ${lastMove ? `
+            ${daysOverdue !== null ? `
               <div class="mini-box">
-                <div class="mini-label">Última movimentação</div>
-                <div class="mini-value">${getColumnTitle(lastMove.de)} → ${getColumnTitle(lastMove.para)}${lastMove.em ? ` | ${formatISODateBR(lastMove.em)}` : ""}</div>
+                <div class="mini-label">${daysOverdue > 0 ? "DIAS EM ATRASO" : "SITUAÇÃO"}</div>
+                <div class="mini-value">${daysOverdue > 0 ? `${daysOverdue} DIA${daysOverdue === 1 ? "" : "S"}` : daysOverdue === 0 ? "VENCE HOJE" : "AINDA NÃO VENCIDO"}</div>
               </div>
             ` : ""}
 
