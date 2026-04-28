@@ -244,6 +244,92 @@
       background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin-bottom:7px
     }
     [data-theme="dark"] .mini-box{background:#fbfdff}
+    .auth-box{
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:8px 9px;
+      margin-bottom:8px;
+      background:#fff;
+    }
+    .auth-box.pending{background:var(--today-bg);border-color:var(--today-border)}
+    .auth-box.approved{background:var(--success-bg);border-color:var(--success-border)}
+    [data-theme="dark"] .auth-box{background:#fbfdff}
+    [data-theme="dark"] .auth-box.pending{background:#fff7e9}
+    [data-theme="dark"] .auth-box.approved{background:#edf7f0}
+    .auth-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .auth-btn{
+      border:1px solid var(--line);
+      border-radius:10px;
+      min-height:30px;
+      padding:7px 10px;
+      font-size:10px;
+      font-weight:900;
+      cursor:pointer;
+      background:#fff;
+      color:var(--text);
+    }
+    .auth-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .auth-btn.warning{background:#fff4f4;border-color:#e9c2c2;color:#b42318}
+    .paid-week-group{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:var(--panel-soft);
+      padding:8px;
+      margin-bottom:10px;
+    }
+    .paid-week-group.collapsed{padding:7px 8px}
+    .paid-week-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      padding:2px;
+      cursor:pointer;
+    }
+    .paid-week-group:not(.collapsed) .paid-week-head{
+      padding-bottom:8px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:8px;
+    }
+    .paid-week-title{
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.3px;
+    }
+    .paid-week-meta{
+      margin-top:3px;
+      font-size:10px;
+      color:var(--muted);
+      font-weight:800;
+      line-height:1.35;
+    }
+    .paid-week-right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-shrink:0;
+    }
+    .paid-week-total{
+      font-size:11px;
+      font-weight:900;
+      white-space:nowrap;
+      text-align:right;
+    }
+    .paid-week-toggle{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:10px;
+      min-width:30px;
+      height:28px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .paid-week-list{display:flex;flex-direction:column;gap:8px}
+    .paid-week-group.collapsed .paid-week-list{display:none}
+    [data-theme="dark"] .paid-week-group{background:#fbfdff}
     .mini-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase}
     .mini-value{margin-top:3px;font-size:11px;font-weight:800}
     .mini-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
@@ -306,6 +392,53 @@
     .modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
     .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
 
+    .form-error{
+      display:none;
+      background:#fff4f4;
+      border:1px solid #e9c2c2;
+      color:#b42318;
+      border-radius:10px;
+      padding:9px 11px;
+      font-size:12px;
+      font-weight:800;
+      line-height:1.35;
+      margin:10px 0 0;
+    }
+    .form-error.show{display:block}
+    .modal-summary{
+      border:1px solid var(--line);
+      background:var(--panel-soft);
+      border-radius:14px;
+      padding:10px 12px;
+      margin-bottom:12px;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+    }
+    .modal-summary-item{min-width:0}
+    .modal-summary-label{
+      font-size:10px;
+      font-weight:900;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.25px;
+    }
+    .modal-summary-value{
+      margin-top:3px;
+      font-size:12px;
+      font-weight:900;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+    }
+    .modal-text{
+      font-size:13px;
+      line-height:1.45;
+      color:var(--text);
+      font-weight:700;
+      margin:0 0 8px;
+    }
+    .modal-text.muted{color:var(--muted);font-size:12px;font-weight:700}
+
     @media (max-width:1380px){
       .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
       .filters-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -329,11 +462,18 @@
       .hero h1{font-size:20px}
       .modal{padding:10px}
       .modal-card{padding:14px;border-radius:16px}
+      .modal-summary{grid-template-columns:1fr}
+      .modal-actions{flex-direction:column-reverse}
+      .modal-actions .btn{width:100%}
       .item-actions{grid-template-columns:minmax(0,1fr) 36px 36px}
       .item-summary{grid-template-columns:minmax(0,1fr) auto}
       .item-topline{grid-template-columns:1fr}
       .amount{text-align:left}
       .toggle-btn{grid-column:2}
+      .paid-week-head{align-items:center}
+      .paid-week-right{align-items:flex-end}
+      .paid-week-total{text-align:right}
+      .paid-week-meta{text-align:left}
     }
   </style>
 </head>
@@ -510,6 +650,168 @@
       </form>
     </div>
   </div>
+
+  <div class="modal" id="authorizeModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">AUTORIZAR PAGAMENTO</div>
+        <button class="close" id="closeAuthorizeModal">×</button>
+      </div>
+      <div class="modal-summary" id="authorizeSummary"></div>
+      <div class="modal-grid">
+        <div class="field" style="grid-column:1/-1">
+          <label for="authorizeName">Nome de quem autorizou *</label>
+          <input type="text" id="authorizeName" autocomplete="off">
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label for="authorizeObservation">Observação da autorização</label>
+          <textarea id="authorizeObservation"></textarea>
+        </div>
+      </div>
+      <div class="form-error" id="authorizeError"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelAuthorizeModal">Cancelar</button>
+        <button type="button" class="btn" id="confirmAuthorizeBtn">Confirmar autorização</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="reverseConfirmModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">CONFIRMAR REVERSÃO</div>
+        <button class="close" id="closeReverseConfirmModal">×</button>
+      </div>
+      <p class="modal-text">Tem certeza de que deseja reverter esta autorização de pagamento?</p>
+      <p class="modal-text muted">Essa ação irá remover o registro de autorização, incluindo quem autorizou, data/hora e observação. Use esta opção apenas se a autorização foi lançada incorretamente.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelReverseConfirmModal">Cancelar</button>
+        <button type="button" class="btn" id="continueReverseBtn">Continuar reversão</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="reversePasswordModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">SENHA DE REVERSÃO</div>
+        <button class="close" id="closeReversePasswordModal">×</button>
+      </div>
+      <p class="modal-text">Para reverter a autorização, informe a senha de segurança.</p>
+      <div class="modal-grid">
+        <div class="field" style="grid-column:1/-1">
+          <label for="reversePassword">Senha *</label>
+          <input type="password" id="reversePassword" autocomplete="current-password">
+        </div>
+      </div>
+      <div class="form-error" id="reversePasswordError"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelReversePasswordModal">Cancelar</button>
+        <button type="button" class="btn" id="confirmReverseBtn">Reverter autorização</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="paymentBlockedModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">PAGAMENTO NÃO AUTORIZADO</div>
+        <button class="close" id="closePaymentBlockedModal">×</button>
+      </div>
+      <p class="modal-text">Este título ainda não possui autorização de pagamento. Autorize o pagamento antes de marcar como pago.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="okPaymentBlockedBtn">Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="movementNotAllowedModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">MOVIMENTAÇÃO NÃO PERMITIDA</div>
+        <button class="close" id="closeMovementNotAllowedModal">×</button>
+      </div>
+      <p class="modal-text">Para manter o registro de autorização, este título só pode ser movido para Pagar hoje através do botão Autorizar pagamento.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="okMovementNotAllowedBtn">Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="actionNotAllowedModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">AÇÃO NÃO PERMITIDA</div>
+        <button class="close" id="closeActionNotAllowedModal">×</button>
+      </div>
+      <p class="modal-text">Este título já foi marcado como pago. Para alterar a autorização, primeiro será necessário revisar o status do pagamento.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="okActionNotAllowedBtn">Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="paymentConfirmModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">CONFIRMAR PAGAMENTO</div>
+        <button class="close" id="closePaymentConfirmModal">×</button>
+      </div>
+      <p class="modal-text">Confirma que este título foi realmente pago?</p>
+      <p class="modal-text muted">Após a confirmação, o título será movido para a coluna Pago e ficará registrado com a data de pagamento.</p>
+      <div class="modal-summary" id="paymentSummary"></div>
+      <div class="modal-grid">
+        <div class="field" style="grid-column:1/-1">
+          <label for="paymentDate">Data do pagamento *</label>
+          <input type="date" id="paymentDate">
+        </div>
+      </div>
+      <div class="form-error" id="paymentConfirmError"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelPaymentConfirmModal">Cancelar</button>
+        <button type="button" class="btn" id="confirmPaymentBtn">Confirmar pagamento</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal" id="protectedActionPasswordModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="protectedActionPasswordTitle">SENHA DE SEGURANÇA</div>
+        <button class="close" id="closeProtectedActionPasswordModal">×</button>
+      </div>
+      <p class="modal-text" id="protectedActionPasswordText">Para continuar, informe a senha de segurança.</p>
+      <div class="modal-grid">
+        <div class="field" style="grid-column:1/-1">
+          <label for="protectedActionPasswordInput">Senha *</label>
+          <input type="password" id="protectedActionPasswordInput" autocomplete="current-password">
+        </div>
+      </div>
+      <div class="form-error" id="protectedActionPasswordError"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelProtectedActionPasswordModal">Cancelar</button>
+        <button type="button" class="btn" id="confirmProtectedActionPasswordBtn">Continuar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal" id="deleteConfirmModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">CONFIRMAR EXCLUSÃO</div>
+        <button class="close" id="closeDeleteConfirmModal">×</button>
+      </div>
+      <p class="modal-text">Deseja realmente excluir este título?</p>
+      <p class="modal-text muted">Essa ação removerá o card da base do Kanban.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelDeleteConfirmModal">Cancelar</button>
+        <button type="button" class="btn" id="confirmDeleteBtn">Excluir título</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
     import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js";
@@ -601,6 +903,10 @@
         vencimento: item.vencimento,
         valor: Number(item.valor || 0),
         observacao: item.observacao || "",
+        autorizadoPagamento: !!item.autorizadoPagamento,
+        autorizadoPor: item.autorizadoPor || "",
+        autorizadoEm: item.autorizadoEm || "",
+        observacaoAutorizacao: item.observacaoAutorizacao || "",
         quantidade: item.quantidade || null,
         grouped: !!item.quantidade,
         tipo: "MANUAL",
@@ -720,6 +1026,10 @@
         vencimento: data.vencimento || "",
         valor: Number(data.valor || 0),
         observacao: data.observacao || "",
+        autorizadoPagamento: !!data.autorizadoPagamento,
+        autorizadoPor: data.autorizadoPor || "",
+        autorizadoEm: data.autorizadoEm || "",
+        observacaoAutorizacao: data.observacaoAutorizacao || "",
         quantidade: data.quantidade ?? null,
         grouped: !!data.grouped,
         tipo: data.tipo || "MANUAL",
@@ -757,6 +1067,10 @@
           vencimento: payload.vencimento,
           valor: Number(payload.valor || 0),
           observacao: payload.observacao || "",
+          autorizadoPagamento: !!payload.autorizadoPagamento,
+          autorizadoPor: payload.autorizadoPor || "",
+          autorizadoEm: payload.autorizadoEm || "",
+          observacaoAutorizacao: payload.observacaoAutorizacao || "",
           quantidade: payload.quantidade ?? null,
           grouped: !!payload.grouped,
           tipo: payload.tipo || "MANUAL",
@@ -791,6 +1105,82 @@
         await updateDoc(doc(db, COLLECTION_NAME, id), {
           column,
           ...extraPayload
+        });
+      },
+
+      async authorizePayment(id, payload) {
+        const ref = doc(db, COLLECTION_NAME, id);
+        const snap = await getDoc(ref);
+        const currentData = snap.exists() ? snap.data() : {};
+        const currentMovements = Array.isArray(currentData?.movimentacoes) ? currentData.movimentacoes : [];
+        const autorizadoEm = payload.autorizadoEm || new Date().toISOString();
+        const colunaAnterior = payload.colunaAnterior || currentData?.column || "";
+
+        await updateDoc(ref, {
+          autorizadoPagamento: true,
+          autorizadoPor: payload.autorizadoPor || "",
+          autorizadoEm,
+          observacaoAutorizacao: payload.observacaoAutorizacao || "",
+          column: "hoje",
+          movimentacoes: [
+            ...currentMovements,
+            {
+              tipo: "autorizacao_pagamento",
+              autorizadoPor: payload.autorizadoPor || "",
+              de: colunaAnterior,
+              para: "hoje",
+              em: autorizadoEm
+            }
+          ]
+        });
+      },
+
+      async reversePaymentAuthorization(id) {
+        const ref = doc(db, COLLECTION_NAME, id);
+        const snap = await getDoc(ref);
+        const currentData = snap.exists() ? snap.data() : {};
+        const currentMovements = Array.isArray(currentData?.movimentacoes) ? currentData.movimentacoes : [];
+        const revertidoEm = new Date().toISOString();
+
+        await updateDoc(ref, {
+          autorizadoPagamento: false,
+          autorizadoPor: "",
+          autorizadoEm: "",
+          observacaoAutorizacao: "",
+          column: "fila",
+          movimentacoes: [
+            ...currentMovements,
+            {
+              tipo: "reversao_autorizacao_pagamento",
+              de: currentData?.column || "",
+              para: "fila",
+              em: revertidoEm
+            }
+          ]
+        });
+      },
+
+      async confirmPayment(id, payload) {
+        const ref = doc(db, COLLECTION_NAME, id);
+        const snap = await getDoc(ref);
+        const currentData = snap.exists() ? snap.data() : {};
+        const currentMovements = Array.isArray(currentData?.movimentacoes) ? currentData.movimentacoes : [];
+        const pagoEm = new Date().toISOString();
+
+        await updateDoc(ref, {
+          column: "pago",
+          dataPagamento: payload.dataPagamento || "",
+          pagoEm,
+          movimentacoes: [
+            ...currentMovements,
+            {
+              tipo: "pagamento_confirmado",
+              de: currentData?.column || "",
+              para: "pago",
+              dataPagamento: payload.dataPagamento || "",
+              em: pagoEm
+            }
+          ]
         });
       },
 
@@ -867,9 +1257,16 @@
       { empresa:"MF", fornecedor:"VIVO TELEFONICA BRASIL S.A.", historico:"SERVIÇOS CONTRATADOS: SMART EMPRESAS 6GB MAS SERVICO GESTAO DADOS EMPRESAS SERVICO GESTAO VOZ EMPRES", vencimento:"2026-04-25", valor:26.99 }
     ];
 
+    let expandedPaidWeeks = {};
+
     let cards = [];
     let appStarted = false;
     let firestoreUnsubscribe = null;
+    let currentAuthCardId = null;
+    let currentPaymentMove = null;
+    let currentDeleteCardId = null;
+    let protectedActionType = null;
+    let protectedActionCardId = null;
 
     const els = {
       board: document.getElementById("board"),
@@ -903,6 +1300,61 @@
       entryColumn: document.getElementById("entryColumn"),
       entryPriority: document.getElementById("entryPriority"),
       entryObservation: document.getElementById("entryObservation"),
+
+      authorizeModal: document.getElementById("authorizeModal"),
+      authorizeSummary: document.getElementById("authorizeSummary"),
+      authorizeName: document.getElementById("authorizeName"),
+      authorizeObservation: document.getElementById("authorizeObservation"),
+      authorizeError: document.getElementById("authorizeError"),
+      closeAuthorizeModal: document.getElementById("closeAuthorizeModal"),
+      cancelAuthorizeModal: document.getElementById("cancelAuthorizeModal"),
+      confirmAuthorizeBtn: document.getElementById("confirmAuthorizeBtn"),
+
+      reverseConfirmModal: document.getElementById("reverseConfirmModal"),
+      closeReverseConfirmModal: document.getElementById("closeReverseConfirmModal"),
+      cancelReverseConfirmModal: document.getElementById("cancelReverseConfirmModal"),
+      continueReverseBtn: document.getElementById("continueReverseBtn"),
+
+      reversePasswordModal: document.getElementById("reversePasswordModal"),
+      closeReversePasswordModal: document.getElementById("closeReversePasswordModal"),
+      cancelReversePasswordModal: document.getElementById("cancelReversePasswordModal"),
+      reversePassword: document.getElementById("reversePassword"),
+      reversePasswordError: document.getElementById("reversePasswordError"),
+      confirmReverseBtn: document.getElementById("confirmReverseBtn"),
+
+      paymentBlockedModal: document.getElementById("paymentBlockedModal"),
+      closePaymentBlockedModal: document.getElementById("closePaymentBlockedModal"),
+      okPaymentBlockedBtn: document.getElementById("okPaymentBlockedBtn"),
+
+      movementNotAllowedModal: document.getElementById("movementNotAllowedModal"),
+      closeMovementNotAllowedModal: document.getElementById("closeMovementNotAllowedModal"),
+      okMovementNotAllowedBtn: document.getElementById("okMovementNotAllowedBtn"),
+
+      actionNotAllowedModal: document.getElementById("actionNotAllowedModal"),
+      closeActionNotAllowedModal: document.getElementById("closeActionNotAllowedModal"),
+      okActionNotAllowedBtn: document.getElementById("okActionNotAllowedBtn"),
+
+      paymentConfirmModal: document.getElementById("paymentConfirmModal"),
+      paymentSummary: document.getElementById("paymentSummary"),
+      paymentDate: document.getElementById("paymentDate"),
+      paymentConfirmError: document.getElementById("paymentConfirmError"),
+      closePaymentConfirmModal: document.getElementById("closePaymentConfirmModal"),
+      cancelPaymentConfirmModal: document.getElementById("cancelPaymentConfirmModal"),
+      confirmPaymentBtn: document.getElementById("confirmPaymentBtn"),
+
+      protectedActionPasswordModal: document.getElementById("protectedActionPasswordModal"),
+      protectedActionPasswordTitle: document.getElementById("protectedActionPasswordTitle"),
+      protectedActionPasswordText: document.getElementById("protectedActionPasswordText"),
+      protectedActionPasswordInput: document.getElementById("protectedActionPasswordInput"),
+      protectedActionPasswordError: document.getElementById("protectedActionPasswordError"),
+      closeProtectedActionPasswordModal: document.getElementById("closeProtectedActionPasswordModal"),
+      cancelProtectedActionPasswordModal: document.getElementById("cancelProtectedActionPasswordModal"),
+      confirmProtectedActionPasswordBtn: document.getElementById("confirmProtectedActionPasswordBtn"),
+
+      deleteConfirmModal: document.getElementById("deleteConfirmModal"),
+      closeDeleteConfirmModal: document.getElementById("closeDeleteConfirmModal"),
+      cancelDeleteConfirmModal: document.getElementById("cancelDeleteConfirmModal"),
+      confirmDeleteBtn: document.getElementById("confirmDeleteBtn"),
     };
 
     function brl(v){
@@ -926,6 +1378,19 @@
       if(!value) return "";
       const datePart = String(value).slice(0,10);
       return formatDateBR(datePart);
+    }
+
+    function formatDateTimeBR(value){
+      if(!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleString("pt-BR", {
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+      });
     }
 
     function escapeHtml(text){
@@ -1136,6 +1601,121 @@
       ].join("");
     }
 
+    function formatDayMonth(date){
+      if (!date) return "";
+      const day = String(date.getDate()).padStart(2,"0");
+      const month = String(date.getMonth() + 1).padStart(2,"0");
+      return `${day}/${month}`;
+    }
+
+    function dateToISO(date){
+      if (!date) return "";
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2,"0");
+      const d = String(date.getDate()).padStart(2,"0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function getSundayStart(date){
+      if (!date) return null;
+      const copy = new Date(date);
+      copy.setHours(12,0,0,0);
+      copy.setDate(copy.getDate() - copy.getDay());
+      return copy;
+    }
+
+    function getSaturdayEnd(date){
+      const start = getSundayStart(date);
+      if (!start) return null;
+      const end = new Date(start);
+      end.setDate(start.getDate() + 6);
+      end.setHours(12,0,0,0);
+      return end;
+    }
+
+    function getPaymentWeekKey(dateStr){
+      const date = parseDate(dateStr);
+      const start = getSundayStart(date);
+      return start ? dateToISO(start) : "sem_data_pagamento";
+    }
+
+    function getPaymentWeekLabel(dateStr){
+      const date = parseDate(dateStr);
+      if (!date) return "SEM DATA DE PAGAMENTO";
+      const start = getSundayStart(date);
+      const end = getSaturdayEnd(date);
+      return `${formatDayMonth(start)} - ${formatDayMonth(end)}`;
+    }
+
+    function groupPaidCardsByWeek(paidCards){
+      const groups = new Map();
+
+      paidCards.forEach(card => {
+        const hasPaymentDate = !!card.dataPagamento;
+        const key = hasPaymentDate ? getPaymentWeekKey(card.dataPagamento) : "sem_data_pagamento";
+        if (!groups.has(key)) {
+          groups.set(key, {
+            key,
+            label: hasPaymentDate ? getPaymentWeekLabel(card.dataPagamento) : "SEM DATA DE PAGAMENTO",
+            sortDate: hasPaymentDate ? parseDate(key) : null,
+            noDate: !hasPaymentDate,
+            items: [],
+            value: 0
+          });
+        }
+
+        const group = groups.get(key);
+        group.items.push(card);
+        group.value += Number(card.valor || 0);
+      });
+
+      return [...groups.values()]
+        .map(group => ({
+          ...group,
+          items: group.items.sort((a,b) => {
+            if ((a.dataPagamento || "") !== (b.dataPagamento || "")) return (a.dataPagamento || "").localeCompare(b.dataPagamento || "");
+            const supplierCompare = String(a.fornecedor || "").localeCompare(String(b.fornecedor || ""), "pt-BR");
+            if (supplierCompare !== 0) return supplierCompare;
+            return Number(b.valor || 0) - Number(a.valor || 0);
+          })
+        }))
+        .sort((a,b) => {
+          if (a.noDate && !b.noDate) return 1;
+          if (!a.noDate && b.noDate) return -1;
+          if (!a.sortDate || !b.sortDate) return 0;
+          return b.sortDate.getTime() - a.sortDate.getTime();
+        });
+    }
+
+    function renderPaidWeekGroups(visibleItems){
+      if (!visibleItems.length) return `<div class="empty">Nenhum card para exibir nesta coluna</div>`;
+
+      return groupPaidCardsByWeek(visibleItems).map(group => {
+        const isExpanded = !!expandedPaidWeeks[group.key];
+        return `
+          <div class="paid-week-group ${isExpanded ? "" : "collapsed"}" data-paid-week="${escapeHtml(group.key)}">
+            <div class="paid-week-head" data-action="toggle-paid-week" data-week="${escapeHtml(group.key)}">
+              <div>
+                <div class="paid-week-title">${escapeHtml(group.label)}</div>
+                <div class="paid-week-meta">${group.items.length} card${group.items.length === 1 ? "" : "s"}</div>
+              </div>
+              <div class="paid-week-right">
+                <div class="paid-week-total">${brl(group.value)}</div>
+                <button type="button" class="paid-week-toggle" data-action="toggle-paid-week" data-week="${escapeHtml(group.key)}" title="${isExpanded ? "Recolher semana" : "Expandir semana"}">${isExpanded ? "⌄" : "›"}</button>
+              </div>
+            </div>
+            ${isExpanded ? `<div class="paid-week-list">${group.items.map(renderItem).join("")}</div>` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderColumnList(col, visibleItems, isCollapsed){
+      if (isCollapsed) return "";
+      if (col.id === "pago") return renderPaidWeekGroups(visibleItems);
+      return visibleItems.length ? visibleItems.map(renderItem).join("") : `<div class="empty">Nenhum card para exibir nesta coluna</div>`;
+    }
+
     function renderBoard(){
       const filtered = getFilteredCards();
       const visibleTotal = filtered.reduce((acc,c)=>acc + Number(c.valor),0);
@@ -1164,13 +1744,50 @@
               </div>
             </div>
             <div class="list" data-column="${col.id}">
-              ${isCollapsed ? "" : (visibleItems.length ? visibleItems.map(renderItem).join("") : `<div class="empty">Nenhum card para exibir nesta coluna</div>`)}
+              ${renderColumnList(col, visibleItems, isCollapsed)}
             </div>
           </div>
         `;
       }).join("");
 
       bindBoardEvents();
+    }
+
+    function renderAuthorizationBlock(card){
+      if (card.autorizadoPagamento) {
+        const isPaid = card.column === "pago";
+        return `
+          <div class="auth-box approved">
+            <div class="mini-label">PAGAMENTO AUTORIZADO</div>
+            <div class="mini-value">Autorizado por: ${escapeHtml(card.autorizadoPor || "—")}</div>
+            <div class="mini-value">Data/hora: ${escapeHtml(formatDateTimeBR(card.autorizadoEm) || "—")}</div>
+            ${isPaid && card.dataPagamento ? `<div class="mini-value">Data de pagamento: ${formatDateBR(card.dataPagamento)}</div>` : ""}
+            ${card.observacaoAutorizacao ? `<div class="obs" style="margin-top:7px;margin-bottom:0">${escapeHtml(card.observacaoAutorizacao)}</div>` : ""}
+            <div class="auth-actions">
+              ${!isPaid ? `<button type="button" class="auth-btn primary" data-action="mark-paid" data-id="${card.id}">MARCAR COMO PAGO</button>` : ""}
+              ${!isPaid ? `<button type="button" class="auth-btn warning" data-action="reverse-auth" data-id="${card.id}">REVERTER AUTORIZAÇÃO</button>` : ""}
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="auth-box pending">
+          <div class="mini-label">AUTORIZAÇÃO DE PAGAMENTO</div>
+          <div class="mini-value">PENDENTE DE AUTORIZAÇÃO</div>
+          <div class="auth-actions">
+            <button type="button" class="auth-btn primary" data-action="authorize-payment" data-id="${card.id}">AUTORIZAR PAGAMENTO</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function getManualMoveColumns(card){
+      return COLUMNS.filter(c => {
+        if (c.id === "hoje" && card.column !== "hoje") return false;
+        if (c.id === "pago" && card.column !== "pago") return false;
+        return true;
+      });
     }
 
     function renderItem(card){
@@ -1226,11 +1843,13 @@
               ${card.grouped ? `<span class="mini-chip">QTD: ${card.quantidade}</span>` : ``}
             </div>
 
+            ${renderAuthorizationBlock(card)}
+
             ${card.observacao ? `<div class="obs">${escapeHtml(card.observacao)}</div>` : ""}
 
             <div class="item-actions">
               <select data-action="move" data-id="${card.id}">
-                ${COLUMNS.map(c => `<option value="${c.id}" ${c.id === card.column ? "selected" : ""}>${c.title}</option>`).join("")}
+                ${getManualMoveColumns(card).map(c => `<option value="${c.id}" ${c.id === card.column ? "selected" : ""}>${c.title}</option>`).join("")}
               </select>
               <button type="button" class="icon-btn" data-action="edit" data-id="${card.id}" title="Editar">✎</button>
               <button type="button" class="icon-btn" data-action="delete" data-id="${card.id}" title="Excluir">🗑</button>
@@ -1252,6 +1871,17 @@
           e.preventDefault();
           e.stopPropagation();
           toggleColumn(e.currentTarget.dataset.column);
+        });
+      });
+
+      document.querySelectorAll('[data-action="toggle-paid-week"]').forEach(el => {
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const weekKey = e.currentTarget.dataset.week;
+          if (!weekKey) return;
+          expandedPaidWeeks[weekKey] = !expandedPaidWeeks[weekKey];
+          renderBoard();
         });
       });
 
@@ -1277,6 +1907,11 @@
           e.preventDefault();
           col.classList.remove("drag-over");
           const id = e.dataTransfer.getData("text/plain");
+          if (col.dataset.column === "hoje") {
+            openMovementNotAllowedModal();
+            renderBoard();
+            return;
+          }
           moveCard(id, col.dataset.column);
         });
       });
@@ -1297,21 +1932,367 @@
 
       document.querySelectorAll('[data-action="edit"]').forEach(el => {
         el.addEventListener("click", e => {
-          const id = e.currentTarget.dataset.id;
-          const card = cards.find(c => c.id === id);
-          if (!card) return;
-          openModal(card);
+          e.preventDefault();
+          e.stopPropagation();
+          openProtectedActionPasswordModal("edit", e.currentTarget.dataset.id);
         });
       });
 
       document.querySelectorAll('[data-action="delete"]').forEach(el => {
-        el.addEventListener("click", async e => {
-          const id = e.currentTarget.dataset.id;
-          if (!window.firebaseKanban) return;
-          if (!confirm("Deseja realmente excluir este título?")) return;
-          await window.firebaseKanban.deleteCard(id);
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          openProtectedActionPasswordModal("delete", e.currentTarget.dataset.id);
         });
       });
+
+      document.querySelectorAll('[data-action="authorize-payment"]').forEach(el => {
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          openAuthorizeModal(e.currentTarget.dataset.id);
+        });
+      });
+
+      document.querySelectorAll('[data-action="mark-paid"]').forEach(el => {
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          openPaymentConfirmModal(e.currentTarget.dataset.id, "pago");
+        });
+      });
+
+      document.querySelectorAll('[data-action="reverse-auth"]').forEach(el => {
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          openReverseConfirmModal(e.currentTarget.dataset.id);
+        });
+      });
+    }
+
+    function renderModalSummary(card){
+      if (!card) return "";
+      return `
+        <div class="modal-summary-item">
+          <div class="modal-summary-label">Fornecedor</div>
+          <div class="modal-summary-value">${escapeHtml(card.fornecedor || "—")}</div>
+        </div>
+        <div class="modal-summary-item">
+          <div class="modal-summary-label">Valor</div>
+          <div class="modal-summary-value">${brl(card.valor)}</div>
+        </div>
+        <div class="modal-summary-item">
+          <div class="modal-summary-label">Vencimento</div>
+          <div class="modal-summary-value">${formatDateBR(card.vencimento) || "—"}</div>
+        </div>
+        <div class="modal-summary-item">
+          <div class="modal-summary-label">Empresa/Base</div>
+          <div class="modal-summary-value">${escapeHtml(getCompanyLabel(card.empresa) || "—")}</div>
+        </div>
+      `;
+    }
+
+    function showFormError(el, message){
+      if (!el) return;
+      el.textContent = message || "";
+      el.classList.toggle("show", !!message);
+    }
+
+    function showModal(modal){
+      if (modal) modal.classList.add("show");
+    }
+
+    function hideModal(modal){
+      if (modal) modal.classList.remove("show");
+    }
+
+    function openAuthorizeModal(id){
+      const card = cards.find(c => c.id === id);
+      if (!card || !window.firebaseKanban?.authorizePayment) return;
+
+      currentAuthCardId = id;
+      els.authorizeSummary.innerHTML = renderModalSummary(card);
+      els.authorizeName.value = "";
+      els.authorizeObservation.value = "";
+      showFormError(els.authorizeError, "");
+      showModal(els.authorizeModal);
+      setTimeout(() => els.authorizeName.focus(), 50);
+    }
+
+    function closeAuthorizeModal(){
+      hideModal(els.authorizeModal);
+      currentAuthCardId = null;
+      showFormError(els.authorizeError, "");
+    }
+
+    async function confirmAuthorizePayment(){
+      const card = cards.find(c => c.id === currentAuthCardId);
+      if (!card || !window.firebaseKanban?.authorizePayment) {
+        closeAuthorizeModal();
+        return;
+      }
+
+      const nome = els.authorizeName.value.trim();
+      if (!nome) {
+        showFormError(els.authorizeError, "Informe o nome de quem autorizou o pagamento.");
+        return;
+      }
+
+      await window.firebaseKanban.authorizePayment(card.id, {
+        autorizadoPor: nome,
+        autorizadoEm: new Date().toISOString(),
+        observacaoAutorizacao: els.authorizeObservation.value.trim(),
+        colunaAnterior: card.column
+      });
+
+      closeAuthorizeModal();
+    }
+
+    function openReverseConfirmModal(id){
+      const card = cards.find(c => c.id === id);
+      if (!card || !window.firebaseKanban?.reversePaymentAuthorization) return;
+      if (card.column === "pago") {
+        openActionNotAllowedModal();
+        return;
+      }
+      currentAuthCardId = id;
+      showModal(els.reverseConfirmModal);
+    }
+
+    function closeReverseConfirmModal(){
+      hideModal(els.reverseConfirmModal);
+    }
+
+    function openReversePasswordModal(){
+      const card = cards.find(c => c.id === currentAuthCardId);
+      if (!card) {
+        closeReverseConfirmModal();
+        closeReversePasswordModal();
+        return;
+      }
+
+      closeReverseConfirmModal();
+      els.reversePassword.value = "";
+      showFormError(els.reversePasswordError, "");
+      showModal(els.reversePasswordModal);
+      setTimeout(() => els.reversePassword.focus(), 50);
+    }
+
+    function closeReversePasswordModal(){
+      hideModal(els.reversePasswordModal);
+      showFormError(els.reversePasswordError, "");
+    }
+
+    async function confirmReverseAuthorization(){
+      const card = cards.find(c => c.id === currentAuthCardId);
+      if (!card || !window.firebaseKanban?.reversePaymentAuthorization) {
+        closeReversePasswordModal();
+        currentAuthCardId = null;
+        return;
+      }
+
+      const senha = els.reversePassword.value.trim();
+      if (!senha) {
+        showFormError(els.reversePasswordError, "Informe a senha de reversão.");
+        return;
+      }
+
+      if (senha !== "63258116") {
+        showFormError(els.reversePasswordError, "Senha incorreta. A autorização não foi revertida.");
+        return;
+      }
+
+      await window.firebaseKanban.reversePaymentAuthorization(card.id);
+      closeReversePasswordModal();
+      currentAuthCardId = null;
+    }
+
+    function openPaymentBlockedModal(){
+      showModal(els.paymentBlockedModal);
+    }
+
+    function closePaymentBlockedModal(){
+      hideModal(els.paymentBlockedModal);
+    }
+
+    function openMovementNotAllowedModal(){
+      showModal(els.movementNotAllowedModal);
+    }
+
+    function closeMovementNotAllowedModal(){
+      hideModal(els.movementNotAllowedModal);
+    }
+
+    function openActionNotAllowedModal(){
+      showModal(els.actionNotAllowedModal);
+    }
+
+    function closeActionNotAllowedModal(){
+      hideModal(els.actionNotAllowedModal);
+    }
+
+    function openPaymentConfirmModal(id, columnId){
+      const card = cards.find(c => c.id === id);
+      if (!card) return;
+
+      if (card.autorizadoPagamento !== true) {
+        openPaymentBlockedModal();
+        renderBoard();
+        return;
+      }
+
+      currentPaymentMove = { id, columnId: "pago" };
+      els.paymentSummary.innerHTML = renderModalSummary(card);
+      els.paymentDate.value = new Date().toISOString().slice(0,10);
+      showFormError(els.paymentConfirmError, "");
+      showModal(els.paymentConfirmModal);
+      setTimeout(() => els.paymentDate.focus(), 50);
+    }
+
+    function closePaymentConfirmModal(){
+      hideModal(els.paymentConfirmModal);
+      currentPaymentMove = null;
+      showFormError(els.paymentConfirmError, "");
+    }
+
+    async function confirmPaymentMove(){
+      if (!currentPaymentMove || !window.firebaseKanban) {
+        closePaymentConfirmModal();
+        return;
+      }
+
+      const card = cards.find(c => c.id === currentPaymentMove.id);
+      if (!card) {
+        closePaymentConfirmModal();
+        return;
+      }
+
+      const dataPagamento = els.paymentDate.value;
+      if (!dataPagamento) {
+        showFormError(els.paymentConfirmError, "Informe a data do pagamento.");
+        return;
+      }
+
+      if (card.autorizadoPagamento !== true) {
+        closePaymentConfirmModal();
+        openPaymentBlockedModal();
+        renderBoard();
+        return;
+      }
+
+      if (window.firebaseKanban?.confirmPayment) {
+        await window.firebaseKanban.confirmPayment(card.id, { dataPagamento });
+      } else {
+        const pagoEm = new Date().toISOString();
+        const movimentacao = {
+          tipo: "pagamento_confirmado",
+          de: card.column,
+          para: "pago",
+          dataPagamento,
+          em: pagoEm
+        };
+
+        await window.firebaseKanban.moveCard(card.id, "pago", {
+          movimentacoes: [...(Array.isArray(card.movimentacoes) ? card.movimentacoes : []), movimentacao],
+          dataPagamento,
+          pagoEm
+        });
+      }
+
+      closePaymentConfirmModal();
+    }
+
+    function openProtectedActionPasswordModal(type, cardId){
+      const card = cards.find(c => c.id === cardId);
+      if (!card) return;
+
+      protectedActionType = type;
+      protectedActionCardId = cardId;
+
+      if (type === "edit") {
+        els.protectedActionPasswordTitle.textContent = "SENHA PARA EDIÇÃO";
+        els.protectedActionPasswordText.textContent = "Para editar este lançamento, informe a senha de segurança.";
+      } else {
+        els.protectedActionPasswordTitle.textContent = "SENHA PARA EXCLUSÃO";
+        els.protectedActionPasswordText.textContent = "Para excluir este lançamento, informe a senha de segurança.";
+      }
+
+      els.protectedActionPasswordInput.value = "";
+      showFormError(els.protectedActionPasswordError, "");
+      showModal(els.protectedActionPasswordModal);
+      setTimeout(() => els.protectedActionPasswordInput?.focus(), 50);
+    }
+
+    function closeProtectedActionPasswordModal(){
+      hideModal(els.protectedActionPasswordModal);
+      if (els.protectedActionPasswordInput) els.protectedActionPasswordInput.value = "";
+      showFormError(els.protectedActionPasswordError, "");
+      protectedActionType = null;
+      protectedActionCardId = null;
+    }
+
+    function confirmProtectedActionPassword(){
+      const password = String(els.protectedActionPasswordInput?.value || "").trim();
+
+      if (!password) {
+        showFormError(els.protectedActionPasswordError, "Informe a senha de segurança.");
+        return;
+      }
+
+      if (password !== "63258116") {
+        const errorMessage = protectedActionType === "edit"
+          ? "Senha incorreta. A edição não foi liberada."
+          : "Senha incorreta. A exclusão não foi liberada.";
+        showFormError(els.protectedActionPasswordError, errorMessage);
+        return;
+      }
+
+      const type = protectedActionType;
+      const cardId = protectedActionCardId;
+      const card = cards.find(c => c.id === cardId);
+
+      hideModal(els.protectedActionPasswordModal);
+      if (els.protectedActionPasswordInput) els.protectedActionPasswordInput.value = "";
+      showFormError(els.protectedActionPasswordError, "");
+      protectedActionType = null;
+      protectedActionCardId = null;
+
+      if (!card) return;
+
+      if (type === "edit") {
+        console.info("Edição liberada por senha");
+        openModal(card);
+        return;
+      }
+
+      if (type === "delete") {
+        console.info("Exclusão liberada por senha");
+        openDeleteConfirmModal(card.id);
+      }
+    }
+
+    function openDeleteConfirmModal(id){
+      const card = cards.find(c => c.id === id);
+      if (!card || !window.firebaseKanban?.deleteCard) return;
+      currentDeleteCardId = id;
+      showModal(els.deleteConfirmModal);
+    }
+
+    function closeDeleteConfirmModal(){
+      hideModal(els.deleteConfirmModal);
+      currentDeleteCardId = null;
+    }
+
+    async function confirmDeleteCard(){
+      const id = currentDeleteCardId;
+      if (!id || !window.firebaseKanban?.deleteCard) {
+        closeDeleteConfirmModal();
+        return;
+      }
+
+      await window.firebaseKanban.deleteCard(id);
+      closeDeleteConfirmModal();
     }
 
     async function toggleCard(id){
@@ -1330,6 +2311,24 @@
         return;
       }
 
+      if (columnId === "hoje") {
+        openMovementNotAllowedModal();
+        renderBoard();
+        return;
+      }
+
+      if (columnId === "pago" && currentCard.column !== "pago") {
+        if (currentCard.autorizadoPagamento !== true) {
+          openPaymentBlockedModal();
+          renderBoard();
+          return;
+        }
+
+        openPaymentConfirmModal(id, columnId);
+        renderBoard();
+        return;
+      }
+
       const movimentacao = {
         tipo: "movimentacao",
         de: currentCard.column,
@@ -1341,25 +2340,6 @@
         movimentacoes: [...(Array.isArray(currentCard.movimentacoes) ? currentCard.movimentacoes : []), movimentacao]
       };
 
-      if (columnId === "pago" && currentCard.column !== "pago") {
-        const confirma = confirm("Confirmar pagamento deste título?");
-        if (!confirma) {
-          renderBoard();
-          return;
-        }
-
-        const hoje = new Date().toISOString().slice(0,10);
-        const dataPagamento = prompt("Informe a data do pagamento no formato AAAA-MM-DD:", hoje);
-
-        if (!dataPagamento) {
-          renderBoard();
-          return;
-        }
-
-        extraPayload.dataPagamento = dataPagamento;
-        extraPayload.pagoEm = new Date().toISOString();
-      }
-
       await window.firebaseKanban.moveCard(id, columnId, extraPayload);
     }
 
@@ -1368,6 +2348,9 @@
       els.entryId.value = "";
       els.modalTitle.textContent = "NOVO TÍTULO";
       els.entryCompany.value = els.companyScope.value === "ALL" ? "MP" : normalizeCompany(els.companyScope.value);
+      [...els.entryColumn.options].forEach(option => {
+        if (option.value === "hoje") option.remove();
+      });
       els.entryColumn.value = "fila";
       els.entryPriority.value = "a_definir";
       els.entryValue.value = "";
@@ -1384,6 +2367,9 @@
         els.entrySupplier.value = card.fornecedor;
         els.entryHistory.value = card.historico || "";
         els.entryValue.value = Number(card.valor).toLocaleString("pt-BR",{minimumFractionDigits:2, maximumFractionDigits:2});
+        if (card.column === "hoje" && ![...els.entryColumn.options].some(option => option.value === "hoje")) {
+          els.entryColumn.insertAdjacentHTML("beforeend", `<option value="hoje">Pagar hoje</option>`);
+        }
         els.entryColumn.value = card.column;
         els.entryPriority.value = normalizePriority(card.prioridade);
         els.entryObservation.value = card.observacao || "";
@@ -1412,6 +2398,10 @@
           vencimento: item.vencimento,
           valor: Number(item.valor || 0),
           observacao: item.observacao || "",
+          autorizadoPagamento: !!item.autorizadoPagamento,
+          autorizadoPor: item.autorizadoPor || "",
+          autorizadoEm: item.autorizadoEm || "",
+          observacaoAutorizacao: item.observacaoAutorizacao || "",
           quantidade: item.quantidade || null,
           grouped: !!item.quantidade,
           tipo: "MANUAL",
@@ -1439,7 +2429,7 @@
       appStarted = true;
 
       els.filterColumn.innerHTML = `<option value="">Todas</option>` + COLUMNS.map(c => `<option value="${c.id}">${c.title}</option>`).join("");
-      els.entryColumn.innerHTML = COLUMNS.map(c => `<option value="${c.id}">${c.title}</option>`).join("");
+      els.entryColumn.innerHTML = COLUMNS.filter(c => c.id !== "hoje").map(c => `<option value="${c.id}">${c.title}</option>`).join("");
 
       attachMoneyMask(els.entryValue);
       attachMoneyMask(els.filterMin);
@@ -1487,6 +2477,94 @@
         if (e.target === els.entryModal) closeModal();
       });
 
+      els.closeAuthorizeModal.addEventListener("click", closeAuthorizeModal);
+      els.cancelAuthorizeModal.addEventListener("click", closeAuthorizeModal);
+      els.confirmAuthorizeBtn.addEventListener("click", confirmAuthorizePayment);
+      els.authorizeModal.addEventListener("click", e => {
+        if (e.target === els.authorizeModal) closeAuthorizeModal();
+      });
+      els.authorizeName.addEventListener("input", () => showFormError(els.authorizeError, ""));
+
+      els.closeReverseConfirmModal.addEventListener("click", () => {
+        closeReverseConfirmModal();
+        currentAuthCardId = null;
+      });
+      els.cancelReverseConfirmModal.addEventListener("click", () => {
+        closeReverseConfirmModal();
+        currentAuthCardId = null;
+      });
+      els.continueReverseBtn.addEventListener("click", openReversePasswordModal);
+      els.reverseConfirmModal.addEventListener("click", e => {
+        if (e.target === els.reverseConfirmModal) {
+          closeReverseConfirmModal();
+          currentAuthCardId = null;
+        }
+      });
+
+      els.closeReversePasswordModal.addEventListener("click", () => {
+        closeReversePasswordModal();
+        currentAuthCardId = null;
+      });
+      els.cancelReversePasswordModal.addEventListener("click", () => {
+        closeReversePasswordModal();
+        currentAuthCardId = null;
+      });
+      els.confirmReverseBtn.addEventListener("click", confirmReverseAuthorization);
+      els.reversePassword.addEventListener("input", () => showFormError(els.reversePasswordError, ""));
+      els.reversePasswordModal.addEventListener("click", e => {
+        if (e.target === els.reversePasswordModal) {
+          closeReversePasswordModal();
+          currentAuthCardId = null;
+        }
+      });
+
+      els.closePaymentBlockedModal.addEventListener("click", closePaymentBlockedModal);
+      els.okPaymentBlockedBtn.addEventListener("click", closePaymentBlockedModal);
+      els.paymentBlockedModal.addEventListener("click", e => {
+        if (e.target === els.paymentBlockedModal) closePaymentBlockedModal();
+      });
+
+      els.closeMovementNotAllowedModal.addEventListener("click", closeMovementNotAllowedModal);
+      els.okMovementNotAllowedBtn.addEventListener("click", closeMovementNotAllowedModal);
+      els.movementNotAllowedModal.addEventListener("click", e => {
+        if (e.target === els.movementNotAllowedModal) closeMovementNotAllowedModal();
+      });
+
+      els.closeActionNotAllowedModal.addEventListener("click", closeActionNotAllowedModal);
+      els.okActionNotAllowedBtn.addEventListener("click", closeActionNotAllowedModal);
+      els.actionNotAllowedModal.addEventListener("click", e => {
+        if (e.target === els.actionNotAllowedModal) closeActionNotAllowedModal();
+      });
+
+      els.closePaymentConfirmModal.addEventListener("click", closePaymentConfirmModal);
+      els.cancelPaymentConfirmModal.addEventListener("click", closePaymentConfirmModal);
+      els.confirmPaymentBtn.addEventListener("click", confirmPaymentMove);
+      els.paymentDate.addEventListener("input", () => showFormError(els.paymentConfirmError, ""));
+      els.paymentConfirmModal.addEventListener("click", e => {
+        if (e.target === els.paymentConfirmModal) closePaymentConfirmModal();
+      });
+
+      els.closeProtectedActionPasswordModal.addEventListener("click", closeProtectedActionPasswordModal);
+      els.cancelProtectedActionPasswordModal.addEventListener("click", closeProtectedActionPasswordModal);
+      els.confirmProtectedActionPasswordBtn.addEventListener("click", confirmProtectedActionPassword);
+      els.protectedActionPasswordInput.addEventListener("input", () => showFormError(els.protectedActionPasswordError, ""));
+      els.protectedActionPasswordInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          confirmProtectedActionPassword();
+        }
+      });
+      els.protectedActionPasswordModal.addEventListener("click", e => {
+        if (e.target === els.protectedActionPasswordModal) closeProtectedActionPasswordModal();
+      });
+
+      els.closeDeleteConfirmModal.addEventListener("click", closeDeleteConfirmModal);
+      els.cancelDeleteConfirmModal.addEventListener("click", closeDeleteConfirmModal);
+      els.confirmDeleteBtn.addEventListener("click", confirmDeleteCard);
+      els.deleteConfirmModal.addEventListener("click", e => {
+        if (e.target === els.deleteConfirmModal) closeDeleteConfirmModal();
+      });
+
       els.entryForm.addEventListener("submit", async e => {
         e.preventDefault();
 
@@ -1514,6 +2592,10 @@
             tipo:"MANUAL",
             dataPagamento:"",
             pagoEm:"",
+            autorizadoPagamento:false,
+            autorizadoPor:"",
+            autorizadoEm:"",
+            observacaoAutorizacao:"",
             movimentacoes:[],
             expanded:false
           });
