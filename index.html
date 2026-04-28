@@ -517,6 +517,7 @@
       getFirestore,
       collection,
       doc,
+      getDoc,
       getDocs,
       setDoc,
       updateDoc,
@@ -547,6 +548,8 @@
     }
 
     const COLLECTION_NAME = "kanban_financeiro_cards";
+    const CONFIG_COLLECTION_NAME = "kanban_config";
+    const SEED_STATUS_DOC_ID = "seed_status";
 
     const BASE_ENTRIES = [
       { empresa:"MP", fornecedor:"REGINALDO LEAL DE OLIVEIRA FILHO", historico:"ACORDO COM FORNECEDOR BAIANO - CARROCERIA DA FIORINO REF. PARC 4/5", vencimento:"2026-03-16", valor:5000.00 },
@@ -657,23 +660,42 @@
       if (seedPromise) return seedPromise;
 
       seedPromise = (async () => {
-        const colRef = collection(db, COLLECTION_NAME);
-        const snapshot = await getDocs(colRef);
-        const existingIds = new Set(snapshot.docs.map((docSnap) => docSnap.id));
+        const seedStatusRef = doc(db, CONFIG_COLLECTION_NAME, SEED_STATUS_DOC_ID);
+        const seedStatusSnap = await getDoc(seedStatusRef);
+
+        if (seedStatusSnap.exists() && seedStatusSnap.data()?.seeded === true) {
+          return;
+        }
+
+        const cardsSnapshot = await getDocs(collection(db, COLLECTION_NAME));
+
+        if (!cardsSnapshot.empty) {
+          await setDoc(seedStatusRef, {
+            seeded: true,
+            seededAt: new Date().toISOString(),
+            sourceCollection: COLLECTION_NAME,
+            totalBaseEntries: BASE_ENTRIES.length,
+            migratedFromExistingData: true
+          }, { merge: true });
+          return;
+        }
 
         const batch = writeBatch(db);
-        let hasPendingWrites = false;
 
         BASE_ENTRIES.forEach((item, index) => {
           const payload = getSeedPayload(item, index);
-          if (existingIds.has(payload.id)) return;
           batch.set(doc(db, COLLECTION_NAME, payload.id), payload);
-          hasPendingWrites = true;
         });
 
-        if (hasPendingWrites) {
-          await batch.commit();
-        }
+        batch.set(seedStatusRef, {
+          seeded: true,
+          seededAt: new Date().toISOString(),
+          sourceCollection: COLLECTION_NAME,
+          totalBaseEntries: BASE_ENTRIES.length,
+          migratedFromExistingData: false
+        }, { merge: true });
+
+        await batch.commit();
       })().finally(() => {
         seedPromise = null;
       });
