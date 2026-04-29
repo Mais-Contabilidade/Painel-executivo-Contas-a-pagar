@@ -731,7 +731,7 @@
         <div class="modal-title">MOVIMENTAÇÃO NÃO PERMITIDA</div>
         <button class="close" id="closeMovementNotAllowedModal">×</button>
       </div>
-      <p class="modal-text">Para manter o registro de autorização, este título só pode ser movido para Pagar hoje através do botão Autorizar pagamento.</p>
+      <p class="modal-text">Este título já foi autorizado para pagamento. Para manter a segurança do processo, ele só pode sair de “Pagar hoje” de duas formas: marcando como pago ou revertendo a autorização.</p>
       <div class="modal-actions">
         <button type="button" class="btn" id="okMovementNotAllowedBtn">Entendi</button>
       </div>
@@ -907,6 +907,7 @@
         autorizadoPor: item.autorizadoPor || "",
         autorizadoEm: item.autorizadoEm || "",
         observacaoAutorizacao: item.observacaoAutorizacao || "",
+        colunaAntesAutorizacao: item.colunaAntesAutorizacao || "",
         quantidade: item.quantidade || null,
         grouped: !!item.quantidade,
         tipo: "MANUAL",
@@ -1030,6 +1031,7 @@
         autorizadoPor: data.autorizadoPor || "",
         autorizadoEm: data.autorizadoEm || "",
         observacaoAutorizacao: data.observacaoAutorizacao || "",
+        colunaAntesAutorizacao: data.colunaAntesAutorizacao || "",
         quantidade: data.quantidade ?? null,
         grouped: !!data.grouped,
         tipo: data.tipo || "MANUAL",
@@ -1071,6 +1073,7 @@
           autorizadoPor: payload.autorizadoPor || "",
           autorizadoEm: payload.autorizadoEm || "",
           observacaoAutorizacao: payload.observacaoAutorizacao || "",
+          colunaAntesAutorizacao: payload.colunaAntesAutorizacao || "",
           quantidade: payload.quantidade ?? null,
           grouped: !!payload.grouped,
           tipo: payload.tipo || "MANUAL",
@@ -1085,14 +1088,20 @@
       },
 
       async updateCard(id, payload) {
-        await updateDoc(doc(db, COLLECTION_NAME, id), {
+        const ref = doc(db, COLLECTION_NAME, id);
+        const snap = await getDoc(ref);
+        const currentData = snap.exists() ? snap.data() : {};
+        const isLockedAuthorizedPayment = currentData?.autorizadoPagamento === true && currentData?.column === "hoje";
+        const safeColumn = isLockedAuthorizedPayment ? currentData.column : payload.column;
+
+        await updateDoc(ref, {
           empresa: normalizeEmpresa(payload.empresa),
           fornecedor: payload.fornecedor,
           historico: payload.historico || "",
           vencimento: payload.vencimento,
           valor: Number(payload.valor || 0),
           observacao: payload.observacao || "",
-          column: payload.column,
+          column: safeColumn,
           prioridade: normalizePriority(payload.prioridade || "a_definir")
         });
       },
@@ -1102,10 +1111,21 @@
       },
 
       async moveCard(id, column, extraPayload = {}) {
-        await updateDoc(doc(db, COLLECTION_NAME, id), {
+        const ref = doc(db, COLLECTION_NAME, id);
+        const snap = await getDoc(ref);
+        const currentData = snap.exists() ? snap.data() : {};
+        const isLockedAuthorizedPayment = currentData?.autorizadoPagamento === true && currentData?.column === "hoje";
+
+        if (isLockedAuthorizedPayment && column !== "hoje") {
+          console.warn("Movimentação bloqueada: título autorizado em Pagar hoje só pode sair via pagamento confirmado ou reversão de autorização.");
+          return false;
+        }
+
+        await updateDoc(ref, {
           column,
           ...extraPayload
         });
+        return true;
       },
 
       async authorizePayment(id, payload) {
@@ -1121,6 +1141,7 @@
           autorizadoPor: payload.autorizadoPor || "",
           autorizadoEm,
           observacaoAutorizacao: payload.observacaoAutorizacao || "",
+          colunaAntesAutorizacao: colunaAnterior,
           column: "hoje",
           movimentacoes: [
             ...currentMovements,
@@ -1142,18 +1163,21 @@
         const currentMovements = Array.isArray(currentData?.movimentacoes) ? currentData.movimentacoes : [];
         const revertidoEm = new Date().toISOString();
 
+        const colunaRetorno = currentData?.colunaAntesAutorizacao || "fila";
+
         await updateDoc(ref, {
           autorizadoPagamento: false,
           autorizadoPor: "",
           autorizadoEm: "",
           observacaoAutorizacao: "",
-          column: "fila",
+          colunaAntesAutorizacao: "",
+          column: colunaRetorno,
           movimentacoes: [
             ...currentMovements,
             {
               tipo: "reversao_autorizacao_pagamento",
               de: currentData?.column || "",
-              para: "fila",
+              para: colunaRetorno,
               em: revertidoEm
             }
           ]
@@ -1169,6 +1193,7 @@
 
         await updateDoc(ref, {
           column: "pago",
+          colunaAntesAutorizacao: "",
           dataPagamento: payload.dataPagamento || "",
           pagoEm,
           movimentacoes: [
@@ -1782,7 +1807,15 @@
       `;
     }
 
+    function isAuthorizedLocked(card){
+      return !!card && card.autorizadoPagamento === true && card.column === "hoje";
+    }
+
     function getManualMoveColumns(card){
+      if (isAuthorizedLocked(card)) {
+        return COLUMNS.filter(c => c.id === card.column);
+      }
+
       return COLUMNS.filter(c => {
         if (c.id === "hoje" && card.column !== "hoje") return false;
         if (c.id === "pago" && card.column !== "pago") return false;
@@ -1795,9 +1828,10 @@
       const condClass = cond === "VENCIDO" ? "bad-v" : cond === "VENCE HOJE" ? "bad-h" : "bad-a";
       const itemClass = card.column === "pago" ? "pago" : cond === "VENCIDO" ? "vencido" : cond === "VENCE HOJE" ? "hoje" : "";
       const daysOverdue = getDaysOverdue(card.vencimento, card.column);
+      const lockedAuthorizedPayment = isAuthorizedLocked(card);
 
       return `
-        <div class="item ${itemClass} ${card.expanded ? "expanded" : ""}" draggable="true" data-id="${card.id}">
+        <div class="item ${itemClass} ${card.expanded ? "expanded" : ""}" draggable="${lockedAuthorizedPayment ? "false" : "true"}" data-id="${card.id}">
           <div class="item-summary" data-action="toggle" data-id="${card.id}">
             <div class="item-main">
               <div class="item-topline">
@@ -1848,7 +1882,7 @@
             ${card.observacao ? `<div class="obs">${escapeHtml(card.observacao)}</div>` : ""}
 
             <div class="item-actions">
-              <select data-action="move" data-id="${card.id}">
+              <select data-action="move" data-id="${card.id}" ${lockedAuthorizedPayment ? "disabled title='Título autorizado: use Marcar como pago ou Reverter autorização'" : ""}>
                 ${getManualMoveColumns(card).map(c => `<option value="${c.id}" ${c.id === card.column ? "selected" : ""}>${c.title}</option>`).join("")}
               </select>
               <button type="button" class="icon-btn" data-action="edit" data-id="${card.id}" title="Editar">✎</button>
@@ -1891,6 +1925,13 @@
             e.preventDefault();
             return;
           }
+          const card = cards.find(c => c.id === el.dataset.id);
+          if (isAuthorizedLocked(card)) {
+            e.preventDefault();
+            openMovementNotAllowedModal();
+            renderBoard();
+            return;
+          }
           el.classList.add("dragging");
           e.dataTransfer.setData("text/plain", el.dataset.id);
         });
@@ -1907,6 +1948,12 @@
           e.preventDefault();
           col.classList.remove("drag-over");
           const id = e.dataTransfer.getData("text/plain");
+          const card = cards.find(c => c.id === id);
+          if (isAuthorizedLocked(card) && col.dataset.column !== card.column) {
+            openMovementNotAllowedModal();
+            renderBoard();
+            return;
+          }
           if (col.dataset.column === "hoje") {
             openMovementNotAllowedModal();
             renderBoard();
@@ -1926,6 +1973,12 @@
 
       document.querySelectorAll('[data-action="move"]').forEach(el => {
         el.addEventListener("change", e => {
+          const card = cards.find(c => c.id === e.target.dataset.id);
+          if (isAuthorizedLocked(card) && e.target.value !== card.column) {
+            openMovementNotAllowedModal();
+            renderBoard();
+            return;
+          }
           moveCard(e.target.dataset.id, e.target.value);
         });
       });
@@ -2311,6 +2364,12 @@
         return;
       }
 
+      if (isAuthorizedLocked(currentCard)) {
+        openMovementNotAllowedModal();
+        renderBoard();
+        return;
+      }
+
       if (columnId === "hoje") {
         openMovementNotAllowedModal();
         renderBoard();
@@ -2351,6 +2410,7 @@
       [...els.entryColumn.options].forEach(option => {
         if (option.value === "hoje") option.remove();
       });
+      els.entryColumn.disabled = false;
       els.entryColumn.value = "fila";
       els.entryPriority.value = "a_definir";
       els.entryValue.value = "";
@@ -2371,6 +2431,7 @@
           els.entryColumn.insertAdjacentHTML("beforeend", `<option value="hoje">Pagar hoje</option>`);
         }
         els.entryColumn.value = card.column;
+        els.entryColumn.disabled = isAuthorizedLocked(card);
         els.entryPriority.value = normalizePriority(card.prioridade);
         els.entryObservation.value = card.observacao || "";
       }
@@ -2596,6 +2657,7 @@
             autorizadoPor:"",
             autorizadoEm:"",
             observacaoAutorizacao:"",
+            colunaAntesAutorizacao:"",
             movimentacoes:[],
             expanded:false
           });
