@@ -457,6 +457,23 @@
     .dash-title-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
     .dash-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel-soft);border-radius:999px;padding:7px 10px;font-size:10px;font-weight:720;color:var(--muted)}
     .dash-pill.strong{background:var(--accent-soft);border-color:#c9dced;color:var(--accent)}
+    .weekly-open-total{
+      display:inline-flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:2px;
+      min-width:178px;
+      padding:8px 12px;
+      border:1px solid #c9dced;
+      background:linear-gradient(180deg,#ffffff,var(--accent-soft));
+      border-radius:14px;
+      box-shadow:0 5px 13px rgba(31,54,79,.035);
+      line-height:1.15;
+    }
+    .weekly-open-total span{font-size:9px;font-weight:750;text-transform:uppercase;letter-spacing:.34px;color:var(--muted)}
+    .weekly-open-total strong{font-size:15px;font-weight:780;color:var(--accent);letter-spacing:-.2px;white-space:nowrap}
+    .weekly-open-total small{font-size:10px;font-weight:720;color:var(--muted);white-space:nowrap}
+
     .week-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px;margin-bottom:0}
     .week-card{position:relative;border:1px solid #d6e1ec;background:var(--panel);border-radius:16px;padding:13px 12px 12px;min-height:88px;box-shadow:0 6px 14px rgba(31,54,79,.038);overflow:hidden}
     .week-card::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--accent);opacity:.9}
@@ -860,10 +877,15 @@
         <div class="dash-title-row">
           <div>
             <div class="dash-title">Kanban da Semana</div>
-            <div class="dash-sub">Despesas programadas de segunda a sábado para validação e autorização do cliente.</div>
+            <div class="dash-sub">Pagamentos programados de segunda a sábado para validação, autorização e acompanhamento do cliente.</div>
           </div>
           <div class="dash-title-actions">
             <span class="dash-pill strong" id="weekIntervalPill">Semana</span>
+            <div class="weekly-open-total" id="weekOpenTotal" aria-label="Total em aberto da semana">
+              <span>Total em aberto da semana</span>
+              <strong>R$ 0,00</strong>
+              <small>0 títulos em aberto programados</small>
+            </div>
           </div>
         </div>
         <div class="weekly-board" id="weeklyKanban"></div>
@@ -1823,7 +1845,7 @@
       { id: "dda", title: "DDA pendente de validação", description: "Boletos que precisam ser validados antes da autorização." },
       { id: "fila", title: "Fila de pagamento", description: "Títulos aguardando decisão de pagamento." },
       { id: "hoje", title: "Pagar hoje", description: "Títulos autorizados para pagamento imediato." },
-      { id: "semana", title: "Ainda esta semana", description: "Títulos com vencimento dentro da semana atual." },
+      { id: "semana", title: "Ainda esta semana", description: "Títulos programados para pagamento dentro da semana atual." },
       { id: "proxima", title: "Próxima semana", description: "Títulos programados para a próxima semana." },
       { id: "pago", title: "Pago", description: "Títulos já confirmados como pagos." }
     ];
@@ -1904,6 +1926,7 @@
       weekIntervalPill: document.getElementById("weekIntervalPill"),
       weekCards: document.getElementById("weekCards"),
       weeklyKanban: document.getElementById("weeklyKanban"),
+      weekOpenTotal: document.getElementById("weekOpenTotal"),
       weekReading: document.getElementById("weekReading"),
       suggestedPlanTable: document.getElementById("suggestedPlanTable"),
       competenceSummary: document.getElementById("competenceSummary"),
@@ -2538,7 +2561,7 @@
             <div class="week-mini-value">${brl(card.valor)}</div>
           </div>
           <div class="week-mini-line">
-            <span class="week-mini-date">Venc.: ${formatDateBR(card.vencimento) || "—"}</span>
+            <span class="week-mini-date">Programação: ${formatDateBR(card.vencimento) || "—"}</span>
           </div>
           <div class="week-mini-line">${badges.join("")}</div>
           ${text ? `<div class="week-mini-text">${escapeHtml(text)}</div>` : ""}
@@ -2567,7 +2590,7 @@
               </div>
             </div>
             <div class="week-day-list">
-              ${items.length ? items.map(renderWeeklyMiniCard).join("") : `<div class="week-day-empty">Sem despesas programadas para este dia.</div>`}
+              ${items.length ? items.map(renderWeeklyMiniCard).join("") : `<div class="week-day-empty">Nenhum pagamento em aberto para este dia.</div>`}
             </div>
           </section>
         `);
@@ -2588,6 +2611,14 @@
 
       if (els.weekIntervalPill) {
         els.weekIntervalPill.textContent = `Semana de ${formatDateObjectBR(weekStartMonday)} a ${formatDateObjectBR(weekEndSaturday)}`;
+      }
+
+      if (els.weekOpenTotal) {
+        els.weekOpenTotal.innerHTML = `
+          <span>Total em aberto da semana</span>
+          <strong>${brl(weekSummary.value)}</strong>
+          <small>${getTitleWord(weekSummary.qty)} em aberto programado${weekSummary.qty === 1 ? "" : "s"}</small>
+        `;
       }
 
       if (els.weekCards) {
