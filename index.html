@@ -3,98 +3,96 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kanban Financeiro</title>
+  <title>Painel Financeiro de Autorizações</title>
   <style>
     :root{
-      --bg:#eef3f8;
-      --bg-2:#e6edf5;
-      --panel:#ffffff;
-      --panel-soft:#f7fafc;
-      --text:#152536;
-      --muted:#5f7083;
-      --line:#d7e0ea;
-      --accent:#245584;
-      --accent-2:#2f6b9f;
-      --accent-soft:#edf4fb;
-      --danger-bg:#fff4f4;
-      --danger-border:#e9c2c2;
-      --today-bg:#fff8eb;
-      --today-border:#ead6a3;
-      --success-bg:#eef8f2;
-      --success-border:#cfe4d7;
-      --shadow:0 10px 28px rgba(31,54,79,.08);
-    }
-
-    [data-theme="dark"]{
-      --bg:#dde7f2;
-      --bg-2:#d6e1ec;
-      --panel:#f9fbfe;
-      --panel-soft:#eff4fa;
-      --text:#132131;
-      --muted:#607286;
-      --line:#cfd9e4;
-      --accent:#224f7a;
-      --accent-2:#2b638f;
-      --accent-soft:#e8f0f8;
-      --danger-bg:#fff2f2;
-      --danger-border:#e7c2c2;
-      --today-bg:#fff7e9;
-      --today-border:#e7d4a1;
-      --success-bg:#edf7f0;
-      --success-border:#cadfce;
-      --shadow:0 10px 24px rgba(31,54,79,.06);
+      --bg:#d9e3ee;
+      --bg-2:#e9eff6;
+      --panel:#f8fafc;
+      --panel-soft:#edf3f8;
+      --panel-muted:#e3ebf3;
+      --text:#142337;
+      --muted:#5d6f82;
+      --line:#d4dee9;
+      --accent:#1f4f78;
+      --accent-2:#2a638f;
+      --accent-soft:#e7f0f8;
+      --danger-bg:#fff7f1;
+      --danger-border:#ecd4c1;
+      --today-bg:#fff8e8;
+      --today-border:#e5cd86;
+      --success-bg:#edf7f1;
+      --success-border:#cddfd3;
+      --shadow:0 8px 22px rgba(22,45,70,.055);
     }
 
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--text)}
-    .wrap{max-width:1720px;margin:0 auto;padding:16px}
+    html,body{margin:0;padding:0;font-family:Inter,"Segoe UI",Roboto,Aptos,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 48%,#eef4f9 100%);color:var(--text);min-height:100%;font-size:14px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    .wrap{max-width:1760px;margin:0 auto;padding:18px}
     .card-shell{
       background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:18px;
+      border:1px solid rgba(207,219,231,.82);
+      border-radius:16px;
       box-shadow:var(--shadow);
     }
 
-    .hero{padding:18px 18px 16px;margin-bottom:14px}
+    .hero{
+      padding:10px 14px;
+      margin-bottom:10px;
+      background:rgba(248,250,252,.94);
+      border:1px solid rgba(205,218,231,.85);
+      border-radius:15px;
+      box-shadow:0 6px 18px rgba(31,54,79,.045);
+      backdrop-filter:saturate(112%) blur(2px);
+    }
     .hero-top{
-      display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:center;
+      flex-wrap:wrap;
     }
-    .hero h1{margin:0;font-size:24px;letter-spacing:.2px}
-    .hero-sub{margin-top:5px;font-size:13px;color:var(--muted);font-weight:600}
-    .hero-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .theme-wrap{
-      display:flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;border:1px solid var(--line);
-      background:var(--panel-soft);font-size:11px;font-weight:800
+    .brand-block{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-icon{
+      width:40px;height:40px;border-radius:12px;
+      display:grid;place-items:center;flex:0 0 auto;
+      background:linear-gradient(145deg,var(--accent),#1f466b);
+      box-shadow:0 6px 14px rgba(36,85,132,.12);
+      color:#fff;
     }
-    .switch{
-      width:44px;height:24px;border-radius:999px;background:#d9e5f1;position:relative;cursor:pointer;border:1px solid var(--line)
+    .brand-icon svg{width:23px;height:23px;display:block}
+    .brand-copy{min-width:0}
+    .brand-eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.24px;color:var(--accent);line-height:1.1}
+    .hero h1{margin:3px 0 0;font-size:20px;letter-spacing:-.22px;line-height:1.1;font-weight:760;color:#142337;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:620px}
+    .hero-sub{margin-top:4px;font-size:12px;color:var(--muted);font-weight:500;line-height:1.35}
+    .current-base-text{display:inline-flex;margin-top:5px;font-size:11px;color:#516478;font-weight:600;line-height:1.2}
+    .current-base-text strong{font-weight:750;color:#142337}
+    .hero-actions{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-left:auto;justify-content:flex-end}
+    .scope-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      height:36px;padding:0 11px;border-radius:999px;
+      background:#f4f8fc;border:1px solid #d8e4ef;
+      font-size:10px;font-weight:750;letter-spacing:.22px;color:#54697f;
+      white-space:nowrap;
     }
-    .switch::after{
-      content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
-      background:var(--accent);transition:.2s ease
-    }
-    [data-theme="dark"] .switch::after{left:22px}
+    .scope-chip strong{color:#142536}
+    .header-field{min-width:210px}
+    .header-field label{font-size:10px;text-transform:uppercase;letter-spacing:.2px;font-weight:650}
+    .header-field select{height:36px;padding:7px 36px 7px 11px;border-radius:11px;background:#f1f5f9;font-weight:650;color:#142536}
     .btn{
-      border:none;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;
-      padding:11px 14px;cursor:pointer;font-size:13px;transition:.2s ease
+      border:none;border-radius:12px;background:linear-gradient(180deg,var(--accent),#1e486f);color:#fff;font-weight:700;
+      height:36px;padding:0 14px;cursor:pointer;font-size:12px;letter-spacing:.15px;transition:.2s ease;box-shadow:0 6px 14px rgba(36,85,132,.12);display:inline-flex;align-items:center;justify-content:center
     }
     .btn:hover{background:var(--accent-2);transform:translateY(-1px)}
     .btn-secondary{
-      background:transparent;color:var(--text);border:1px solid var(--line)
+      background:var(--panel);color:var(--text);border:1px solid var(--line);box-shadow:none
     }
     .btn-secondary:hover{background:var(--panel-soft)}
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-    .chip{
-      display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);border:1px solid var(--line);
-      color:var(--text);border-radius:999px;padding:8px 11px;font-size:11px;font-weight:800
-    }
-
-    .selectors{
-      display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:10px;margin-top:14px
-    }
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:0}
+    .chip{display:inline-flex;align-items:center;gap:8px;background:#f3f8fd;border:1px solid #d6e3f0;color:var(--text);border-radius:999px;padding:7px 10px;font-size:10px;font-weight:700;letter-spacing:.16px}
+    .selectors{display:grid;grid-template-columns:minmax(220px,320px);gap:10px;margin-top:12px;align-items:end}
     .field{display:flex;flex-direction:column;gap:6px}
-    .field label{font-size:11px;font-weight:800;color:var(--muted)}
+    .field label{font-size:11px;font-weight:700;color:var(--muted)}
     .field input,.field select,.field textarea{
       width:100%;border:1px solid var(--line);background:var(--panel-soft);color:var(--text);
       border-radius:12px;padding:10px 12px;font-size:13px;outline:none
@@ -105,16 +103,16 @@
       display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:14px
     }
     .kpi{padding:14px}
-    .kpi-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.35px}
+    .kpi-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.35px}
     .kpi-label-lower{text-transform:none}
-    .kpi-value{margin-top:8px;font-size:18px;font-weight:900}
+    .kpi-value{margin-top:8px;font-size:18px;font-weight:720}
     .kpi-sub{margin-top:4px;font-size:11px;color:var(--muted)}
 
     .filters{padding:14px;margin-bottom:14px}
     .filters-head{
       display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px
     }
-    .filters-title{font-size:14px;font-weight:900}
+    .filters-title{font-size:14px;font-weight:720}
     .filters-info{font-size:12px;color:var(--muted);margin-top:4px}
     .filters-grid{
       display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px
@@ -145,7 +143,7 @@
     .column-head{
       display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:4px 4px 10px;cursor:pointer
     }
-    .column-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.4px}
+    .column-title{font-size:12px;font-weight:720;text-transform:uppercase;letter-spacing:.4px}
     .column-description{margin-top:4px;font-size:10px;line-height:1.35;color:var(--muted);font-weight:700}
     .column-meta{font-size:11px;color:var(--muted);margin-top:4px}
     .column-value{text-align:right}
@@ -159,7 +157,7 @@
       min-width:30px;
       height:28px;
       font-size:12px;
-      font-weight:900;
+      font-weight:720;
       cursor:pointer
     }
     .list{display:flex;flex-direction:column;gap:8px;min-height:110px}
@@ -192,12 +190,12 @@
     }
     .supplier{
       font-size:12px;
-      font-weight:900;
+      font-weight:720;
       line-height:1.25;
       word-break:break-word;
       overflow-wrap:anywhere;
     }
-    .amount{font-size:14px;font-weight:900;white-space:nowrap;text-align:right}
+    .amount{font-size:14px;font-weight:720;white-space:nowrap;text-align:right}
     .summary-line{
       margin-top:5px;
       display:flex;
@@ -205,16 +203,16 @@
       flex-wrap:wrap;
       align-items:center;
     }
-    .summary-small{font-size:10px;color:var(--muted);font-weight:800}
+    .summary-small{font-size:10px;color:var(--muted);font-weight:700}
     .toggle-btn{
       border:1px solid var(--line);
-      background:#fff;
+      background:var(--panel);
       color:var(--text);
       border-radius:10px;
       min-width:32px;
       height:30px;
       font-size:12px;
-      font-weight:900;
+      font-weight:720;
       cursor:pointer;
       flex-shrink:0
     }
@@ -225,9 +223,9 @@
       border-radius:999px;
       padding:3px 7px;
       font-size:9px;
-      font-weight:900;
+      font-weight:720;
       line-height:1;
-      background:#fff;
+      background:var(--panel);
       white-space:nowrap;
     }
     .priority-a_definir{color:var(--muted);background:var(--panel-soft);border-color:var(--line)}
@@ -241,21 +239,17 @@
 
     .history{margin:0 0 8px;font-size:11px;line-height:1.35}
     .mini-box{
-      background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin-bottom:7px
+      background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin-bottom:7px
     }
-    [data-theme="dark"] .mini-box{background:#fbfdff}
     .auth-box{
       border:1px solid var(--line);
       border-radius:10px;
       padding:8px 9px;
       margin-bottom:8px;
-      background:#fff;
+      background:var(--panel);
     }
     .auth-box.pending{background:var(--today-bg);border-color:var(--today-border)}
     .auth-box.approved{background:var(--success-bg);border-color:var(--success-border)}
-    [data-theme="dark"] .auth-box{background:#fbfdff}
-    [data-theme="dark"] .auth-box.pending{background:#fff7e9}
-    [data-theme="dark"] .auth-box.approved{background:#edf7f0}
     .auth-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
     .auth-btn{
       border:1px solid var(--line);
@@ -263,9 +257,9 @@
       min-height:30px;
       padding:7px 10px;
       font-size:10px;
-      font-weight:900;
+      font-weight:720;
       cursor:pointer;
-      background:#fff;
+      background:var(--panel);
       color:var(--text);
     }
     .auth-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -293,7 +287,7 @@
     }
     .paid-week-title{
       font-size:11px;
-      font-weight:900;
+      font-weight:720;
       text-transform:uppercase;
       letter-spacing:.3px;
     }
@@ -301,7 +295,7 @@
       margin-top:3px;
       font-size:10px;
       color:var(--muted);
-      font-weight:800;
+      font-weight:700;
       line-height:1.35;
     }
     .paid-week-right{
@@ -312,45 +306,44 @@
     }
     .paid-week-total{
       font-size:11px;
-      font-weight:900;
+      font-weight:720;
       white-space:nowrap;
       text-align:right;
     }
     .paid-week-toggle{
       border:1px solid var(--line);
-      background:#fff;
+      background:var(--panel);
       color:var(--text);
       border-radius:10px;
       min-width:30px;
       height:28px;
       font-size:12px;
-      font-weight:900;
+      font-weight:720;
       cursor:pointer;
     }
     .paid-week-list{display:flex;flex-direction:column;gap:8px}
     .paid-week-group.collapsed .paid-week-list{display:none}
-    [data-theme="dark"] .paid-week-group{background:#fbfdff}
-    .mini-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase}
-    .mini-value{margin-top:3px;font-size:11px;font-weight:800}
+    .mini-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase}
+    .mini-value{margin-top:3px;font-size:11px;font-weight:700}
     .mini-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
     .mini-chip{
-      border:1px solid var(--line);border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;background:#fff
+      border:1px solid var(--line);border-radius:999px;padding:5px 8px;font-size:10px;font-weight:720;background:#fff
     }
     .mini-chip.bad-v{color:#b42318}
     .mini-chip.bad-h{color:#b7791f}
     .mini-chip.bad-a{color:#1d4ed8}
     .obs{
-      background:#fff;border:1px dashed var(--line);border-radius:10px;padding:8px 9px;
+      background:var(--panel);border:1px dashed var(--line);border-radius:10px;padding:8px 9px;
       font-size:10px;color:var(--muted);line-height:1.35;margin-bottom:8px
     }
     .item-actions{
       display:grid;grid-template-columns:minmax(0,1fr) 36px 36px;gap:6px;align-items:center
     }
     .item-actions select,.icon-btn{
-      border:1px solid var(--line);background:#fff;color:var(--text);border-radius:10px;height:32px
+      border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;height:32px
     }
-    .item-actions select{padding:0 8px;font-weight:800;font-size:11px;min-width:0;width:100%}
-    .icon-btn{width:36px;min-width:36px;padding:0;font-size:12px;font-weight:900;cursor:pointer}
+    .item-actions select{padding:0 8px;font-weight:700;font-size:11px;min-width:0;width:100%}
+    .icon-btn{width:36px;min-width:36px;padding:0;font-size:12px;font-weight:720;cursor:pointer}
     .empty{
       border:1px dashed var(--line);border-radius:12px;padding:16px;text-align:center;
       color:var(--muted);font-size:12px;background:transparent
@@ -385,7 +378,7 @@
       padding:16px
     }
     .modal-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}
-    .modal-title{font-size:16px;font-weight:900}
+    .modal-title{font-size:16px;font-weight:720}
     .close{
       border:none;background:transparent;color:var(--text);font-size:24px;cursor:pointer;padding:4px 8px
     }
@@ -400,7 +393,7 @@
       border-radius:10px;
       padding:9px 11px;
       font-size:12px;
-      font-weight:800;
+      font-weight:700;
       line-height:1.35;
       margin:10px 0 0;
     }
@@ -418,7 +411,7 @@
     .modal-summary-item{min-width:0}
     .modal-summary-label{
       font-size:10px;
-      font-weight:900;
+      font-weight:720;
       color:var(--muted);
       text-transform:uppercase;
       letter-spacing:.25px;
@@ -426,7 +419,7 @@
     .modal-summary-value{
       margin-top:3px;
       font-size:12px;
-      font-weight:900;
+      font-weight:720;
       word-break:break-word;
       overflow-wrap:anywhere;
     }
@@ -439,9 +432,348 @@
     }
     .modal-text.muted{color:var(--muted);font-size:12px;font-weight:700}
 
+
+
+    .app-tabs{
+      display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin:0 0 14px;
+      padding:0 4px;border-bottom:1px solid rgba(196,211,226,.95);background:transparent;border-radius:0
+    }
+    .tab-button{
+      position:relative;border:0;background:transparent;color:var(--muted);border-radius:0;
+      padding:12px 2px 13px;font-size:12px;font-weight:750;letter-spacing:.08px;cursor:pointer
+    }
+    .tab-button::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;border-radius:999px;background:transparent;transition:.18s ease}
+    .tab-button.active{color:var(--accent);font-weight:720}
+    .tab-button.active::after{background:var(--accent)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    .dashboard-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px;align-items:start}
+    .dash-section{padding:16px;margin-bottom:14px}
+    .dash-section.weekly-main{padding:18px 18px 16px;border-radius:20px;box-shadow:0 14px 34px rgba(31,54,79,.075)}
+    .dash-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .dash-title{font-size:15px;font-weight:720;letter-spacing:.1px;text-transform:none}
+    .dash-sub{margin-top:4px;font-size:12px;color:var(--muted);font-weight:600;line-height:1.35}
+    .dash-title-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+    .dash-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel-soft);border-radius:999px;padding:7px 10px;font-size:10px;font-weight:720;color:var(--muted)}
+    .dash-pill.strong{background:var(--accent-soft);border-color:#c9dced;color:var(--accent)}
+    .week-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px;margin-bottom:0}
+    .week-card{position:relative;border:1px solid #d6e1ec;background:var(--panel);border-radius:16px;padding:13px 12px 12px;min-height:88px;box-shadow:0 6px 14px rgba(31,54,79,.038);overflow:hidden}
+    .week-card::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--accent);opacity:.9}
+    .week-card.overdue::before{background:#b7791f}
+    .week-card.today::before{background:#245584}
+    .week-card.week::before{background:#2f6b9f}
+    .week-card.dda::before{background:#8a6d1d}
+    .week-card.plan::before{background:#166534}
+    .week-card-title{font-size:10px;text-transform:uppercase;font-weight:750;letter-spacing:.45px;color:#53677c;line-height:1.25}
+    .week-card-value{font-size:17px;font-weight:750;margin-top:8px;white-space:nowrap;letter-spacing:-.3px}
+    .week-card-sub{font-size:11px;color:var(--muted);font-weight:750;margin-top:5px;line-height:1.35}
+    .week-reading{margin-top:12px;border:1px solid #d6e1ec;background:linear-gradient(180deg,#fff,#f7fafc);border-radius:15px;padding:12px 14px;font-size:12px;color:var(--muted);font-weight:750;line-height:1.45}
+    .week-reading strong{display:block;color:var(--text);font-size:12px;text-transform:uppercase;letter-spacing:.25px;margin-bottom:3px}
+    .table-wrap{width:100%;overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel-soft)}
+    .exec-table{width:100%;border-collapse:separate;border-spacing:0;min-width:920px}
+    .exec-table th,.exec-table td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:11px;text-align:left;vertical-align:top}
+    .exec-table th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.35px;font-weight:750;background:#fff}
+    .exec-table tr:last-child td{border-bottom:none}
+    .exec-table td strong{font-weight:750}
+    .table-action{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:7px 9px;font-size:10px;font-weight:720;cursor:pointer;color:var(--text);white-space:nowrap}
+    .table-action.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .table-action.danger{background:var(--danger-bg);border-color:var(--danger-border);color:#b42318}
+    .plan-order-control{display:flex;align-items:center;gap:7px;min-width:96px}
+    .plan-order-input{width:46px;height:32px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-size:12px;font-weight:720;text-align:center;outline:none}
+    .plan-order-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(36,85,132,.10)}
+    .plan-order-buttons{display:flex;gap:4px;align-items:center}
+    .plan-order-btn{width:28px;height:28px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);font-size:12px;font-weight:720;cursor:pointer;line-height:1}
+    .plan-order-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+    .plan-order-btn:disabled{opacity:.35;cursor:not-allowed}
+
+    .competence-list{display:flex;flex-direction:column;gap:9px}
+    .competence-row{display:grid;grid-template-columns:minmax(150px,1fr) 95px 160px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px;box-shadow:0 4px 12px rgba(31,54,79,.028)}
+    .competence-title{font-size:12px;font-weight:750}
+    .competence-meta{font-size:10px;color:var(--muted);font-weight:720;text-transform:uppercase;letter-spacing:.25px}
+    .bar-track{height:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+    .bar-fill{height:100%;background:var(--accent);border-radius:999px;min-width:3px}
+    .empty-soft{border:1px dashed var(--line);background:var(--panel-soft);border-radius:14px;padding:14px;font-size:12px;color:var(--muted);font-weight:700;text-align:center}
+
+    .badge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:3px 7px;font-size:9px;font-weight:750;line-height:1;background:var(--panel);white-space:nowrap}
+    .badge-plan{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+    .badge-auth{background:var(--success-bg);border-color:var(--success-border);color:#166534}
+    .badge-dda{background:var(--today-bg);border-color:var(--today-border);color:#92400e}
+    .item-status-line{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+    .plan-actions{margin-top:8px;margin-bottom:8px}
+
+    .column{background:linear-gradient(180deg,var(--panel),var(--panel-soft));}
+    .column-title{font-size:11px}
+    .item{transition:.18s ease;box-shadow:0 4px 12px rgba(31,54,79,.04)}
+    .item:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(31,54,79,.08)}
+
+
+
+    .weekly-board{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(260px,1fr));
+      gap:12px;
+      overflow:auto;
+      padding:2px 2px 8px;
+      scrollbar-width:thin;
+    }
+    .week-day-column{
+      min-width:260px;
+      background:linear-gradient(180deg,#ffffff,#f8fbfe);
+      border:1px solid #d6e1ec;
+      border-radius:18px;
+      box-shadow:0 10px 24px rgba(31,54,79,.055);
+      overflow:hidden;
+    }
+    .week-day-head{
+      position:relative;
+      padding:14px 13px 11px;
+      border-bottom:1px solid #e3ebf3;
+      background:var(--panel);
+    }
+    .week-day-head::before{
+      content:"";
+      position:absolute;
+      top:0;left:0;right:0;height:4px;
+      background:var(--accent);
+      opacity:.95;
+    }
+    .week-day-title{
+      font-size:11px;
+      font-weight:750;
+      text-transform:uppercase;
+      letter-spacing:.45px;
+      color:#17283a;
+      margin-top:2px;
+    }
+    .week-day-date{margin-top:3px;font-size:11px;color:var(--muted);font-weight:720}
+    .week-day-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:9px;font-size:11px;font-weight:720;color:var(--text)}
+    .week-day-total{white-space:nowrap;color:var(--accent)}
+    .week-day-list{display:flex;flex-direction:column;gap:9px;padding:10px;min-height:260px}
+    .week-day-empty{border:1px dashed #d7e0ea;border-radius:13px;padding:14px 10px;text-align:center;color:var(--muted);font-size:11px;font-weight:700;background:#fbfdff}
+    .week-mini-card{border:1px solid #dce6f0;background:var(--panel);border-radius:14px;padding:10px 10px 9px;box-shadow:0 5px 13px rgba(31,54,79,.045)}
+    .week-mini-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .week-mini-supplier{font-size:11px;font-weight:750;line-height:1.25;word-break:break-word;overflow-wrap:anywhere;color:#142436}
+    .week-mini-value{font-size:12px;font-weight:750;white-space:nowrap;color:#142436}
+    .week-mini-line{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+    .week-mini-text{margin-top:6px;font-size:10px;line-height:1.35;color:var(--muted);font-weight:750;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .week-mini-date{font-size:10px;color:var(--muted);font-weight:720;text-transform:uppercase;letter-spacing:.15px}
+    .previous-context{border-left:4px solid #d6a842;background:#fffdf8;box-shadow:none}
+    .dash-section{position:relative;overflow:hidden}
+    .dash-section::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),rgba(47,107,159,.45));opacity:.72}
+    .dashboard-grid .dash-section::before{background:linear-gradient(90deg,#166534,rgba(22,101,52,.25))}
+    .exec-table th{position:sticky;top:0;z-index:1}
+
+
+
+    .map-controls{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+    .map-nav{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .map-month-title{
+      min-width:190px;
+      text-align:center;
+      font-size:14px;
+      font-weight:750;
+      color:var(--text);
+      text-transform:capitalize;
+      letter-spacing:.2px;
+    }
+    .map-filter{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .map-filter label{
+      font-size:10px;
+      font-weight:750;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.35px;
+    }
+    .map-filter select{
+      border:1px solid var(--line);
+      background:var(--panel);
+      color:var(--text);
+      border-radius:12px;
+      padding:9px 11px;
+      font-size:12px;
+      font-weight:750;
+      outline:none;
+    }
+    .map-support{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:0 0 12px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:linear-gradient(180deg,var(--panel),var(--panel-soft));
+    }
+    .map-hint{font-size:12px;color:var(--muted);font-weight:650;line-height:1.35}
+    .map-legend{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .map-legend-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.24px;margin-right:2px}
+    .month-summary{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .month-summary-card{
+      position:relative;
+      background:var(--panel);
+      border:1px solid #d6e1ec;
+      border-radius:16px;
+      padding:12px;
+      box-shadow:0 4px 12px rgba(31,54,79,.028);
+      overflow:hidden;
+      min-height:78px;
+    }
+    .month-summary-card::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      right:0;
+      height:4px;
+      background:var(--accent);
+      opacity:.9;
+    }
+    .month-summary-label{
+      font-size:10px;
+      text-transform:uppercase;
+      color:#53677c;
+      font-weight:750;
+      letter-spacing:.35px;
+      line-height:1.25;
+    }
+    .month-summary-value{
+      margin-top:8px;
+      font-size:16px;
+      font-weight:750;
+      color:var(--text);
+      letter-spacing:-.25px;
+    }
+    .month-summary-sub{
+      margin-top:4px;
+      font-size:10px;
+      color:var(--muted);
+      font-weight:700;
+      line-height:1.35;
+    }
+    .calendar-wrap{
+      width:100%;
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:var(--panel);
+      box-shadow:0 6px 16px rgba(31,54,79,.035);
+    }
+    .calendar-weekdays{
+      display:grid;
+      grid-template-columns:repeat(7,minmax(150px,1fr));
+      min-width:1050px;
+      border-bottom:1px solid var(--line);
+      background:var(--panel-soft);
+    }
+    .calendar-weekday{
+      padding:10px 12px;
+      font-size:10px;
+      font-weight:750;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+      color:var(--muted);
+      border-right:1px solid var(--line);
+    }
+    .calendar-weekday:last-child{border-right:none}
+    .calendar-grid{
+      display:grid;
+      grid-template-columns:repeat(7,minmax(150px,1fr));
+      min-width:1050px;
+    }
+    .calendar-day{
+      min-height:150px;
+      border-right:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      padding:10px;
+      background:var(--panel);
+      position:relative;
+      cursor:default;
+      transition:.16s ease;
+    }
+    .calendar-day:nth-child(7n){border-right:none}
+    .calendar-day.out-month{background:#f6f9fc;opacity:.62}
+    .calendar-day.has-items{cursor:pointer;background:linear-gradient(180deg,#fff,#fbfdff)}
+    .calendar-day.has-items:hover{box-shadow:inset 0 0 0 2px rgba(36,85,132,.14);background:#f8fbfe}
+    .calendar-day.today{box-shadow:inset 0 0 0 2px rgba(36,85,132,.32);background:#f5faff}
+    .calendar-day.overdue-day::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#d6a842;opacity:.9}
+    .calendar-day.high-value::after{content:"Maior concentração";position:absolute;top:8px;right:8px;border:1px solid #bfd4e8;background:#eef6fd;color:var(--accent);border-radius:999px;padding:3px 7px;font-size:8px;font-weight:750;text-transform:uppercase;letter-spacing:.25px}
+    .calendar-day-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+    .calendar-day-number{font-size:13px;font-weight:750;color:var(--text)}
+    .calendar-day-total{font-size:10px;font-weight:750;color:var(--accent);white-space:nowrap;margin-top:1px;text-align:right}
+    .calendar-day-meta{font-size:10px;color:var(--muted);font-weight:720;margin-bottom:7px;display:flex;justify-content:space-between;gap:6px;align-items:center}
+    .calendar-item-list{display:flex;flex-direction:column;gap:5px}
+    .calendar-mini-item{border:1px solid #d8e3ee;background:var(--panel);border-radius:10px;padding:6px 7px;box-shadow:0 2px 6px rgba(31,54,79,.024)}
+    .calendar-mini-top{display:flex;justify-content:space-between;gap:6px;align-items:flex-start}
+    .calendar-mini-supplier{font-size:10px;font-weight:750;line-height:1.2;color:#142436;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    .calendar-mini-value{font-size:10px;font-weight:750;color:#142436;white-space:nowrap}
+    .calendar-mini-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+    .calendar-more{font-size:10px;color:var(--muted);font-weight:720;padding:2px 1px}
+    .day-details-list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+    .day-detail-card{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px;box-shadow:0 4px 12px rgba(31,54,79,.028)}
+    .day-detail-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:8px}
+    .day-detail-supplier{font-size:13px;font-weight:750;color:var(--text);line-height:1.25;max-width:520px}
+    .day-detail-value{font-size:14px;font-weight:750;color:var(--accent);white-space:nowrap}
+    .day-detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+    .day-detail-field{border:1px solid var(--line);background:var(--panel-soft);border-radius:10px;padding:7px 8px;min-width:0}
+    .day-detail-label{font-size:9px;font-weight:750;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+    .day-detail-value-text{margin-top:3px;font-size:11px;font-weight:720;color:var(--text);word-break:break-word;overflow-wrap:anywhere}
+    .day-detail-history{margin-top:8px;border:1px dashed var(--line);border-radius:10px;padding:8px;font-size:11px;line-height:1.35;color:var(--muted);font-weight:750;background:#fbfdff}
+    .day-detail-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .small-badge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:3px 6px;font-size:8px;font-weight:750;line-height:1;background:var(--panel);white-space:nowrap;text-transform:uppercase;letter-spacing:.15px}
+    .small-badge.overdue{background:#fff8eb;border-color:#ead6a3;color:#92400e}
+    .small-badge.today{background:#eef6fd;border-color:#bfd4e8;color:var(--accent)}
+    .small-badge.dda{background:#fff8eb;border-color:#ead6a3;color:#92400e}
+    .small-badge.plan{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+    .small-badge.auth{background:var(--success-bg);border-color:var(--success-border);color:#166534}
+    .small-badge.paid{background:var(--success-bg);border-color:var(--success-border);color:#166534}
+
+    @media (max-width:1380px){
+      .month-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+    @media (max-width:980px){
+      .month-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .map-controls{align-items:flex-start}
+      .day-detail-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:640px){
+      .month-summary{grid-template-columns:1fr}
+      .map-nav,.map-filter{width:100%}
+      .map-month-title{min-width:0;flex:1;text-align:left}
+      .calendar-weekdays,.calendar-grid{min-width:980px;grid-template-columns:repeat(7,140px)}
+      .calendar-day{min-height:142px}
+    }
+
     @media (max-width:1380px){
       .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
       .filters-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .week-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .weekly-board{grid-template-columns:repeat(6,minmax(220px,1fr))}
+      .dashboard-grid{grid-template-columns:1fr}
     }
     @media (max-width:980px){
       .selectors{grid-template-columns:1fr}
@@ -449,7 +781,10 @@
       .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
       .board{grid-template-columns:1fr}
       .modal-grid{grid-template-columns:1fr}
-      .hero-right{width:100%;justify-content:flex-start}
+      .hero-actions{width:100%;justify-content:flex-start}
+      .week-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .weekly-board{grid-template-columns:repeat(6,minmax(230px,1fr))}
+      .competence-row{grid-template-columns:1fr;gap:6px}
     }
     @media (max-width:640px){
       .wrap{padding:12px}
@@ -460,6 +795,10 @@
       .kpis{grid-template-columns:1fr}
       .chips{flex-direction:column;align-items:flex-start}
       .hero h1{font-size:20px}
+      .week-cards{grid-template-columns:1fr}
+      .weekly-board{display:flex;overflow-x:auto}
+      .week-day-column{min-width:82vw}
+      .tab-button{flex:1;text-align:center;padding:10px 8px}
       .modal{padding:10px}
       .modal-card{padding:14px;border-radius:16px}
       .modal-summary{grid-template-columns:1fr}
@@ -477,105 +816,227 @@
     }
   </style>
 </head>
-<body data-theme="light">
+<body>
   <div class="wrap">
-    <section class="hero card-shell">
+    <section class="hero">
       <div class="hero-top">
-        <div>
-          <h1>KANBAN FINANCEIRO</h1>
-          <div class="hero-sub">PAINEL EXECUTIVO DE CONTAS A PAGAR</div>
+        <div class="brand-block">
+          <div class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 7.5C4 5.57 5.57 4 7.5 4h9C18.43 4 20 5.57 20 7.5v9c0 1.93-1.57 3.5-3.5 3.5h-9C5.57 20 4 18.43 4 16.5v-9Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M8 14.5h8M8 10h8M8 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <div class="brand-eyebrow">Contas a Pagar</div>
+            <h1 id="scopeNameTop">Painel Financeiro de Autorizações</h1>
+            <div class="hero-sub" id="heroScopeContext">Controle de pendências, validação e autorização de pagamentos</div>
+            <div class="current-base-text" id="currentBaseText">Base atual: <strong>Malut Pneus</strong></div>
+          </div>
         </div>
-        <div class="hero-right">
-          <div class="theme-wrap">
-            <span>CLARO</span>
-            <div class="switch" id="themeSwitch"></div>
-            <span>ESCURO</span>
+        <div class="hero-actions">
+          <div class="field header-field">
+            <label for="companyScope">Empresa / Base</label>
+            <select id="companyScope">
+              <option value="MP">Malut Pneus</option>
+              <option value="MF">Malut Ferragens</option>
+              <option value="MR">Malut Recife</option>
+              <option value="ALL">Todas as bases</option>
+            </select>
           </div>
           <button class="btn" id="newEntryBtn">+ NOVO TÍTULO</button>
         </div>
       </div>
-
-      <div class="chips">
-        <span class="chip">VISÃO: <strong id="scopeLabel">MALUT PNEUS</strong></span>
-      </div>
-
-      <div class="selectors">
-        <div class="field">
-          <label for="companyScope">Empresa / Base</label>
-          <select id="companyScope">
-            <option value="MP">Malut Pneus</option>
-            <option value="MF">Malut Ferragens</option>
-            <option value="MR">Malut Recife</option>
-            <option value="ALL">Todas as bases</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="manualInfo">Lógica de lançamento</label>
-          <input id="manualInfo" type="text" value="DDA é uma etapa de validação antes da fila de pagamento" readonly>
-        </div>
-      </div>
     </section>
 
-    <section class="kpis" id="kpis"></section>
+    <nav class="app-tabs" aria-label="Navegação principal">
+      <button type="button" class="tab-button active" data-tab="dashboard">Visão da Semana</button>
+      <button type="button" class="tab-button" data-tab="operacional">Autorizações e Pagamentos</button>
+      <button type="button" class="tab-button" data-tab="mapa">Mapa de Pendências</button>
+    </nav>
 
-    <section class="filters card-shell">
-      <div class="filters-head">
-        <div>
-          <div class="filters-title">FILTROS</div>
-          <div class="filters-info" id="resultsInfo">Exibindo todos os cards</div>
+    <main class="tab-panel active" id="dashboardTab">
+      <section class="dash-section card-shell weekly-main">
+        <div class="dash-title-row">
+          <div>
+            <div class="dash-title">Kanban da Semana</div>
+            <div class="dash-sub">Despesas programadas de segunda a sábado para validação e autorização do cliente.</div>
+          </div>
+          <div class="dash-title-actions">
+            <span class="dash-pill strong" id="weekIntervalPill">Semana</span>
+          </div>
         </div>
-        <button class="btn btn-secondary" id="clearFilters">Limpar filtros</button>
+        <div class="weekly-board" id="weeklyKanban"></div>
+        <div class="week-reading previous-context" id="weekReading"></div>
+        <div class="week-cards" id="weekCards"></div>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="dash-section card-shell">
+          <div class="dash-title-row">
+            <div>
+              <div class="dash-title">Plano Sugerido de Autorização</div>
+              <div class="dash-sub">Lista manual e curada pela equipe financeira/BPO para orientar a decisão do cliente.</div>
+            </div>
+            <span class="dash-pill">Definição manual</span>
+          </div>
+          <div id="suggestedPlanTable"></div>
+        </section>
       </div>
 
-      <div class="filters-grid">
-        <div class="field">
-          <label for="filterFrom">Vencimento de</label>
-          <input type="date" id="filterFrom">
+      <section class="dash-section card-shell">
+        <div class="dash-title-row">
+          <div>
+            <div class="dash-title">Pendências por Competência</div>
+            <div class="dash-sub">Distribuição dos títulos em aberto por mês de vencimento.</div>
+          </div>
         </div>
-        <div class="field">
-          <label for="filterTo">Vencimento até</label>
-          <input type="date" id="filterTo">
-        </div>
-        <div class="field">
-          <label for="filterSupplier">Fornecedor</label>
-          <select id="filterSupplier"></select>
-        </div>
-        <div class="field">
-          <label for="filterCondition">Condição</label>
-          <select id="filterCondition">
-            <option value="">Todas</option>
-            <option value="VENCIDO">VENCIDO</option>
-            <option value="VENCE HOJE">VENCE HOJE</option>
-            <option value="A VENCER">A VENCER</option>
-            <option value="PAGO">PAGO</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="filterMin">Valor mínimo</label>
-          <input type="text" id="filterMin" placeholder="0,00" inputmode="decimal">
-        </div>
-        <div class="field">
-          <label for="filterMax">Valor máximo</label>
-          <input type="text" id="filterMax" placeholder="0,00" inputmode="decimal">
-        </div>
-        <div class="field">
-          <label for="filterColumn">Coluna atual</label>
-          <select id="filterColumn"></select>
-        </div>
-        <div class="field">
-          <label for="filterPriority">Prioridade</label>
-          <select id="filterPriority">
-            <option value="">Todas</option>
-            <option value="a_definir">A definir</option>
-            <option value="alta">Alta</option>
-            <option value="media">Média</option>
-            <option value="baixa">Baixa</option>
-          </select>
-        </div>
-      </div>
-    </section>
+        <div id="competenceSummary"></div>
+      </section>
+    </main>
 
-    <section class="board" id="board"></section>
+    <main class="tab-panel" id="operacionalTab">
+      <section class="kpis" id="kpis"></section>
+
+      <section class="filters card-shell">
+        <div class="filters-head">
+          <div>
+            <div class="filters-title">FILTROS OPERACIONAIS</div>
+            <div class="filters-info" id="resultsInfo">Exibindo todos os cards</div>
+          </div>
+          <button class="btn btn-secondary" id="clearFilters">Limpar filtros</button>
+        </div>
+
+        <div class="filters-grid">
+          <div class="field">
+            <label for="filterFrom">Vencimento de</label>
+            <input type="date" id="filterFrom">
+          </div>
+          <div class="field">
+            <label for="filterTo">Vencimento até</label>
+            <input type="date" id="filterTo">
+          </div>
+          <div class="field">
+            <label for="filterSupplier">Fornecedor</label>
+            <select id="filterSupplier"></select>
+          </div>
+          <div class="field">
+            <label for="filterCondition">Condição</label>
+            <select id="filterCondition">
+              <option value="">Todas</option>
+              <option value="VENCIDO">VENCIDO</option>
+              <option value="VENCE HOJE">VENCE HOJE</option>
+              <option value="A VENCER">A VENCER</option>
+              <option value="PAGO">PAGO</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filterMin">Valor mínimo</label>
+            <input type="text" id="filterMin" placeholder="0,00" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="filterMax">Valor máximo</label>
+            <input type="text" id="filterMax" placeholder="0,00" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="filterColumn">Coluna atual</label>
+            <select id="filterColumn"></select>
+          </div>
+          <div class="field">
+            <label for="filterPriority">Prioridade</label>
+            <select id="filterPriority">
+              <option value="">Todas</option>
+              <option value="a_definir">A definir</option>
+              <option value="alta">Alta</option>
+              <option value="media">Média</option>
+              <option value="baixa">Baixa</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filterDelayRange">Faixa de atraso</label>
+            <select id="filterDelayRange">
+              <option value="">Todas</option>
+              <option value="0">Sem atraso</option>
+              <option value="1-7">1 a 7 dias</option>
+              <option value="8-30">8 a 30 dias</option>
+              <option value="31+">Acima de 30 dias</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filterCompetence">Competência</label>
+            <select id="filterCompetence"></select>
+          </div>
+          <div class="field">
+            <label for="filterPlan">No plano sugerido?</label>
+            <select id="filterPlan">
+              <option value="">Todos</option>
+              <option value="SIM">Sim</option>
+              <option value="NAO">Não</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="board" id="board"></section>
+    </main>
+
+    <main class="tab-panel" id="mapaTab">
+      <section class="dash-section card-shell">
+        <div class="dash-title-row">
+          <div>
+            <div class="dash-title">Mapa de Pendências</div>
+            <div class="dash-sub">Calendário mensal das pendências financeiras por data de vencimento.</div>
+          </div>
+        </div>
+
+        <div class="map-controls">
+          <div class="map-nav">
+            <button type="button" class="btn btn-secondary" id="mapPrevMonth">← Mês anterior</button>
+            <div class="map-month-title" id="mapMonthTitle">Mês atual</div>
+            <button type="button" class="btn btn-secondary" id="mapNextMonth">Próximo mês →</button>
+            <button type="button" class="btn" id="mapCurrentMonth">Mês atual</button>
+          </div>
+          <div class="map-filter">
+            <label for="mapViewFilter">Visualização</label>
+            <select id="mapViewFilter">
+              <option value="open" selected>Em aberto</option>
+              <option value="all">Todos</option>
+              <option value="paid">Pagos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="month-summary" id="monthSummary"></div>
+
+        <div class="map-support">
+          <div class="map-hint">Clique em um dia para visualizar os detalhes.</div>
+          <div class="map-legend" aria-label="Legenda do mapa de pendências">
+            <span class="map-legend-label">Legenda:</span>
+            <span class="small-badge overdue">Vencido</span>
+            <span class="small-badge today">Vence hoje</span>
+            <span class="small-badge dda">DDA</span>
+            <span class="small-badge plan">No plano</span>
+            <span class="small-badge auth">Autorizado</span>
+            <span class="small-badge paid">Pago</span>
+          </div>
+        </div>
+
+        <div class="calendar-wrap">
+          <div class="calendar-weekdays">
+            <div class="calendar-weekday">Seg</div>
+            <div class="calendar-weekday">Ter</div>
+            <div class="calendar-weekday">Qua</div>
+            <div class="calendar-weekday">Qui</div>
+            <div class="calendar-weekday">Sex</div>
+            <div class="calendar-weekday">Sáb</div>
+            <div class="calendar-weekday">Dom</div>
+          </div>
+          <div class="calendar-grid" id="monthCalendar"></div>
+        </div>
+
+        <div id="noDueDateBlock" style="margin-top:12px"></div>
+      </section>
+    </main>
 
     <div class="footer-bar">
       Desenvolvido por <strong>Mais Contabilidade &amp; Soluções Empresariais</strong>
@@ -775,6 +1236,61 @@
   </div>
 
 
+  <div class="modal" id="planModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">PLANO SUGERIDO DE AUTORIZAÇÃO</div>
+        <button class="close" id="closePlanModal">×</button>
+      </div>
+      <div class="modal-summary" id="planSummary"></div>
+      <div class="modal-grid">
+        <div class="field">
+          <label for="planOrder">Ordem sugerida *</label>
+          <input type="number" id="planOrder" min="1" step="1" placeholder="1">
+        </div>
+        <div class="field">
+          <label for="planPriorityType">Classificação da prioridade *</label>
+          <select id="planPriorityType">
+            <option value="">Selecione</option>
+            <option value="Tributos e obrigações">Tributos e obrigações</option>
+            <option value="Acordos e negociações">Acordos e negociações</option>
+            <option value="Operacional essencial">Operacional essencial</option>
+            <option value="Fornecedor estratégico">Fornecedor estratégico</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label for="planReason">Motivo da sugestão *</label>
+          <input type="text" id="planReason" placeholder="Ex.: Título vencido de competência anterior com valor relevante.">
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label for="planObservation">Observação da equipe</label>
+          <textarea id="planObservation"></textarea>
+        </div>
+      </div>
+      <div class="form-error" id="planError"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelPlanModal">Cancelar</button>
+        <button type="button" class="btn" id="savePlanBtn">Salvar no plano</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="removePlanConfirmModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">REMOVER DO PLANO SUGERIDO?</div>
+        <button class="close" id="closeRemovePlanConfirmModal">×</button>
+      </div>
+      <p class="modal-text">Tem certeza de que deseja remover este título do Plano Sugerido de Autorização?</p>
+      <p class="modal-text muted">O título não será excluído e continuará disponível no sistema.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelRemovePlanConfirmModal">Cancelar</button>
+        <button type="button" class="btn" id="confirmRemovePlanBtn">Remover do plano</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="protectedActionPasswordModal">
     <div class="modal-card">
       <div class="modal-head">
@@ -796,6 +1312,22 @@
     </div>
   </div>
 
+
+  <div class="modal" id="dayDetailsModal">
+    <div class="modal-card" style="width:min(980px,100%)">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">DETALHES DO DIA</div>
+          <p class="modal-text muted" id="dayDetailsSubtitle" style="margin:4px 0 0"></p>
+        </div>
+        <button class="close" id="closeDayDetailsModal">×</button>
+      </div>
+      <div id="dayDetailsBody"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="okDayDetailsBtn">Fechar</button>
+      </div>
+    </div>
+  </div>
 
   <div class="modal" id="deleteConfirmModal">
     <div class="modal-card">
@@ -916,7 +1448,15 @@
         dataPagamento: item.dataPagamento || "",
         pagoEm: item.pagoEm || "",
         movimentacoes: Array.isArray(item.movimentacoes) ? item.movimentacoes : [],
-        expanded: false
+        expanded: false,
+        planoSugerido: {
+          incluido: false,
+          ordem: null,
+          tipoPrioridade: "",
+          motivo: "",
+          observacao: "",
+          incluidoEm: ""
+        }
       };
     }
 
@@ -1018,6 +1558,18 @@
       return ["MP", "MF", "MR"].includes(value) ? value : "MP";
     }
 
+    function normalizePlanoSugerido(value) {
+      const source = value && typeof value === "object" ? value : {};
+      return {
+        incluido: !!source.incluido,
+        ordem: Number.isFinite(Number(source.ordem)) && Number(source.ordem) > 0 ? Number(source.ordem) : null,
+        tipoPrioridade: source.tipoPrioridade || "",
+        motivo: source.motivo || "",
+        observacao: source.observacao || "",
+        incluidoEm: source.incluidoEm || ""
+      };
+    }
+
     function normalizeCard(id, data) {
       return {
         id,
@@ -1040,7 +1592,8 @@
         dataPagamento: data.dataPagamento || "",
         pagoEm: data.pagoEm || "",
         movimentacoes: Array.isArray(data.movimentacoes) ? data.movimentacoes : [],
-        expanded: !!data.expanded
+        expanded: !!data.expanded,
+        planoSugerido: normalizePlanoSugerido(data.planoSugerido)
       };
     }
 
@@ -1082,7 +1635,8 @@
           dataPagamento: payload.dataPagamento || "",
           pagoEm: payload.pagoEm || "",
           movimentacoes: Array.isArray(payload.movimentacoes) ? payload.movimentacoes : [],
-          expanded: !!payload.expanded
+          expanded: !!payload.expanded,
+          planoSugerido: normalizePlanoSugerido(payload.planoSugerido)
         };
         await setDoc(ref, card);
       },
@@ -1209,6 +1763,46 @@
         });
       },
 
+      async updateSuggestedPlan(id, payload) {
+        const ordem = Number(payload.ordem || 0);
+        await updateDoc(doc(db, COLLECTION_NAME, id), {
+          planoSugerido: {
+            incluido: true,
+            ordem: Number.isFinite(ordem) && ordem > 0 ? ordem : null,
+            tipoPrioridade: payload.tipoPrioridade || "",
+            motivo: payload.motivo || "",
+            observacao: payload.observacao || "",
+            incluidoEm: payload.incluidoEm || new Date().toISOString()
+          }
+        });
+      },
+
+      async updateSuggestedPlanOrders(updates) {
+        if (!Array.isArray(updates) || !updates.length) return;
+        const batch = writeBatch(db);
+        updates.forEach(item => {
+          const ordem = Number(item?.ordem || 0);
+          if (!item?.id || !Number.isInteger(ordem) || ordem < 1) return;
+          batch.update(doc(db, COLLECTION_NAME, item.id), {
+            "planoSugerido.ordem": ordem
+          });
+        });
+        await batch.commit();
+      },
+
+      async removeSuggestedPlan(id) {
+        const ref = doc(db, COLLECTION_NAME, id);
+        const snap = await getDoc(ref);
+        const currentData = snap.exists() ? snap.data() : {};
+        const currentPlan = normalizePlanoSugerido(currentData?.planoSugerido);
+        await updateDoc(ref, {
+          planoSugerido: {
+            ...currentPlan,
+            incluido: false
+          }
+        });
+      },
+
       async toggleCard(id, expanded) {
         await updateDoc(doc(db, COLLECTION_NAME, id), { expanded: !!expanded });
       }
@@ -1226,12 +1820,12 @@
     }
 
     const COLUMNS = [
-      { id: "dda", title: "DDA pendente de validação" },
-      { id: "fila", title: "Fila de pagamento" },
-      { id: "hoje", title: "Pagar hoje" },
-      { id: "semana", title: "Ainda esta semana" },
-      { id: "proxima", title: "Próxima semana" },
-      { id: "pago", title: "Pago" }
+      { id: "dda", title: "DDA pendente de validação", description: "Boletos que precisam ser validados antes da autorização." },
+      { id: "fila", title: "Fila de pagamento", description: "Títulos aguardando decisão de pagamento." },
+      { id: "hoje", title: "Pagar hoje", description: "Títulos autorizados para pagamento imediato." },
+      { id: "semana", title: "Ainda esta semana", description: "Títulos com vencimento dentro da semana atual." },
+      { id: "proxima", title: "Próxima semana", description: "Títulos programados para a próxima semana." },
+      { id: "pago", title: "Pago", description: "Títulos já confirmados como pagos." }
     ];
 
     let collapsedColumns = {
@@ -1292,14 +1886,42 @@
     let currentDeleteCardId = null;
     let protectedActionType = null;
     let protectedActionCardId = null;
+    let currentPlanCardId = null;
+    let currentRemovePlanCardId = null;
+    let activeTab = "dashboard";
+    let currentMapDate = getTodayDate();
+    let mapViewFilter = "open";
+    let currentDayDetailsKey = "";
 
     const els = {
       board: document.getElementById("board"),
       kpis: document.getElementById("kpis"),
+      dashboardTab: document.getElementById("dashboardTab"),
+      operacionalTab: document.getElementById("operacionalTab"),
+      mapaTab: document.getElementById("mapaTab"),
+      tabButtons: document.querySelectorAll(".tab-button"),
+      dashboardScopePill: document.getElementById("dashboardScopePill"),
+      weekIntervalPill: document.getElementById("weekIntervalPill"),
+      weekCards: document.getElementById("weekCards"),
+      weeklyKanban: document.getElementById("weeklyKanban"),
+      weekReading: document.getElementById("weekReading"),
+      suggestedPlanTable: document.getElementById("suggestedPlanTable"),
+      competenceSummary: document.getElementById("competenceSummary"),
+      mapScopePill: document.getElementById("mapScopePill"),
+      mapPrevMonth: document.getElementById("mapPrevMonth"),
+      mapNextMonth: document.getElementById("mapNextMonth"),
+      mapCurrentMonth: document.getElementById("mapCurrentMonth"),
+      mapMonthTitle: document.getElementById("mapMonthTitle"),
+      mapViewFilter: document.getElementById("mapViewFilter"),
+      monthSummary: document.getElementById("monthSummary"),
+      monthCalendar: document.getElementById("monthCalendar"),
+      noDueDateBlock: document.getElementById("noDueDateBlock"),
       resultsInfo: document.getElementById("resultsInfo"),
-      themeSwitch: document.getElementById("themeSwitch"),
       companyScope: document.getElementById("companyScope"),
       scopeLabel: document.getElementById("scopeLabel"),
+      scopeNameTop: document.getElementById("scopeNameTop"),
+      heroScopeContext: document.getElementById("heroScopeContext"),
+      currentBaseText: document.getElementById("currentBaseText"),
       filterFrom: document.getElementById("filterFrom"),
       filterTo: document.getElementById("filterTo"),
       filterSupplier: document.getElementById("filterSupplier"),
@@ -1308,6 +1930,9 @@
       filterMax: document.getElementById("filterMax"),
       filterColumn: document.getElementById("filterColumn"),
       filterPriority: document.getElementById("filterPriority"),
+      filterDelayRange: document.getElementById("filterDelayRange"),
+      filterCompetence: document.getElementById("filterCompetence"),
+      filterPlan: document.getElementById("filterPlan"),
       clearFilters: document.getElementById("clearFilters"),
       newEntryBtn: document.getElementById("newEntryBtn"),
 
@@ -1366,6 +1991,28 @@
       closePaymentConfirmModal: document.getElementById("closePaymentConfirmModal"),
       cancelPaymentConfirmModal: document.getElementById("cancelPaymentConfirmModal"),
       confirmPaymentBtn: document.getElementById("confirmPaymentBtn"),
+
+      dayDetailsModal: document.getElementById("dayDetailsModal"),
+      closeDayDetailsModal: document.getElementById("closeDayDetailsModal"),
+      okDayDetailsBtn: document.getElementById("okDayDetailsBtn"),
+      dayDetailsSubtitle: document.getElementById("dayDetailsSubtitle"),
+      dayDetailsBody: document.getElementById("dayDetailsBody"),
+
+      planModal: document.getElementById("planModal"),
+      planSummary: document.getElementById("planSummary"),
+      planOrder: document.getElementById("planOrder"),
+      planPriorityType: document.getElementById("planPriorityType"),
+      planReason: document.getElementById("planReason"),
+      planObservation: document.getElementById("planObservation"),
+      planError: document.getElementById("planError"),
+      closePlanModal: document.getElementById("closePlanModal"),
+      cancelPlanModal: document.getElementById("cancelPlanModal"),
+      savePlanBtn: document.getElementById("savePlanBtn"),
+
+      removePlanConfirmModal: document.getElementById("removePlanConfirmModal"),
+      closeRemovePlanConfirmModal: document.getElementById("closeRemovePlanConfirmModal"),
+      cancelRemovePlanConfirmModal: document.getElementById("cancelRemovePlanConfirmModal"),
+      confirmRemovePlanBtn: document.getElementById("confirmRemovePlanBtn"),
 
       protectedActionPasswordModal: document.getElementById("protectedActionPasswordModal"),
       protectedActionPasswordTitle: document.getElementById("protectedActionPasswordTitle"),
@@ -1542,6 +2189,55 @@
       return found ? found.title.toUpperCase() : String(columnId || "").toUpperCase();
     }
 
+    function normalizePlan(value){
+      const source = value && typeof value === "object" ? value : {};
+      return {
+        incluido: !!source.incluido,
+        ordem: Number.isFinite(Number(source.ordem)) && Number(source.ordem) > 0 ? Number(source.ordem) : null,
+        tipoPrioridade: source.tipoPrioridade || "",
+        motivo: source.motivo || "",
+        observacao: source.observacao || "",
+        incluidoEm: source.incluidoEm || ""
+      };
+    }
+
+    function getPlan(card){
+      return normalizePlan(card?.planoSugerido);
+    }
+
+    function isInSuggestedPlan(card){
+      return getPlan(card).incluido === true;
+    }
+
+    function isOpenCard(card){
+      return card && card.column !== "pago";
+    }
+
+    function getCompetenceKey(dateStr){
+      return String(dateStr || "").slice(0,7) || "sem_competencia";
+    }
+
+    function getCompetenceLabel(key){
+      if (!key || key === "sem_competencia") return "Sem competência";
+      const [year, month] = key.split("-").map(Number);
+      if (!year || !month) return key;
+      const date = new Date(year, month - 1, 1, 12, 0, 0);
+      return date.toLocaleDateString("pt-BR", { month:"long", year:"numeric" }).replace(/^./, c => c.toUpperCase());
+    }
+
+    function getCurrentCompetenceKey(){
+      const today = getTodayDate();
+      return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2,"0")}`;
+    }
+
+    function getCompetenceBadge(key){
+      const current = getCurrentCompetenceKey();
+      if (key === current) return "Mês atual";
+      if (key < current) return "Mês anterior";
+      return "Próxima competência";
+    }
+
+
     function getScopeCards(){
       const scope = els.companyScope.value;
       if (scope === "ALL") return cards;
@@ -1559,6 +2255,14 @@
       if (suppliers.includes(current)) els.filterSupplier.value = current;
     }
 
+    function refreshCompetenceOptions(){
+      if (!els.filterCompetence) return;
+      const current = els.filterCompetence.value;
+      const keys = [...new Set(getScopeCards().map(c => getCompetenceKey(c.vencimento)).filter(Boolean))].sort();
+      els.filterCompetence.innerHTML = `<option value="">Todas</option>` + keys.map(key => `<option value="${escapeHtml(key)}">${escapeHtml(getCompetenceLabel(key))}</option>`).join("");
+      if (keys.includes(current)) els.filterCompetence.value = current;
+    }
+
     function getFilteredCards(){
       const list = getScopeCards();
       const from = els.filterFrom.value;
@@ -1569,6 +2273,9 @@
       const max = parseBRLInput(els.filterMax.value);
       const column = els.filterColumn.value;
       const priority = els.filterPriority.value;
+      const delayRange = els.filterDelayRange?.value || "";
+      const competence = els.filterCompetence?.value || "";
+      const planFilter = els.filterPlan?.value || "";
 
       return list.filter(card => {
         if (from && card.vencimento < from) return false;
@@ -1579,6 +2286,17 @@
         if (els.filterMax.value && Number(card.valor) > max) return false;
         if (column && card.column !== column) return false;
         if (priority && normalizePriority(card.prioridade) !== priority) return false;
+        if (competence && getCompetenceKey(card.vencimento) !== competence) return false;
+        if (planFilter === "SIM" && !isInSuggestedPlan(card)) return false;
+        if (planFilter === "NAO" && isInSuggestedPlan(card)) return false;
+        if (delayRange) {
+          const overdue = getDaysOverdue(card.vencimento, card.column);
+          const safeOverdue = overdue === null ? 0 : overdue;
+          if (delayRange === "0" && safeOverdue > 0) return false;
+          if (delayRange === "1-7" && !(safeOverdue >= 1 && safeOverdue <= 7)) return false;
+          if (delayRange === "8-30" && !(safeOverdue >= 8 && safeOverdue <= 30)) return false;
+          if (delayRange === "31+" && safeOverdue < 31) return false;
+        }
         return true;
       });
     }
@@ -1599,23 +2317,23 @@
     function renderKpis(){
       const scopeCards = getScopeCards();
       const totalCards = scopeCards.length;
-      const openColumns = ["fila", "hoje", "semana", "proxima"];
-      const openValue = scopeCards
-        .filter(c => openColumns.includes(c.column))
-        .reduce((acc,c)=>acc + Number(c.valor || 0),0);
+      const openCards = scopeCards.filter(isOpenCard);
+      const openValue = openCards.reduce((acc,c)=>acc + Number(c.valor || 0),0);
+      const planCards = scopeCards.filter(c => isInSuggestedPlan(c) && c.column !== "pago");
 
       const columnMetrics = COLUMNS.map(col => {
         const items = scopeCards.filter(c => c.column === col.id);
         return {
           ...col,
           qty: items.length,
-          value: items.reduce((acc,c)=>acc + Number(c.valor),0)
+          value: items.reduce((acc,c)=>acc + Number(c.valor || 0),0)
         };
       });
 
       els.kpis.innerHTML = [
-        `<div class="kpi card-shell"><div class="kpi-label">Total de cards</div><div class="kpi-value">${totalCards}</div><div class="kpi-sub">Base visível atual</div></div>`,
-        `<div class="kpi card-shell"><div class="kpi-label kpi-label-lower">valor em aberto</div><div class="kpi-value">${brl(openValue)}</div><div class="kpi-sub">Fila de pagamento + pagar hoje + ainda esta semana + próxima semana</div></div>`,
+        `<div class="kpi card-shell"><div class="kpi-label">Total de títulos</div><div class="kpi-value">${totalCards}</div><div class="kpi-sub">Base visível atual</div></div>`,
+        `<div class="kpi card-shell"><div class="kpi-label">Valor em aberto</div><div class="kpi-value">${brl(openValue)}</div><div class="kpi-sub">Exclui títulos pagos</div></div>`,
+        `<div class="kpi card-shell"><div class="kpi-label">No plano sugerido</div><div class="kpi-value">${brl(planCards.reduce((acc,c)=>acc + Number(c.valor || 0),0))}</div><div class="kpi-sub">${planCards.length} título${planCards.length === 1 ? "" : "s"} ativo${planCards.length === 1 ? "" : "s"}</div></div>`,
         ...columnMetrics.map(item => `
           <div class="kpi card-shell">
             <div class="kpi-label">${item.title}</div>
@@ -1712,6 +2430,745 @@
         });
     }
 
+
+    function getWeekStartMonday(baseDate = getTodayDate()){
+      const copy = new Date(baseDate);
+      const day = copy.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      copy.setDate(copy.getDate() + diff);
+      copy.setHours(12,0,0,0);
+      return copy;
+    }
+
+    function getWeekEndSaturday(baseDate = getTodayDate()){
+      const start = getWeekStartMonday(baseDate);
+      const end = new Date(start);
+      end.setDate(start.getDate() + 5);
+      end.setHours(23,59,59,999);
+      return end;
+    }
+
+    function formatDateObjectBR(date){
+      if (!date || Number.isNaN(date.getTime())) return "";
+      return date.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit", year:"numeric" });
+    }
+
+    function getTitleWord(qty){
+      return `${qty} título${qty === 1 ? "" : "s"}`;
+    }
+
+    function getWeekDashboardMetrics(){
+      const scopeCards = getScopeCards();
+      const open = scopeCards.filter(isOpenCard);
+      const today = getTodayDate();
+      const weekStartMonday = getWeekStartMonday(today);
+      const weekEndSaturday = getWeekEndSaturday(today);
+
+      const buckets = {
+        overdueBeforeWeek: [],
+        dda: [],
+        plan: [],
+        week: [],
+        byDay: new Map()
+      };
+
+      for (let i = 0; i < 6; i++) {
+        const day = new Date(weekStartMonday);
+        day.setDate(weekStartMonday.getDate() + i);
+        buckets.byDay.set(dateToISO(day), []);
+      }
+
+      open.forEach(card => {
+        const due = parseDate(card.vencimento);
+        if (card.column === "dda") buckets.dda.push(card);
+        if (isInSuggestedPlan(card)) buckets.plan.push(card);
+        if (!due) return;
+        if (due < weekStartMonday) buckets.overdueBeforeWeek.push(card);
+        if (due >= weekStartMonday && due <= weekEndSaturday) {
+          buckets.week.push(card);
+          const key = dateToISO(due);
+          if (buckets.byDay.has(key)) buckets.byDay.get(key).push(card);
+        }
+      });
+
+      buckets.byDay.forEach((items, key) => {
+        buckets.byDay.set(key, items.sort((a,b) => {
+          if (a.autorizadoPagamento !== b.autorizadoPagamento) return a.autorizadoPagamento ? 1 : -1;
+          if (isInSuggestedPlan(a) !== isInSuggestedPlan(b)) return isInSuggestedPlan(a) ? -1 : 1;
+          const priorityOrder = { alta: 1, media: 2, baixa: 3, a_definir: 4 };
+          const pa = priorityOrder[normalizePriority(a.prioridade)] || 4;
+          const pb = priorityOrder[normalizePriority(b.prioridade)] || 4;
+          if (pa !== pb) return pa - pb;
+          return Number(b.valor || 0) - Number(a.valor || 0);
+        }));
+      });
+
+      return { buckets, weekStartMonday, weekEndSaturday };
+    }
+
+    function summarizeCards(list){
+      return {
+        qty: list.length,
+        value: list.reduce((acc,c)=>acc + Number(c.valor || 0),0)
+      };
+    }
+
+    function getWeekDayName(date){
+      return date.toLocaleDateString("pt-BR", { weekday:"long" }).replace("-feira", "-feira").toUpperCase();
+    }
+
+    function getCompactCardText(card){
+      const source = String(card.historico || card.observacao || "").trim();
+      if (!source) return "";
+      return source.length > 92 ? `${source.slice(0, 89)}...` : source;
+    }
+
+    function renderWeeklyMiniCard(card){
+      const badges = [];
+      badges.push(`<span class="priority-badge priority-${escapeHtml(normalizePriority(card.prioridade))}">${escapeHtml(getPriorityLabel(card.prioridade))}</span>`);
+      if (isInSuggestedPlan(card)) badges.push(`<span class="badge badge-plan">NO PLANO</span>`);
+      if (card.column === "dda") badges.push(`<span class="badge badge-dda">DDA</span>`);
+      if (card.autorizadoPagamento) badges.push(`<span class="badge badge-auth">AUTORIZADO</span>`);
+      const text = getCompactCardText(card);
+
+      return `
+        <article class="week-mini-card">
+          <div class="week-mini-top">
+            <div class="week-mini-supplier">${escapeHtml(card.fornecedor || "—")}</div>
+            <div class="week-mini-value">${brl(card.valor)}</div>
+          </div>
+          <div class="week-mini-line">
+            <span class="week-mini-date">Venc.: ${formatDateBR(card.vencimento) || "—"}</span>
+          </div>
+          <div class="week-mini-line">${badges.join("")}</div>
+          ${text ? `<div class="week-mini-text">${escapeHtml(text)}</div>` : ""}
+        </article>
+      `;
+    }
+
+    function renderWeeklyKanban(buckets, weekStartMonday){
+      if (!els.weeklyKanban) return;
+      const columns = [];
+
+      for (let i = 0; i < 6; i++) {
+        const day = new Date(weekStartMonday);
+        day.setDate(weekStartMonday.getDate() + i);
+        const key = dateToISO(day);
+        const items = buckets.byDay.get(key) || [];
+        const summary = summarizeCards(items);
+        columns.push(`
+          <section class="week-day-column">
+            <div class="week-day-head">
+              <div class="week-day-title">${escapeHtml(getWeekDayName(day))}</div>
+              <div class="week-day-date">${formatDateObjectBR(day)}</div>
+              <div class="week-day-meta">
+                <span>${getTitleWord(summary.qty)}</span>
+                <span class="week-day-total">${brl(summary.value)}</span>
+              </div>
+            </div>
+            <div class="week-day-list">
+              ${items.length ? items.map(renderWeeklyMiniCard).join("") : `<div class="week-day-empty">Sem despesas programadas para este dia.</div>`}
+            </div>
+          </section>
+        `);
+      }
+
+      els.weeklyKanban.innerHTML = columns.join("");
+    }
+
+    function renderWeekDashboard(){
+      const { buckets, weekStartMonday, weekEndSaturday } = getWeekDashboardMetrics();
+      const weekSummary = summarizeCards(buckets.week);
+      const overdueSummary = summarizeCards(buckets.overdueBeforeWeek);
+      const metrics = [
+        { css:"overdue", title:"Vencidos anteriores", data:overdueSummary, sub:"Em aberto antes da segunda-feira atual." },
+        { css:"dda", title:"DDA pendente", data:summarizeCards(buckets.dda), sub:"Aguardando validação antes da autorização." },
+        { css:"plan", title:"No plano sugerido", data:summarizeCards(buckets.plan), sub:"Incluídos manualmente pela equipe." }
+      ];
+
+      if (els.weekIntervalPill) {
+        els.weekIntervalPill.textContent = `Semana de ${formatDateObjectBR(weekStartMonday)} a ${formatDateObjectBR(weekEndSaturday)}`;
+      }
+
+      if (els.weekCards) {
+        els.weekCards.innerHTML = metrics.map(item => `
+          <div class="week-card ${escapeHtml(item.css)}">
+            <div class="week-card-title">${escapeHtml(item.title)}</div>
+            <div class="week-card-value">${brl(item.data.value)}</div>
+            <div class="week-card-sub">${getTitleWord(item.data.qty)}</div>
+            <div class="week-card-sub">${escapeHtml(item.sub)}</div>
+          </div>
+        `).join("");
+      }
+
+      renderWeeklyKanban(buckets, weekStartMonday);
+
+      if (els.weekReading) {
+        const message = overdueSummary.qty > 0
+          ? `Existem ${getTitleWord(overdueSummary.qty)} vencido${overdueSummary.qty === 1 ? "" : "s"} de períodos anteriores, totalizando ${brl(overdueSummary.value)}.`
+          : "Não há pendências vencidas anteriores à semana para a base selecionada.";
+        els.weekReading.innerHTML = `<strong>Pendências anteriores à semana</strong>${escapeHtml(message)}`;
+      }
+    }
+
+    function getActiveSuggestedPlanCards(){
+      return getScopeCards()
+        .filter(card => isInSuggestedPlan(card) && card.column !== "pago")
+        .sort((a,b) => {
+          const pa = getPlan(a);
+          const pb = getPlan(b);
+          const ao = pa.ordem ?? 999999;
+          const bo = pb.ordem ?? 999999;
+          if (ao !== bo) return ao - bo;
+          return String(a.vencimento || "").localeCompare(String(b.vencimento || ""));
+        });
+    }
+
+    function renderSuggestedPlan(){
+      const planCards = getActiveSuggestedPlanCards();
+      if (!planCards.length) {
+        els.suggestedPlanTable.innerHTML = `<div class="empty-soft">Nenhum título incluído no plano sugerido. Inclua manualmente pelos cards na aba Autorizações e Pagamentos.</div>`;
+        return;
+      }
+
+      els.suggestedPlanTable.innerHTML = `
+        <div class="table-wrap">
+          <table class="exec-table">
+            <thead>
+              <tr>
+                <th>Ordem</th>
+                <th>Fornecedor</th>
+                <th>Valor</th>
+                <th>Vencimento</th>
+                <th>Dias em atraso</th>
+                <th>Competência</th>
+                <th>Tipo de prioridade</th>
+                <th>Motivo da sugestão</th>
+                <th>Status</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${planCards.map((card, index) => {
+                const plan = getPlan(card);
+                const days = getDaysOverdue(card.vencimento, card.column);
+                const status = card.autorizadoPagamento ? "Já autorizado" : "Pendente";
+                const displayOrder = Number.isInteger(Number(plan.ordem)) && Number(plan.ordem) > 0 ? Number(plan.ordem) : index + 1;
+                return `
+                  <tr>
+                    <td>
+                      <div class="plan-order-control">
+                        <input type="number" class="plan-order-input" min="1" step="1" value="${displayOrder}" data-plan-order-input data-id="${card.id}" aria-label="Ordem no plano sugerido">
+                        <div class="plan-order-buttons" aria-label="Alterar prioridade">
+                          <button type="button" class="plan-order-btn" data-plan-action="move-up" data-id="${card.id}" title="Subir prioridade" ${index === 0 ? "disabled" : ""}>↑</button>
+                          <button type="button" class="plan-order-btn" data-plan-action="move-down" data-id="${card.id}" title="Descer prioridade" ${index === planCards.length - 1 ? "disabled" : ""}>↓</button>
+                        </div>
+                      </div>
+                    </td>
+                    <td><strong>${escapeHtml(card.fornecedor || "—")}</strong></td>
+                    <td>${brl(card.valor)}</td>
+                    <td>${formatDateBR(card.vencimento) || "—"}</td>
+                    <td>${days && days > 0 ? `${days} dia${days === 1 ? "" : "s"}` : "—"}</td>
+                    <td>${escapeHtml(getCompetenceLabel(getCompetenceKey(card.vencimento)))}</td>
+                    <td>${escapeHtml(plan.tipoPrioridade || "—")}</td>
+                    <td>${escapeHtml(plan.motivo || "—")}</td>
+                    <td>${card.autorizadoPagamento ? `<span class="badge badge-auth">${status}</span>` : `<span class="badge">${status}</span>`}</td>
+                    <td>
+                      ${!card.autorizadoPagamento ? `<button type="button" class="table-action primary" data-action="authorize-payment" data-id="${card.id}">Autorizar</button>` : ""}
+                      <button type="button" class="table-action danger" data-action="remove-plan" data-id="${card.id}">Remover</button>
+                    </td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      bindSuggestedPlanEvents();
+    }
+
+    function bindSuggestedPlanEvents(){
+      if (!els.suggestedPlanTable) return;
+
+      els.suggestedPlanTable.querySelectorAll("[data-plan-action]").forEach(button => {
+        button.addEventListener("click", async e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const id = e.currentTarget.dataset.id;
+          const action = e.currentTarget.dataset.planAction;
+          if (action === "move-up") await moveSuggestedPlanItem(id, -1);
+          if (action === "move-down") await moveSuggestedPlanItem(id, 1);
+        });
+      });
+
+      els.suggestedPlanTable.querySelectorAll("[data-plan-order-input]").forEach(input => {
+        input.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            e.currentTarget.blur();
+          }
+        });
+        input.addEventListener("change", async e => {
+          await setSuggestedPlanItemOrder(e.currentTarget.dataset.id, e.currentTarget.value);
+        });
+        input.addEventListener("blur", async e => {
+          await setSuggestedPlanItemOrder(e.currentTarget.dataset.id, e.currentTarget.value);
+        });
+      });
+    }
+
+    function normalizePlanOrderList(list){
+      return list.map((card, index) => ({ id: card.id, ordem: index + 1 }));
+    }
+
+    async function persistSuggestedPlanOrder(orderedCards){
+      const updates = normalizePlanOrderList(orderedCards);
+      updates.forEach(item => {
+        const card = cards.find(c => c.id === item.id);
+        if (card) {
+          card.planoSugerido = { ...normalizePlan(card.planoSugerido), ordem: item.ordem };
+        }
+      });
+      refreshAll();
+
+      if (window.firebaseKanban?.updateSuggestedPlanOrders) {
+        await window.firebaseKanban.updateSuggestedPlanOrders(updates);
+        return;
+      }
+
+      if (window.firebaseKanban?.updateSuggestedPlan) {
+        await Promise.all(updates.map(item => {
+          const card = cards.find(c => c.id === item.id);
+          const plan = normalizePlan(card?.planoSugerido);
+          return window.firebaseKanban.updateSuggestedPlan(item.id, {
+            ...plan,
+            ordem: item.ordem,
+            incluidoEm: plan.incluidoEm || new Date().toISOString()
+          });
+        }));
+      }
+    }
+
+    async function moveSuggestedPlanItem(id, direction){
+      const planCards = getActiveSuggestedPlanCards();
+      const fromIndex = planCards.findIndex(card => card.id === id);
+      if (fromIndex < 0) return;
+      const toIndex = Math.max(0, Math.min(planCards.length - 1, fromIndex + direction));
+      if (toIndex === fromIndex) return;
+      const [selected] = planCards.splice(fromIndex, 1);
+      planCards.splice(toIndex, 0, selected);
+      await persistSuggestedPlanOrder(planCards);
+    }
+
+    async function setSuggestedPlanItemOrder(id, rawOrder){
+      const planCards = getActiveSuggestedPlanCards();
+      const fromIndex = planCards.findIndex(card => card.id === id);
+      if (fromIndex < 0) return;
+
+      const parsedOrder = Math.trunc(Number(rawOrder));
+      if (!Number.isFinite(parsedOrder) || parsedOrder < 1) {
+        renderSuggestedPlan();
+        return;
+      }
+
+      const toIndex = Math.max(0, Math.min(planCards.length - 1, parsedOrder - 1));
+      if (toIndex === fromIndex) {
+        await persistSuggestedPlanOrder(planCards);
+        return;
+      }
+
+      const [selected] = planCards.splice(fromIndex, 1);
+      planCards.splice(toIndex, 0, selected);
+      await persistSuggestedPlanOrder(planCards);
+    }
+
+    function renderCompetenceSummary(){
+      const open = getScopeCards().filter(isOpenCard);
+      const total = open.reduce((acc,c)=>acc + Number(c.valor || 0),0);
+      const map = new Map();
+      open.forEach(card => {
+        const key = getCompetenceKey(card.vencimento);
+        if (!map.has(key)) map.set(key, { key, qty:0, value:0 });
+        const group = map.get(key);
+        group.qty += 1;
+        group.value += Number(card.valor || 0);
+      });
+
+      const rows = [...map.values()].sort((a,b) => a.key.localeCompare(b.key));
+      if (!rows.length) {
+        els.competenceSummary.innerHTML = `<div class="empty-soft">Não há títulos em aberto para a base selecionada.</div>`;
+        return;
+      }
+
+      els.competenceSummary.innerHTML = `<div class="competence-list">${rows.map(row => {
+        const pct = total ? (row.value / total) * 100 : 0;
+        return `
+          <div class="competence-row">
+            <div>
+              <div class="competence-title">${escapeHtml(getCompetenceLabel(row.key))}</div>
+              <div class="competence-meta">${escapeHtml(getCompetenceBadge(row.key))}</div>
+            </div>
+            <div><div class="competence-meta">Quantidade</div><strong>${row.qty}</strong></div>
+            <div><div class="competence-meta">Valor em aberto</div><strong>${brl(row.value)}</strong></div>
+            <div>
+              <div class="competence-meta">Concentração</div>
+              <div class="bar-track"><div class="bar-fill" style="width:${Math.max(3, Math.min(100, pct)).toFixed(1)}%"></div></div>
+            </div>
+            <div><span class="badge">${pct.toFixed(1).replace(".",",")}%</span></div>
+          </div>
+        `;
+      }).join("")}</div>`;
+    }
+
+
+    function getMonthStart(date = currentMapDate){
+      const base = date instanceof Date && !Number.isNaN(date.getTime()) ? date : getTodayDate();
+      return new Date(base.getFullYear(), base.getMonth(), 1, 12, 0, 0);
+    }
+
+    function getMonthEnd(date = currentMapDate){
+      const start = getMonthStart(date);
+      return new Date(start.getFullYear(), start.getMonth() + 1, 0, 12, 0, 0);
+    }
+
+    function getMonthLabel(date = currentMapDate){
+      return getMonthStart(date).toLocaleDateString("pt-BR", { month:"long", year:"numeric" }).replace(/^./, c => c.toUpperCase());
+    }
+
+    function getCalendarStartMonday(date){
+      return getWeekStartMonday(getMonthStart(date));
+    }
+
+    function getCalendarEndSunday(date){
+      const last = getMonthEnd(date);
+      const end = new Date(last);
+      const day = end.getDay();
+      const diff = day === 0 ? 0 : 7 - day;
+      end.setDate(end.getDate() + diff);
+      end.setHours(12,0,0,0);
+      return end;
+    }
+
+    function getMonthCalendarDays(date = currentMapDate){
+      const days = [];
+      const start = getCalendarStartMonday(date);
+      const end = getCalendarEndSunday(date);
+      const cursor = new Date(start);
+      while (cursor <= end) {
+        days.push(new Date(cursor));
+        cursor.setDate(cursor.getDate() + 1);
+      }
+      return days;
+    }
+
+    function isSameISODate(a, b){
+      return dateToISO(a) === dateToISO(b);
+    }
+
+    function getMapViewCards(){
+      const mode = mapViewFilter || "open";
+      return getScopeCards().filter(card => {
+        if (!card.vencimento) return false;
+        if (mode === "paid") return card.column === "pago";
+        if (mode === "all") return true;
+        return card.column !== "pago";
+      });
+    }
+
+    function getMapMonthCards({ openOnly = false } = {}){
+      const start = getMonthStart(currentMapDate);
+      const end = getMonthEnd(currentMapDate);
+      return getScopeCards().filter(card => {
+        const due = parseDate(card.vencimento);
+        if (!due) return false;
+        if (openOnly && card.column === "pago") return false;
+        return due >= start && due <= end;
+      });
+    }
+
+    function getCardsByCalendarDay(date){
+      const key = dateToISO(date);
+      return getMapViewCards()
+        .filter(card => card.vencimento === key)
+        .sort((a,b) => {
+          if ((a.column === "pago") !== (b.column === "pago")) return a.column === "pago" ? 1 : -1;
+          if (isInSuggestedPlan(a) !== isInSuggestedPlan(b)) return isInSuggestedPlan(a) ? -1 : 1;
+          if (a.autorizadoPagamento !== b.autorizadoPagamento) return a.autorizadoPagamento ? 1 : -1;
+          const priorityOrder = { alta: 1, media: 2, baixa: 3, a_definir: 4 };
+          const pa = priorityOrder[normalizePriority(a.prioridade)] || 4;
+          const pb = priorityOrder[normalizePriority(b.prioridade)] || 4;
+          if (pa !== pb) return pa - pb;
+          return Number(b.valor || 0) - Number(a.valor || 0);
+        });
+    }
+
+    function getMapStatusBadges(card){
+      const badges = [];
+      const cond = getCondition(card.vencimento, card.column);
+      if (card.column === "pago") badges.push(`<span class="small-badge paid">PAGO</span>`);
+      else if (cond === "VENCIDO") badges.push(`<span class="small-badge overdue">VENCIDO</span>`);
+      else if (cond === "VENCE HOJE") badges.push(`<span class="small-badge today">VENCE HOJE</span>`);
+      if (card.column === "dda") badges.push(`<span class="small-badge dda">DDA</span>`);
+      if (isInSuggestedPlan(card)) badges.push(`<span class="small-badge plan">NO PLANO</span>`);
+      if (card.autorizadoPagamento && card.column !== "pago") badges.push(`<span class="small-badge auth">AUTORIZADO</span>`);
+      return badges.join("");
+    }
+
+    function renderMonthSummary(){
+      if (!els.monthSummary) return;
+      const monthOpenCards = getMapMonthCards({ openOnly: true });
+      const openValue = monthOpenCards.reduce((acc,c)=>acc + Number(c.valor || 0),0);
+      const ddaCards = monthOpenCards.filter(c => c.column === "dda");
+      const planCards = monthOpenCards.filter(c => isInSuggestedPlan(c));
+      const byDay = new Map();
+      monthOpenCards.forEach(card => {
+        if (!byDay.has(card.vencimento)) byDay.set(card.vencimento, { key: card.vencimento, qty:0, value:0 });
+        const row = byDay.get(card.vencimento);
+        row.qty += 1;
+        row.value += Number(card.valor || 0);
+      });
+      const rawHighest = [...byDay.values()].sort((a,b) => b.value - a.value)[0];
+      const highest = rawHighest && (rawHighest.value >= 5000 || rawHighest.qty >= 3) ? rawHighest : null;
+      els.monthSummary.innerHTML = `
+        <div class="month-summary-card">
+          <div class="month-summary-label">Total em aberto no mês</div>
+          <div class="month-summary-value">${brl(openValue)}</div>
+          <div class="month-summary-sub">Exclui títulos pagos.</div>
+        </div>
+        <div class="month-summary-card">
+          <div class="month-summary-label">Títulos em aberto no mês</div>
+          <div class="month-summary-value">${monthOpenCards.length}</div>
+          <div class="month-summary-sub">Com vencimento no mês exibido.</div>
+        </div>
+        <div class="month-summary-card">
+          <div class="month-summary-label">Maior dia de concentração</div>
+          <div class="month-summary-value">${highest ? formatDateBR(highest.key) : "—"}</div>
+          <div class="month-summary-sub">${highest ? `${getTitleWord(highest.qty)} • ${brl(highest.value)}` : "Sem concentração no mês."}</div>
+        </div>
+        <div class="month-summary-card">
+          <div class="month-summary-label">Total em DDA no mês</div>
+          <div class="month-summary-value">${brl(ddaCards.reduce((acc,c)=>acc + Number(c.valor || 0),0))}</div>
+          <div class="month-summary-sub">${getTitleWord(ddaCards.length)} aguardando validação.</div>
+        </div>
+        <div class="month-summary-card">
+          <div class="month-summary-label">Total no Plano Sugerido</div>
+          <div class="month-summary-value">${brl(planCards.reduce((acc,c)=>acc + Number(c.valor || 0),0))}</div>
+          <div class="month-summary-sub">${getTitleWord(planCards.length)} no plano ativo.</div>
+        </div>
+      `;
+    }
+
+    function renderCalendarMiniItem(card){
+      return `
+        <div class="calendar-mini-item">
+          <div class="calendar-mini-top">
+            <div class="calendar-mini-supplier">${escapeHtml(card.fornecedor || "—")}</div>
+            <div class="calendar-mini-value">${brl(card.valor)}</div>
+          </div>
+          <div class="calendar-mini-badges">${getMapStatusBadges(card)}</div>
+        </div>
+      `;
+    }
+
+    function renderPendingCalendar(){
+      if (!els.monthCalendar) return;
+      const days = getMonthCalendarDays(currentMapDate);
+      const month = getMonthStart(currentMapDate).getMonth();
+      const today = getTodayDate();
+      const monthOpenCards = getMapMonthCards({ openOnly: true });
+      const highest = monthOpenCards.reduce((map, card) => {
+        if (!card.vencimento) return map;
+        map[card.vencimento] = (map[card.vencimento] || 0) + Number(card.valor || 0);
+        return map;
+      }, {});
+      const maxDayValue = Math.max(0, ...Object.values(highest));
+
+      els.monthCalendar.innerHTML = days.map(day => {
+        const key = dateToISO(day);
+        const items = getCardsByCalendarDay(day);
+        const summary = summarizeCards(items);
+        const hasOverdue = items.some(card => getCondition(card.vencimento, card.column) === "VENCIDO");
+        const isToday = isSameISODate(day, today);
+        const isOutMonth = day.getMonth() !== month;
+        const isHighValue = summary.value > 0 && summary.value === maxDayValue && (summary.value >= 5000 || summary.qty >= 3);
+        const visibleItems = items.slice(0, 3);
+        const classes = [
+          "calendar-day",
+          isOutMonth ? "out-month" : "",
+          items.length ? "has-items" : "",
+          isToday ? "today" : "",
+          hasOverdue ? "overdue-day" : "",
+          isHighValue ? "high-value" : ""
+        ].filter(Boolean).join(" ");
+        return `
+          <div class="${classes}" data-map-day="${escapeHtml(key)}" role="button" tabindex="${items.length ? "0" : "-1"}">
+            <div class="calendar-day-top">
+              <div class="calendar-day-number">${day.getDate()}</div>
+              ${items.length ? `<div class="calendar-day-total">${brl(summary.value)}</div>` : ""}
+            </div>
+            ${items.length ? `<div class="calendar-day-meta"><span>${getTitleWord(summary.qty)}</span><span>${summary.qty} item${summary.qty === 1 ? "" : "s"}</span></div>` : `<div class="calendar-day-meta"><span>Sem títulos</span></div>`}
+            <div class="calendar-item-list">
+              ${visibleItems.map(renderCalendarMiniItem).join("")}
+              ${items.length > visibleItems.length ? `<div class="calendar-more">+${items.length - visibleItems.length} título${items.length - visibleItems.length === 1 ? "" : "s"}</div>` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      bindPendingCalendarEvents();
+    }
+
+    function renderNoDueDateBlock(){
+      if (!els.noDueDateBlock) return;
+      const items = getScopeCards().filter(card => {
+        if (card.vencimento) return false;
+        if (mapViewFilter === "paid") return card.column === "pago";
+        if (mapViewFilter === "all") return true;
+        return card.column !== "pago";
+      });
+      if (!items.length) {
+        els.noDueDateBlock.innerHTML = "";
+        return;
+      }
+      els.noDueDateBlock.innerHTML = `<div class="empty-soft">Títulos sem vencimento informado: ${items.length} • ${brl(items.reduce((acc,c)=>acc + Number(c.valor || 0),0))}</div>`;
+    }
+
+    function renderPendingMap(){
+      if (!els.mapaTab) return;
+      const scopeName = getScopeLabel(els.companyScope.value);
+      if (els.mapScopePill) els.mapScopePill.textContent = scopeName;
+      if (els.mapMonthTitle) els.mapMonthTitle.textContent = getMonthLabel(currentMapDate);
+      if (els.mapViewFilter && els.mapViewFilter.value !== mapViewFilter) els.mapViewFilter.value = mapViewFilter;
+      renderMonthSummary();
+      renderPendingCalendar();
+      renderNoDueDateBlock();
+      if (currentDayDetailsKey && els.dayDetailsModal?.classList.contains("show")) {
+        openDayDetailsModal(currentDayDetailsKey);
+      }
+    }
+
+    function bindPendingCalendarEvents(){
+      if (!els.monthCalendar) return;
+      els.monthCalendar.querySelectorAll(".calendar-day.has-items").forEach(dayEl => {
+        const open = () => openDayDetailsModal(dayEl.dataset.mapDay);
+        dayEl.addEventListener("click", open);
+        dayEl.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            open();
+          }
+        });
+      });
+    }
+
+    function getDayDetailsCards(dayKey){
+      if (!dayKey) return [];
+      return getMapViewCards()
+        .filter(card => card.vencimento === dayKey)
+        .sort((a,b) => Number(b.valor || 0) - Number(a.valor || 0));
+    }
+
+    function renderDayDetailCard(card){
+      const plan = getPlan(card);
+      return `
+        <article class="day-detail-card">
+          <div class="day-detail-head">
+            <div>
+              <div class="day-detail-supplier">${escapeHtml(card.fornecedor || "—")}</div>
+              <div class="calendar-mini-badges" style="margin-top:6px">${getMapStatusBadges(card)}</div>
+            </div>
+            <div class="day-detail-value">${brl(card.valor)}</div>
+          </div>
+          <div class="day-detail-grid">
+            <div class="day-detail-field"><div class="day-detail-label">Vencimento</div><div class="day-detail-value-text">${formatDateBR(card.vencimento) || "—"}</div></div>
+            <div class="day-detail-field"><div class="day-detail-label">Empresa/Base</div><div class="day-detail-value-text">${escapeHtml(getCompanyLabel(card.empresa) || "—")}</div></div>
+            <div class="day-detail-field"><div class="day-detail-label">Coluna/status</div><div class="day-detail-value-text">${escapeHtml(getColumnTitle(card.column))}</div></div>
+            <div class="day-detail-field"><div class="day-detail-label">Prioridade</div><div class="day-detail-value-text">${escapeHtml(getPriorityLabel(card.prioridade))}</div></div>
+            <div class="day-detail-field"><div class="day-detail-label">Plano sugerido</div><div class="day-detail-value-text">${isInSuggestedPlan(card) ? `Sim${plan.ordem ? ` • ordem ${plan.ordem}` : ""}` : "Não"}</div></div>
+            <div class="day-detail-field"><div class="day-detail-label">Autorização</div><div class="day-detail-value-text">${card.autorizadoPagamento ? `Autorizado${card.autorizadoPor ? ` por ${escapeHtml(card.autorizadoPor)}` : ""}` : "Pendente"}</div></div>
+          </div>
+          ${card.historico ? `<div class="day-detail-history"><strong>HISTÓRICO:</strong> ${escapeHtml(String(card.historico).toUpperCase())}</div>` : ""}
+          <div class="day-detail-actions">
+            ${!card.autorizadoPagamento && card.column !== "pago" ? `<button type="button" class="table-action primary" data-map-action="authorize" data-id="${card.id}">Autorizar</button>` : ""}
+            ${isInSuggestedPlan(card)
+              ? `<button type="button" class="table-action danger" data-map-action="remove-plan" data-id="${card.id}">Remover do plano</button>`
+              : card.column !== "pago" ? `<button type="button" class="table-action" data-map-action="open-plan" data-id="${card.id}">Incluir no plano</button>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    function openDayDetailsModal(dayKey){
+      const items = getDayDetailsCards(dayKey);
+      if (!items.length) return;
+      currentDayDetailsKey = dayKey;
+      const summary = summarizeCards(items);
+      if (els.dayDetailsSubtitle) {
+        els.dayDetailsSubtitle.textContent = `${formatDateBR(dayKey)} • ${getTitleWord(summary.qty)} • ${brl(summary.value)}`;
+      }
+      if (els.dayDetailsBody) {
+        els.dayDetailsBody.innerHTML = `<div class="day-details-list">${items.map(renderDayDetailCard).join("")}</div>`;
+      }
+      bindDayDetailsActions();
+      showModal(els.dayDetailsModal);
+    }
+
+    function closeDayDetailsModal(){
+      hideModal(els.dayDetailsModal);
+      currentDayDetailsKey = "";
+    }
+
+    function bindDayDetailsActions(){
+      if (!els.dayDetailsBody) return;
+      els.dayDetailsBody.querySelectorAll("[data-map-action]").forEach(button => {
+        button.addEventListener("click", async e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const id = e.currentTarget.dataset.id;
+          const action = e.currentTarget.dataset.mapAction;
+          if (action === "authorize") {
+            closeDayDetailsModal();
+            openAuthorizeModal(id);
+            return;
+          }
+          if (action === "open-plan") {
+            closeDayDetailsModal();
+            openPlanModal(id);
+            return;
+          }
+          if (action === "remove-plan") {
+            closeDayDetailsModal();
+            openRemovePlanConfirmModal(id);
+            return;
+          }
+        });
+      });
+    }
+
+    function updateCurrentBaseText(scopeName = getScopeLabel(els.companyScope?.value || "MP")){
+      if (els.currentBaseText) els.currentBaseText.innerHTML = `Base atual: <strong>${escapeHtml(scopeName)}</strong>`;
+    }
+
+    function renderDashboard(){
+      const scopeName = getScopeLabel(els.companyScope.value);
+      if (els.dashboardScopePill) els.dashboardScopePill.textContent = scopeName;
+      updateCurrentBaseText(scopeName);
+      renderWeekDashboard();
+      renderSuggestedPlan();
+      renderCompetenceSummary();
+    }
+
+    function setActiveTab(tab){
+      const allowedTabs = ["dashboard", "operacional", "mapa"];
+      activeTab = allowedTabs.includes(tab) ? tab : "dashboard";
+      els.tabButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.tab === activeTab));
+      els.dashboardTab?.classList.toggle("active", activeTab === "dashboard");
+      els.operacionalTab?.classList.toggle("active", activeTab === "operacional");
+      els.mapaTab?.classList.toggle("active", activeTab === "mapa");
+      if (activeTab === "mapa") renderPendingMap();
+    }
+
     function renderPaidWeekGroups(visibleItems){
       if (!visibleItems.length) return `<div class="empty">Nenhum card para exibir nesta coluna</div>`;
 
@@ -1745,7 +3202,9 @@
       const filtered = getFilteredCards();
       const visibleTotal = filtered.reduce((acc,c)=>acc + Number(c.valor),0);
       els.resultsInfo.textContent = `Exibindo ${filtered.length} de ${getScopeCards().length} cards | ${brl(visibleTotal)} visível no filtro`;
-      els.scopeLabel.textContent = getScopeLabel(els.companyScope.value);
+      const boardScopeName = getScopeLabel(els.companyScope.value);
+      if (els.scopeLabel) els.scopeLabel.textContent = boardScopeName;
+      updateCurrentBaseText(boardScopeName);
 
       els.board.innerHTML = COLUMNS.map(col => {
         const allItems = getScopeCards().filter(c => c.column === col.id).sort(columnSort);
@@ -1757,7 +3216,7 @@
             <div class="column-head" data-action="toggle-column" data-column="${col.id}">
               <div>
                 <div class="column-title">${col.title}</div>
-                ${col.id === "dda" ? `<div class="column-description">Boletos recebidos via DDA que precisam ser conferidos com o cliente antes de seguir para pagamento.</div>` : ""}
+                <div class="column-description">${escapeHtml(col.description || "")}</div>
                 <div class="column-meta">${allItems.length} card${allItems.length === 1 ? "" : "s"} no total</div>
               </div>
               <div class="column-actions">
@@ -1829,6 +3288,9 @@
       const itemClass = card.column === "pago" ? "pago" : cond === "VENCIDO" ? "vencido" : cond === "VENCE HOJE" ? "hoje" : "";
       const daysOverdue = getDaysOverdue(card.vencimento, card.column);
       const lockedAuthorizedPayment = isAuthorizedLocked(card);
+      const inPlan = isInSuggestedPlan(card);
+      const competenceLabel = getCompetenceLabel(getCompetenceKey(card.vencimento));
+      const authLabel = card.column === "pago" ? "PAGO" : card.autorizadoPagamento ? "AUTORIZADO" : "PENDENTE";
 
       return `
         <div class="item ${itemClass} ${card.expanded ? "expanded" : ""}" draggable="${lockedAuthorizedPayment ? "false" : "true"}" data-id="${card.id}">
@@ -1841,15 +3303,22 @@
               <div class="summary-line">
                 <span class="summary-small">${formatDateBR(card.vencimento)}</span>
                 <span class="summary-small">•</span>
-                <span class="summary-small">${getCompanyLabel(card.empresa)}</span>
+                <span class="summary-small">${escapeHtml(competenceLabel)}</span>
                 <span class="priority-badge priority-${normalizePriority(card.prioridade)}">${getPriorityLabel(card.prioridade)}</span>
+              </div>
+              <div class="item-status-line">
+                <span class="badge ${cond === "VENCIDO" ? "badge-dda" : ""}">${daysOverdue && daysOverdue > 0 ? `${daysOverdue} DIA${daysOverdue === 1 ? "" : "S"} EM ATRASO` : cond}</span>
+                <span class="badge ${card.autorizadoPagamento ? "badge-auth" : ""}">${authLabel}</span>
+                ${card.column === "dda" ? `<span class="badge badge-dda">DDA</span>` : ""}
+                ${inPlan ? `<span class="badge badge-plan">NO PLANO</span>` : ""}
               </div>
             </div>
             <button type="button" class="toggle-btn" data-action="toggle" data-id="${card.id}">⌄</button>
           </div>
 
           <div class="item-body">
-            <div class="history">${escapeHtml(card.historico || "—")}</div>
+            <div class="mini-label">HISTÓRICO</div>
+            <div class="history">${escapeHtml(String(card.historico || "—").toUpperCase())}</div>
 
             <div class="mini-box">
               <div class="mini-label">Vencimento</div>
@@ -1878,6 +3347,12 @@
             </div>
 
             ${renderAuthorizationBlock(card)}
+
+            <div class="auth-actions plan-actions">
+              ${inPlan
+                ? `<button type="button" class="auth-btn warning" data-action="remove-plan" data-id="${card.id}">REMOVER DO PLANO</button>`
+                : `<button type="button" class="auth-btn" data-action="open-plan" data-id="${card.id}">INCLUIR NO PLANO</button>`}
+            </div>
 
             ${card.observacao ? `<div class="obs">${escapeHtml(card.observacao)}</div>` : ""}
 
@@ -2020,6 +3495,22 @@
           e.preventDefault();
           e.stopPropagation();
           openReverseConfirmModal(e.currentTarget.dataset.id);
+        });
+      });
+
+      document.querySelectorAll('[data-action="open-plan"]').forEach(el => {
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          openPlanModal(e.currentTarget.dataset.id);
+        });
+      });
+
+      document.querySelectorAll('[data-action="remove-plan"]').forEach(el => {
+        el.addEventListener("click", async e => {
+          e.preventDefault();
+          e.stopPropagation();
+          await removeFromPlan(e.currentTarget.dataset.id);
         });
       });
     }
@@ -2256,6 +3747,101 @@
       closePaymentConfirmModal();
     }
 
+    function getNextPlanOrder(){
+      const active = getActiveSuggestedPlanCards();
+      const maxOrder = active.reduce((max, card) => Math.max(max, Number(getPlan(card).ordem || 0)), 0);
+      return maxOrder + 1;
+    }
+
+    function openPlanModal(id){
+      const card = cards.find(c => c.id === id);
+      if (!card || !window.firebaseKanban?.updateSuggestedPlan) return;
+      currentPlanCardId = id;
+      const plan = getPlan(card);
+      els.planSummary.innerHTML = renderModalSummary(card);
+      els.planOrder.value = plan.ordem || getNextPlanOrder();
+      els.planPriorityType.value = plan.tipoPrioridade || "";
+      els.planReason.value = plan.motivo || "";
+      els.planObservation.value = plan.observacao || "";
+      showFormError(els.planError, "");
+      showModal(els.planModal);
+      setTimeout(() => els.planReason.focus(), 50);
+    }
+
+    function closePlanModal(){
+      hideModal(els.planModal);
+      currentPlanCardId = null;
+      showFormError(els.planError, "");
+    }
+
+    async function savePlanSuggestion(){
+      const card = cards.find(c => c.id === currentPlanCardId);
+      if (!card || !window.firebaseKanban?.updateSuggestedPlan) {
+        closePlanModal();
+        return;
+      }
+
+      const ordem = Number(els.planOrder.value || 0);
+      const tipoPrioridade = els.planPriorityType.value.trim();
+      const motivo = els.planReason.value.trim();
+
+      if (!ordem || ordem < 1) {
+        showFormError(els.planError, "Informe a ordem sugerida.");
+        return;
+      }
+      if (!tipoPrioridade) {
+        showFormError(els.planError, "Selecione o tipo de prioridade.");
+        return;
+      }
+      if (!motivo) {
+        showFormError(els.planError, "Informe o motivo da sugestão.");
+        return;
+      }
+
+      await window.firebaseKanban.updateSuggestedPlan(card.id, {
+        ordem,
+        tipoPrioridade,
+        motivo,
+        observacao: els.planObservation.value.trim(),
+        incluidoEm: new Date().toISOString()
+      });
+
+      closePlanModal();
+    }
+
+    function openRemovePlanConfirmModal(id){
+      const card = cards.find(c => c.id === id);
+      if (!card) return;
+      currentRemovePlanCardId = id;
+      showModal(els.removePlanConfirmModal);
+    }
+
+    function closeRemovePlanConfirmModal(){
+      hideModal(els.removePlanConfirmModal);
+      currentRemovePlanCardId = null;
+    }
+
+    async function executeRemoveFromPlan(id){
+      if (!id) return;
+      const card = cards.find(c => c.id === id);
+      if (card) card.planoSugerido = { ...normalizePlan(card.planoSugerido), incluido: false };
+      refreshAll();
+      if (window.firebaseKanban?.removeSuggestedPlan) {
+        await window.firebaseKanban.removeSuggestedPlan(id);
+      }
+    }
+
+    async function confirmRemoveFromPlan(){
+      const id = currentRemovePlanCardId;
+      if (!id) return;
+      await executeRemoveFromPlan(id);
+      closeRemovePlanConfirmModal();
+    }
+
+    async function removeFromPlan(id){
+      openRemovePlanConfirmModal(id);
+    }
+
     function openProtectedActionPasswordModal(type, cardId){
       const card = cards.find(c => c.id === cardId);
       if (!card) return;
@@ -2445,8 +4031,14 @@
 
     function refreshAll(){
       refreshSupplierOptions();
+      refreshCompetenceOptions();
+      const scopeName = getScopeLabel(els.companyScope.value);
+      if (els.scopeLabel) els.scopeLabel.textContent = scopeName;
+      updateCurrentBaseText(scopeName);
+      renderDashboard();
       renderKpis();
       renderBoard();
+      renderPendingMap();
     }
 
     async function startFirestoreSync(){
@@ -2471,7 +4063,8 @@
           dataPagamento: item.dataPagamento || "",
           pagoEm: item.pagoEm || "",
           movimentacoes: Array.isArray(item.movimentacoes) ? item.movimentacoes : [],
-          expanded: false
+          expanded: false,
+          planoSugerido: normalizePlan(item.planoSugerido)
         }));
         refreshAll();
         return;
@@ -2496,9 +4089,6 @@
       attachMoneyMask(els.filterMin);
       attachMoneyMask(els.filterMax);
 
-      els.themeSwitch.addEventListener("click", () => {
-        document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
-      });
 
       els.companyScope.addEventListener("change", () => {
         refreshAll();
@@ -2512,10 +4102,14 @@
         els.filterMin,
         els.filterMax,
         els.filterColumn,
-        els.filterPriority
+        els.filterPriority,
+        els.filterDelayRange,
+        els.filterCompetence,
+        els.filterPlan
       ].forEach(el => {
-        el.addEventListener("input", renderBoard);
-        el.addEventListener("change", renderBoard);
+        if (!el) return;
+        el.addEventListener("input", () => { renderBoard(); renderDashboard(); });
+        el.addEventListener("change", () => { renderBoard(); renderDashboard(); });
       });
 
       els.clearFilters.addEventListener("click", () => {
@@ -2527,8 +4121,65 @@
         els.filterMax.value = "";
         els.filterColumn.value = "";
         els.filterPriority.value = "";
+        if (els.filterDelayRange) els.filterDelayRange.value = "";
+        if (els.filterCompetence) els.filterCompetence.value = "";
+        if (els.filterPlan) els.filterPlan.value = "";
         renderBoard();
+        renderDashboard();
       });
+
+      els.tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+      });
+      if (els.mapPrevMonth) {
+        els.mapPrevMonth.addEventListener("click", () => {
+          currentMapDate = new Date(currentMapDate.getFullYear(), currentMapDate.getMonth() - 1, 1, 12, 0, 0);
+          renderPendingMap();
+        });
+      }
+      if (els.mapNextMonth) {
+        els.mapNextMonth.addEventListener("click", () => {
+          currentMapDate = new Date(currentMapDate.getFullYear(), currentMapDate.getMonth() + 1, 1, 12, 0, 0);
+          renderPendingMap();
+        });
+      }
+      if (els.mapCurrentMonth) {
+        els.mapCurrentMonth.addEventListener("click", () => {
+          currentMapDate = getTodayDate();
+          renderPendingMap();
+        });
+      }
+      if (els.mapViewFilter) {
+        els.mapViewFilter.addEventListener("change", () => {
+          mapViewFilter = els.mapViewFilter.value || "open";
+          renderPendingMap();
+        });
+      }
+      if (els.closeDayDetailsModal) els.closeDayDetailsModal.addEventListener("click", closeDayDetailsModal);
+      if (els.okDayDetailsBtn) els.okDayDetailsBtn.addEventListener("click", closeDayDetailsModal);
+      if (els.dayDetailsModal) {
+        els.dayDetailsModal.addEventListener("click", e => {
+          if (e.target === els.dayDetailsModal) closeDayDetailsModal();
+        });
+      }
+      setActiveTab("dashboard");
+
+      els.closePlanModal.addEventListener("click", closePlanModal);
+      els.cancelPlanModal.addEventListener("click", closePlanModal);
+      els.savePlanBtn.addEventListener("click", savePlanSuggestion);
+      els.planReason.addEventListener("input", () => showFormError(els.planError, ""));
+      els.planModal.addEventListener("click", e => {
+        if (e.target === els.planModal) closePlanModal();
+      });
+
+      if (els.closeRemovePlanConfirmModal) els.closeRemovePlanConfirmModal.addEventListener("click", closeRemovePlanConfirmModal);
+      if (els.cancelRemovePlanConfirmModal) els.cancelRemovePlanConfirmModal.addEventListener("click", closeRemovePlanConfirmModal);
+      if (els.confirmRemovePlanBtn) els.confirmRemovePlanBtn.addEventListener("click", confirmRemoveFromPlan);
+      if (els.removePlanConfirmModal) {
+        els.removePlanConfirmModal.addEventListener("click", e => {
+          if (e.target === els.removePlanConfirmModal) closeRemovePlanConfirmModal();
+        });
+      }
 
       els.newEntryBtn.addEventListener("click", () => openModal());
       els.closeModal.addEventListener("click", closeModal);
@@ -2659,7 +4310,15 @@
             observacaoAutorizacao:"",
             colunaAntesAutorizacao:"",
             movimentacoes:[],
-            expanded:false
+            expanded:false,
+            planoSugerido:{
+              incluido:false,
+              ordem:null,
+              tipoPrioridade:"",
+              motivo:"",
+              observacao:"",
+              incluidoEm:""
+            }
           });
         }
 
